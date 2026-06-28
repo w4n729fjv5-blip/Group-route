@@ -1,29 +1,64 @@
 import { useState } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
+type Mode = 'signin' | 'signup'
+
 /**
- * Magic-link sign-in screen. Sends a one-tap login link to the user's email;
- * Supabase redirects back to this app and the session is detected automatically.
+ * Email + password sign-in / create-account screen. A successful
+ * signInWithPassword (or signUp when email confirmation is disabled) creates a
+ * Supabase session, which App.tsx picks up via onAuthStateChange.
  */
 export default function Auth() {
+  const [mode, setMode] = useState<Mode>('signin')
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
+  const [password, setPassword] = useState('')
+  const [working, setWorking] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [info, setInfo] = useState<string | null>(null)
 
-  async function sendLink(e: React.FormEvent) {
+  function friendly(message: string): string {
+    const m = message.toLowerCase()
+    if (m.includes('invalid login credentials')) return 'Wrong email or password.'
+    if (m.includes('user already registered')) return 'That email already has an account — try signing in.'
+    if (m.includes('password should be at least')) return 'Password must be at least 6 characters.'
+    if (m.includes('email not confirmed')) return 'Please confirm your email first, then sign in.'
+    return message
+  }
+
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    setStatus('sending')
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: window.location.origin },
-    })
-    if (error) {
-      setError(error.message)
-      setStatus('idle')
+    setInfo(null)
+    setWorking(true)
+
+    if (mode === 'signin') {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      })
+      if (error) setError(friendly(error.message))
+      // On success, onAuthStateChange in App.tsx swaps in the app.
     } else {
-      setStatus('sent')
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+      })
+      if (error) {
+        setError(friendly(error.message))
+      } else if (!data.session) {
+        // Email confirmation is enabled on the Supabase project.
+        setInfo('Account created. Check your email to confirm it, then sign in.')
+        setMode('signin')
+      }
+      // If data.session exists, confirmation is off and we're already logged in.
     }
+    setWorking(false)
+  }
+
+  function switchMode() {
+    setMode((m) => (m === 'signin' ? 'signup' : 'signin'))
+    setError(null)
+    setInfo(null)
   }
 
   return (
@@ -43,32 +78,51 @@ export default function Auth() {
           </p>
         )}
 
-        {status === 'sent' ? (
-          <p className="success" style={{ marginTop: 20 }}>
-            Check your email — we sent a sign-in link to <strong>{email}</strong>. Open it
-            on this device to continue.
-          </p>
-        ) : (
-          <form onSubmit={sendLink} className="stack" style={{ marginTop: 20 }}>
-            <input
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <button
-              type="submit"
-              className="btn-primary btn-block"
-              disabled={status === 'sending' || !isSupabaseConfigured}
-            >
-              {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
-            </button>
-            {error && <p className="error">{error}</p>}
-          </form>
-        )}
+        <form onSubmit={submit} className="stack" style={{ marginTop: 20 }}>
+          <input
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            minLength={6}
+            required
+          />
+          <button
+            type="submit"
+            className="btn-primary btn-block"
+            disabled={working || !isSupabaseConfigured}
+          >
+            {working
+              ? 'Please wait…'
+              : mode === 'signin'
+                ? 'Sign in'
+                : 'Create account'}
+          </button>
+          {error && <p className="error">{error}</p>}
+          {info && <p className="success">{info}</p>}
+        </form>
+
+        <p className="muted small" style={{ marginTop: 16 }}>
+          {mode === 'signin' ? "Don’t have an account?" : 'Already have an account?'}{' '}
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ padding: '4px 10px' }}
+            onClick={switchMode}
+          >
+            {mode === 'signin' ? 'Create one' : 'Sign in'}
+          </button>
+        </p>
       </div>
     </div>
   )
