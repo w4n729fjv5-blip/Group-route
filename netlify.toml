@@ -1,0 +1,15 @@
+# Netlify config for git-connected deploys.
+# (For drag-and-drop deploys via Netlify Drop, this file is ignored — the
+#  public/_redirects file inside the built dist/ handles SPA routing.)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Single-page app: serve index.html for any path so deep links / refreshes work.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in the Netlify dashboard
+# (Site settings -> Environment variables) for git-connected builds.
