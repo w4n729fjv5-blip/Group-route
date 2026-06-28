@@ -110,3 +110,32 @@ src/components/          Auth, RouteList, RouteEditor, StopCard, AddressInput, I
   `src/lib/geocode.ts`.
 - Stops export in the order you arrange them. Automatic shortest-route optimization is not
   included in this version.
+
+---
+
+## Troubleshooting
+
+**“Supabase isn’t configured yet” on the login screen**
+Your `.env` is missing or the dev server wasn’t restarted after editing it. Confirm `.env`
+contains both `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, then stop and re-run
+`npm run dev` (Vite only reads `.env` at startup). On a host (Netlify/Vercel), set both as
+environment variables and redeploy — `.env` files are not uploaded.
+
+**The sign-in email never arrives**
+Check spam. New Supabase projects use a shared email sender that is rate-limited and
+sometimes slow; wait a minute and try once. For production, configure your own SMTP under
+**Authentication → Emails**.
+
+**Clicking the magic link shows “invalid” / “redirect not allowed” or sends you to the wrong page**
+The URL you’re opening the app from must be listed under **Authentication → URL
+Configuration → Redirect URLs** in Supabase (e.g. `http://localhost:5173` for local,
+`https://your-app.netlify.app` for production). Add it, then request a fresh link.
+
+**Logged in, but “relation public.routes does not exist” / saving fails**
+The schema wasn’t applied. Open the Supabase **SQL Editor**, paste all of
+`supabase/schema.sql`, and click **Run**.
+
+**Logged in, but routes always come back empty**
+Row-Level Security is on but the policies didn’t apply. Re-run `supabase/schema.sql` (it’s
+safe to run again) and confirm `routes` and `stops` each show an enabled policy under
+**Authentication → Policies**.
