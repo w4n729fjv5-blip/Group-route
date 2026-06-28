@@ -212,6 +212,30 @@ textarea {
   border: 1px solid rgba(192, 57, 43, 0.3);
 }
 
+.banner.success {
+  background: #e8f6f0;
+  color: var(--teal);
+  border: 1px solid rgba(20, 138, 109, 0.3);
+}
+
+.backup-bar {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.backup-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.backup-actions .btn {
+  flex: 1;
+}
+
 .muted {
   color: var(--muted);
 }

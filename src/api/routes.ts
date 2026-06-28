@@ -156,3 +156,62 @@ export async function persistStopOrder(stops: Stop[]): Promise<void> {
   }
   write(db);
 }
+
+// --- Backup (export / import) ---------------------------------------------
+// All offline: export hands back a plain object the UI saves as a file, and
+// import takes the parsed contents of such a file back into localStorage.
+
+/** Shape of a backup file. */
+export interface Backup {
+  app: "linen-route-creator";
+  version: 1;
+  exportedAt: string;
+  routes: Route[];
+  stops: Stop[];
+}
+
+/** Snapshot everything for download as a backup file. */
+export async function exportBackup(): Promise<Backup> {
+  const db = read();
+  return {
+    app: "linen-route-creator",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    routes: db.routes,
+    stops: db.stops,
+  };
+}
+
+/** Basic shape check so we don't import garbage. */
+function looksLikeBackup(value: unknown): value is Backup {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return Array.isArray(v.routes) && Array.isArray(v.stops);
+}
+
+/**
+ * Merge a backup into local storage. Routes/stops are matched by id: existing
+ * ids are overwritten with the imported copy, new ones are added. Importing the
+ * same file twice is therefore safe (idempotent). Returns how many of each were
+ * brought in.
+ */
+export async function importBackup(
+  data: unknown
+): Promise<{ routes: number; stops: number }> {
+  if (!looksLikeBackup(data)) {
+    throw new Error("This file isn't a valid Linen Routes backup.");
+  }
+  const db = read();
+  const routeById = new Map(db.routes.map((r) => [r.id, r]));
+  const stopById = new Map(db.stops.map((s) => [s.id, s]));
+
+  for (const r of data.routes) {
+    if (r && typeof r.id === "string") routeById.set(r.id, r as Route);
+  }
+  for (const s of data.stops) {
+    if (s && typeof s.id === "string") stopById.set(s.id, s as Stop);
+  }
+
+  write({ routes: [...routeById.values()], stops: [...stopById.values()] });
+  return { routes: data.routes.length, stops: data.stops.length };
+}

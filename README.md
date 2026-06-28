@@ -29,6 +29,8 @@ web app — no app store needed.
     also has a single-stop Google button.
 - **Fully local** — data is saved in your browser's `localStorage`. It works
   offline and stays private to the device.
+- **Backup & restore** — export all routes to a JSON file and import it back on
+  any device. Still fully offline; import merges by id so re-importing is safe.
 - **Installable** — "Add to Home Screen" on iOS/Android for an app-like icon and
   full-screen launch.
 
@@ -69,6 +71,9 @@ GitHub Pages, etc.). No environment variables or backend are needed.
 - Clearing your browser's site data, or some "private browsing" modes, will
   remove saved routes. Installing to the home screen and using the app normally
   keeps them.
+- Use **Export backup** on the home screen to save all your routes to a JSON
+  file, and **Import backup** to restore them (or copy them to another device).
+  Import merges by id, so importing the same file twice won't create duplicates.
 
 ---
 

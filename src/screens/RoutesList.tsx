@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createRoute, deleteRoute, listRoutes } from "../api/routes";
+import {
+  createRoute,
+  deleteRoute,
+  exportBackup,
+  importBackup,
+  listRoutes,
+} from "../api/routes";
 import { DELIVERY_DAYS, type DeliveryDay, type Route } from "../types";
 
 /** Home screen: lists saved routes grouped by delivery day. */
@@ -10,6 +16,8 @@ export default function RoutesList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     void load();
@@ -48,6 +56,50 @@ export default function RoutesList() {
     }
   }
 
+  /** Download all routes as a JSON backup file (fully offline). */
+  async function handleExport() {
+    setError(null);
+    setNotice(null);
+    try {
+      const backup = await exportBackup();
+      const blob = new Blob([JSON.stringify(backup, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const stamp = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `linen-routes-backup-${stamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setNotice("Backup downloaded.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to export backup.");
+    }
+  }
+
+  /** Read a chosen backup file and merge it into local storage. */
+  async function handleImportFile(file: File) {
+    setError(null);
+    setNotice(null);
+    try {
+      const text = await file.text();
+      const result = await importBackup(JSON.parse(text));
+      await load();
+      setNotice(
+        `Imported ${result.routes} route(s) and ${result.stops} stop(s).`
+      );
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "Couldn't read that file. Make sure it's a Linen Routes backup."
+      );
+    }
+  }
+
   // Group routes by delivery day, with an "Unscheduled" bucket last.
   const groups: { label: string; key: DeliveryDay | "Unscheduled"; routes: Route[] }[] =
     [...DELIVERY_DAYS, "Unscheduled" as const].map((day) => ({
@@ -74,6 +126,7 @@ export default function RoutesList() {
 
       <main className="content">
         {error && <div className="banner error">{error}</div>}
+        {notice && <div className="banner success">{notice}</div>}
         {loading && <p className="muted">Loading…</p>}
 
         {!loading && routes.length === 0 && (
@@ -120,6 +173,38 @@ export default function RoutesList() {
                 </ul>
               </section>
             ))}
+
+        {!loading && (
+          <section className="backup-bar">
+            <p className="muted small">
+              Routes are saved on this device. Back them up to a file, or restore
+              a backup here.
+            </p>
+            <div className="backup-actions">
+              <button type="button" className="btn" onClick={handleExport}>
+                ⬇️ Export backup
+              </button>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => fileInput.current?.click()}
+              >
+                ⬆️ Import backup
+              </button>
+            </div>
+            <input
+              ref={fileInput}
+              type="file"
+              accept="application/json,.json"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleImportFile(file);
+                e.target.value = ""; // allow re-importing the same file
+              }}
+            />
+          </section>
+        )}
       </main>
     </div>
   );
