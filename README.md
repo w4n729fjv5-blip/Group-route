@@ -3,8 +3,10 @@
 A mobile-first web app for planning linen/laundry delivery routes. Build a
 **route**, add **stops**, list the **items** to deliver at each stop (linens,
 carpets, uniforms, napkins, tablecloths — with quantities), jot **notes**, set a
-**delivery day**, and **navigate** the route in Apple Maps or Google Maps. Routes
-are saved to the cloud (Supabase) so they sync across every device.
+**delivery day**, and **navigate** the route in Apple Maps or Google Maps.
+
+Everything is stored **locally on your device** in the browser — no accounts, no
+passwords, no cloud, no setup. Your routes never leave your phone or computer.
 
 Built with React + TypeScript + Vite. Installs to your phone's home screen as a
 web app — no app store needed.
@@ -25,58 +27,48 @@ web app — no app store needed.
   - **Apple Maps:** Apple's URL scheme can't take multiple stops, so each stop
     has its own "Navigate in Apple Maps" button (one stop at a time). Each stop
     also has a single-stop Google button.
-- **Cloud sync** — data lives in Supabase and appears on any device that opens
-  the app.
+- **Fully local** — data is saved in your browser's `localStorage`. It works
+  offline and stays private to the device.
 - **Installable** — "Add to Home Screen" on iOS/Android for an app-like icon and
   full-screen launch.
 
 ---
 
-## Setup
+## Run it locally
 
-### 1. Create a free Supabase project
-1. Go to [supabase.com](https://supabase.com) and create a project.
-2. Open **SQL Editor → New query**, paste the contents of
-   [`supabase/schema.sql`](supabase/schema.sql), and click **Run**. This creates
-   the `routes` and `stops` tables and the access policies.
-3. Open **Project Settings → API** and copy:
-   - **Project URL** (e.g. `https://abcd1234.supabase.co`)
-   - **anon public** key
-
-### 2. Configure the app
-```bash
-cp .env.example .env
-```
-Edit `.env` and paste your values:
-```
-VITE_SUPABASE_URL=https://YOUR-PROJECT-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-public-key
-```
-
-### 3. Run it locally
 ```bash
 npm install
 npm run dev
 ```
+
 Open the printed URL (e.g. `http://localhost:5173`). To test on your phone on the
-same Wi-Fi, open the **Network** URL Vite prints.
+same Wi-Fi, open the **Network** URL Vite prints. That's it — there's nothing to
+configure.
 
 ---
 
 ## Deploy (so you can use it on your phone anywhere)
 
-The build output is static files, so any static host works. Recommended:
+The build output is static files, so any static host works (Netlify, Vercel,
+GitHub Pages, etc.). No environment variables or backend are needed.
 
-**Netlify**
-1. Push this repo to GitHub (already done if you're reading this there).
-2. In Netlify: **Add new site → Import from Git**, pick the repo.
+**Netlify / Vercel**
+1. Push this repo to GitHub.
+2. Import the repo in Netlify or Vercel (framework preset: Vite).
 3. Build command `npm run build`, publish directory `dist`.
-4. **Site settings → Environment variables**: add `VITE_SUPABASE_URL` and
-   `VITE_SUPABASE_ANON_KEY`.
-5. Deploy. Open the HTTPS URL on your phone → Share → **Add to Home Screen**.
+4. Deploy. Open the HTTPS URL on your phone → Share → **Add to Home Screen**.
 
-**Vercel** works the same way (framework preset: Vite). **GitHub Pages** also
-works but needs the env vars baked in at build time via an Actions workflow.
+---
+
+## Where your data lives (and what to know)
+
+- Routes and stops are saved in the browser's `localStorage` under the key
+  `linen-route-creator/v1`.
+- Data is tied to the specific browser/device and site URL. It does **not** sync
+  between devices, and it isn't backed up anywhere.
+- Clearing your browser's site data, or some "private browsing" modes, will
+  remove saved routes. Installing to the home screen and using the app normally
+  keeps them.
 
 ---
 
@@ -89,19 +81,8 @@ works but needs the env vars baked in at build time via an Actions workflow.
   roughly 10 stops; longer routes show a warning and you navigate the overflow
   stop-by-stop.
 - **Apple Maps has no multi-waypoint URL** — by design it only accepts one
-  destination. So Apple navigation is **per stop** (the " Maps" button on each
+  destination. So Apple navigation is **per stop** (the "Maps" button on each
   stop). This isn't a bug we can fix; it's an Apple platform limitation.
-
----
-
-## Privacy note
-
-This app has **no login** (by design choice). Access uses Supabase's public
-`anon` key, and the schema grants that key full read/write. Practically: anyone
-who has your app's URL can view and edit the routes. That's fine for a single
-operator, but don't store sensitive personal data. To make it private later, add
-Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
-(`auth.uid()`) policies.
 
 ---
 
@@ -109,13 +90,11 @@ Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
 
 ```
 src/
-  api/routes.ts        Supabase CRUD for routes & stops
+  api/routes.ts        local (localStorage) CRUD for routes & stops
   components/          DaySelector, ItemPicker, StopCard, ExportBar
   data/catalog.ts      preset delivery items
-  lib/supabase.ts      Supabase client (from env vars)
   lib/maps.ts          Apple/Google Maps URL builders
-  screens/             RoutesList, RouteEditor, StopEditor, SetupNeeded
+  screens/             RoutesList, RouteEditor, StopEditor
   types.ts             shared types
-supabase/schema.sql    database tables + RLS policies
 public/                PWA manifest + icons
 ```

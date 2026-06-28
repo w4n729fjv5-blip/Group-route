@@ -1,15 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { isSupabaseConfigured } from "./lib/supabase";
-import SetupNeeded from "./screens/SetupNeeded";
 import RoutesList from "./screens/RoutesList";
 import RouteEditor from "./screens/RouteEditor";
 import StopEditor from "./screens/StopEditor";
 
 export default function App() {
-  if (!isSupabaseConfigured) {
-    return <SetupNeeded />;
-  }
-
   return (
     <Routes>
       <Route path="/" element={<RoutesList />} />
