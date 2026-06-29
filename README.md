@@ -2,9 +2,10 @@
 
 A mobile-first web app for planning linen/laundry delivery routes. Build a
 **route**, add **stops**, list the **items** to deliver at each stop (linens,
-carpets, uniforms, napkins, tablecloths — with quantities), jot **notes**, set a
-**delivery day**, and **navigate** the route in Apple Maps or Google Maps. Routes
-are saved to the cloud (Supabase) so they sync across every device.
+towels, uniforms, napkins, tablecloths — with quantities), jot **notes**, set a
+**date** and a **delivery day**, and **navigate** the route in Apple Maps or
+Google Maps. Everything is saved **locally on your device** — no account, no
+server, no setup.
 
 Built with React + TypeScript + Vite. Installs to your phone's home screen as a
 web app — no app store needed.
@@ -25,66 +26,61 @@ web app — no app store needed.
   from your catalog, with quantity steppers, plus one-off custom items.
 - **Editable materials catalog** — a **Materials** menu (top-right on the home
   screen) where you add/remove the different linens and delivery materials, each
-  with an emoji. The catalog syncs across devices and feeds every stop's
-  dropdown.
+  with an emoji. The catalog feeds every stop's dropdown.
 - **Maps export**
   - **Google Maps:** one tap opens the whole route as a multi-stop driving
     route (up to ~10 stops per link).
   - **Apple Maps:** Apple's URL scheme can't take multiple stops, so each stop
     has its own "Navigate in Apple Maps" button (one stop at a time). Each stop
     also has a single-stop Google button.
-- **Cloud sync** — data lives in Supabase and appears on any device that opens
-  the app.
+- **Local storage** — all data lives in your browser on this device. Nothing is
+  uploaded anywhere.
 - **Installable** — "Add to Home Screen" on iOS/Android for an app-like icon and
   full-screen launch.
 
 ---
 
-## Setup
+## Run it
 
-### 1. Create a free Supabase project
-1. Go to [supabase.com](https://supabase.com) and create a project.
-2. Open **SQL Editor → New query**, paste the contents of
-   [`supabase/schema.sql`](supabase/schema.sql), and click **Run**. This creates
-   the `routes` and `stops` tables and the access policies.
-3. Open **Project Settings → API** and copy:
-   - **Project URL** (e.g. `https://abcd1234.supabase.co`)
-   - **anon public** key
-
-### 2. Configure the app
-```bash
-cp .env.example .env
-```
-Edit `.env` and paste your values:
-```
-VITE_SUPABASE_URL=https://YOUR-PROJECT-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-public-key
-```
-
-### 3. Run it locally
 ```bash
 npm install
 npm run dev
 ```
-Open the printed URL (e.g. `http://localhost:5173`). To test on your phone on the
-same Wi-Fi, open the **Network** URL Vite prints.
+
+Open the printed URL (e.g. `http://localhost:5173`). That's it — no `.env`, no
+database, no API keys. To test on your phone on the same Wi-Fi, open the
+**Network** URL Vite prints.
 
 ---
 
 ## Deploy (so you can use it on your phone anywhere)
 
-The build output is static files, so any static host works. Recommended:
+The build output is plain static files, so any static host works.
 
-**Netlify**
-1. Push this repo to GitHub (already done if you're reading this there).
-2. In Netlify: **Add new site → Import from Git**, pick the repo.
-3. Build command `npm run build`, publish directory `dist`.
-4. **Site settings → Environment variables**: add `VITE_SUPABASE_URL` and
-   `VITE_SUPABASE_ANON_KEY`.
-5. Deploy. Open the HTTPS URL on your phone → Share → **Add to Home Screen**.
+```bash
+npm run build      # outputs to dist/
+```
 
-**Vercel** works the same way (framework preset: Vite). **GitHub Pages** also
-works but needs the env vars baked in at build time via an Actions workflow.
+**Netlify / Vercel:** import the repo, build command `npm run build`, publish
+directory `dist`. **GitHub Pages** works too — just publish the `dist/` folder.
+No environment variables to configure.
+
+Then open the HTTPS URL on your phone → Share → **Add to Home Screen**.
+
+---
+
+## Where is my data stored?
+
+All routes, stops, and your materials catalog are saved in your browser's
+`localStorage` on the device you're using, under keys prefixed with `linen.`.
+
+What that means:
+
+- **It's private** — nothing leaves your device.
+- **It's per-device / per-browser** — data does *not* sync between your phone
+  and laptop. Each device keeps its own list.
+- **Clearing your browser data** (or using private/incognito mode) erases it. If
+  you want a backup, keep the device's browser data intact.
 
 ---
 
@@ -102,36 +98,18 @@ works but needs the env vars baked in at build time via an Actions workflow.
 
 ---
 
-## Privacy note
-
-This app has **no login** (by design choice). Access uses Supabase's public
-`anon` key, and the schema grants that key full read/write. Practically: anyone
-who has your app's URL can view and edit the routes. That's fine for a single
-operator, but don't store sensitive personal data. To make it private later, add
-Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
-(`auth.uid()`) policies.
-
----
-
 ## Project structure
 
 ```
 src/
-  api/routes.ts            Supabase CRUD for routes & stops
-  api/materials.ts         Supabase CRUD for the materials catalog
-  components/              DaySelector, ItemPicker, StopCard, ExportBar, AddressInput
-  data/catalog.ts          default materials + icon helpers
-  lib/supabase.ts          Supabase client (from env vars)
-  lib/maps.ts              Apple/Google Maps URL builders
-  materials/               MaterialsContext (shared, editable catalog)
-  screens/                 RoutesList, RouteEditor, StopEditor, Materials, SetupNeeded
-  types.ts                 shared types
-supabase/schema.sql        database tables + RLS policies
-public/                    PWA manifest + icons
+  api/routes.ts        local (localStorage) CRUD for routes & stops
+  api/materials.ts     local CRUD for the materials catalog
+  components/          DaySelector, ItemPicker, StopCard, ExportBar, AddressInput
+  data/catalog.ts      default materials + icon helpers
+  lib/localdb.ts       tiny localStorage JSON store + id generator
+  lib/maps.ts          Apple/Google Maps URL builders
+  materials/           MaterialsContext (shared, editable catalog)
+  screens/             RoutesList, RouteEditor, StopEditor, Materials
+  types.ts             shared types
+public/                PWA manifest + icons
 ```
-
-### Already have an older copy of the database?
-
-`supabase/schema.sql` is safe to re-run. Paste it into the Supabase SQL editor
-again to add the new `materials` table and the stops' `date` column to an
-existing project.

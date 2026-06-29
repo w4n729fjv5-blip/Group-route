@@ -1,4 +1,4 @@
-import { requireSupabase } from "../lib/supabase";
+import { newId, readJSON, writeJSON } from "../lib/localdb";
 import type {
   DeliveryDay,
   LineItem,
@@ -7,44 +7,37 @@ import type {
   Stop,
 } from "../types";
 
-// CRUD helpers against the Supabase `routes` and `stops` tables.
-// No auth: all reads/writes go through the public anon role.
+// CRUD helpers for routes and stops, backed by browser localStorage.
+// Everything runs locally on this device — no account or server needed.
 
-const ROUTES = "routes";
-const STOPS = "stops";
+const ROUTES_KEY = "routes";
+const STOPS_KEY = "stops";
+
+function allRoutes(): Route[] {
+  return readJSON<Route[]>(ROUTES_KEY, []);
+}
+
+function allStops(): Stop[] {
+  return readJSON<Stop[]>(STOPS_KEY, []);
+}
 
 /** Fetch all routes (without stops), newest first. */
 export async function listRoutes(): Promise<Route[]> {
-  const sb = requireSupabase();
-  const { data, error } = await sb
-    .from(ROUTES)
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return (data ?? []) as Route[];
+  return [...allRoutes()].sort((a, b) =>
+    b.created_at.localeCompare(a.created_at)
+  );
 }
 
 /** Fetch a single route together with its ordered stops. */
 export async function getRouteWithStops(
   routeId: string
 ): Promise<RouteWithStops | null> {
-  const sb = requireSupabase();
-  const { data: route, error: routeErr } = await sb
-    .from(ROUTES)
-    .select("*")
-    .eq("id", routeId)
-    .maybeSingle();
-  if (routeErr) throw routeErr;
+  const route = allRoutes().find((r) => r.id === routeId);
   if (!route) return null;
-
-  const { data: stops, error: stopsErr } = await sb
-    .from(STOPS)
-    .select("*")
-    .eq("route_id", routeId)
-    .order("position", { ascending: true });
-  if (stopsErr) throw stopsErr;
-
-  return { ...(route as Route), stops: (stops ?? []) as Stop[] };
+  const stops = allStops()
+    .filter((s) => s.route_id === routeId)
+    .sort((a, b) => a.position - b.position);
+  return { ...route, stops };
 }
 
 /** Create a new empty route and return it. */
@@ -52,14 +45,15 @@ export async function createRoute(
   name: string,
   deliveryDay: DeliveryDay | null
 ): Promise<Route> {
-  const sb = requireSupabase();
-  const { data, error } = await sb
-    .from(ROUTES)
-    .insert({ name, delivery_day: deliveryDay, notes: "" })
-    .select("*")
-    .single();
-  if (error) throw error;
-  return data as Route;
+  const route: Route = {
+    id: newId(),
+    name,
+    delivery_day: deliveryDay,
+    notes: "",
+    created_at: new Date().toISOString(),
+  };
+  writeJSON(ROUTES_KEY, [...allRoutes(), route]);
+  return route;
 }
 
 /** Update mutable fields on a route. */
@@ -67,16 +61,22 @@ export async function updateRoute(
   routeId: string,
   patch: Partial<Pick<Route, "name" | "delivery_day" | "notes">>
 ): Promise<void> {
-  const sb = requireSupabase();
-  const { error } = await sb.from(ROUTES).update(patch).eq("id", routeId);
-  if (error) throw error;
+  const next = allRoutes().map((r) =>
+    r.id === routeId ? { ...r, ...patch } : r
+  );
+  writeJSON(ROUTES_KEY, next);
 }
 
-/** Delete a route. Stops are removed via ON DELETE CASCADE. */
+/** Delete a route and all of its stops. */
 export async function deleteRoute(routeId: string): Promise<void> {
-  const sb = requireSupabase();
-  const { error } = await sb.from(ROUTES).delete().eq("id", routeId);
-  if (error) throw error;
+  writeJSON(
+    ROUTES_KEY,
+    allRoutes().filter((r) => r.id !== routeId)
+  );
+  writeJSON(
+    STOPS_KEY,
+    allStops().filter((s) => s.route_id !== routeId)
+  );
 }
 
 /** Add a stop to the end of a route and return it. */
@@ -84,22 +84,18 @@ export async function createStop(
   routeId: string,
   position: number
 ): Promise<Stop> {
-  const sb = requireSupabase();
-  const { data, error } = await sb
-    .from(STOPS)
-    .insert({
-      route_id: routeId,
-      name: "",
-      address: "",
-      date: "",
-      notes: "",
-      position,
-      items: [] as LineItem[],
-    })
-    .select("*")
-    .single();
-  if (error) throw error;
-  return data as Stop;
+  const stop: Stop = {
+    id: newId(),
+    route_id: routeId,
+    name: "",
+    address: "",
+    date: "",
+    notes: "",
+    position,
+    items: [] as LineItem[],
+  };
+  writeJSON(STOPS_KEY, [...allStops(), stop]);
+  return stop;
 }
 
 /** Update mutable fields on a stop. */
@@ -109,27 +105,25 @@ export async function updateStop(
     Pick<Stop, "name" | "address" | "date" | "notes" | "position" | "items">
   >
 ): Promise<void> {
-  const sb = requireSupabase();
-  const { error } = await sb.from(STOPS).update(patch).eq("id", stopId);
-  if (error) throw error;
+  const next = allStops().map((s) =>
+    s.id === stopId ? { ...s, ...patch } : s
+  );
+  writeJSON(STOPS_KEY, next);
 }
 
 /** Delete a single stop. */
 export async function deleteStop(stopId: string): Promise<void> {
-  const sb = requireSupabase();
-  const { error } = await sb.from(STOPS).delete().eq("id", stopId);
-  if (error) throw error;
+  writeJSON(
+    STOPS_KEY,
+    allStops().filter((s) => s.id !== stopId)
+  );
 }
 
 /** Persist a new ordering by writing each stop's position. */
 export async function persistStopOrder(stops: Stop[]): Promise<void> {
-  const sb = requireSupabase();
-  await Promise.all(
-    stops.map((stop, index) =>
-      sb.from(STOPS).update({ position: index }).eq("id", stop.id)
-    )
+  const order = new Map(stops.map((s, index) => [s.id, index]));
+  const next = allStops().map((s) =>
+    order.has(s.id) ? { ...s, position: order.get(s.id)! } : s
   );
-  // Surface the first error, if any, by re-reading is unnecessary; updates above
-  // throw via the network layer only on transport errors. Individual row errors
-  // are rare for position writes, so we keep this lightweight.
+  writeJSON(STOPS_KEY, next);
 }

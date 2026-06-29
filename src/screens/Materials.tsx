@@ -10,7 +10,7 @@ import { useMaterials } from "../materials/MaterialsContext";
  * material" dropdown on every stop.
  */
 export default function Materials() {
-  const { materials, loading, usingFallback, refresh } = useMaterials();
+  const { materials, loading, refresh } = useMaterials();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState(ICON_CHOICES[0]);
   const [busy, setBusy] = useState(false);
@@ -63,13 +63,6 @@ export default function Materials() {
 
       <main className="content">
         {error && <div className="banner error">{error}</div>}
-        {usingFallback && (
-          <div className="banner error">
-            Showing the built-in default list. To save your own materials, run the
-            updated <code>supabase/schema.sql</code> in your Supabase project, then
-            reload.
-          </div>
-        )}
 
         <div className="card">
           <h2 className="card-title">Add a material</h2>
@@ -110,7 +103,7 @@ export default function Materials() {
             type="button"
             className="btn primary block"
             onClick={handleAdd}
-            disabled={busy || !name.trim() || usingFallback}
+            disabled={busy || !name.trim()}
           >
             + Add to catalog
           </button>
@@ -133,7 +126,6 @@ export default function Materials() {
                     type="button"
                     className="btn tiny danger"
                     onClick={() => handleDelete(m.id, m.name)}
-                    disabled={usingFallback}
                     aria-label={`Remove ${m.name}`}
                   >
                     Remove

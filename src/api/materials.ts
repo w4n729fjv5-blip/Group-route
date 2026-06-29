@@ -1,32 +1,29 @@
-import { requireSupabase } from "../lib/supabase";
+import { newId, readJSON, writeJSON } from "../lib/localdb";
 import { DEFAULT_MATERIALS } from "../data/catalog";
 import type { Material } from "../types";
 
-// CRUD helpers for the editable catalog of linens & delivery materials.
-// Stored in the Supabase `materials` table so the list syncs across devices.
+// CRUD helpers for the editable catalog of linens & delivery materials,
+// backed by browser localStorage (local to this device).
 
-const MATERIALS = "materials";
+const MATERIALS_KEY = "materials";
+
+function allMaterials(): Material[] {
+  return readJSON<Material[]>(MATERIALS_KEY, []);
+}
 
 /** Fetch every material, alphabetically. */
 export async function listMaterials(): Promise<Material[]> {
-  const sb = requireSupabase();
-  const { data, error } = await sb
-    .from(MATERIALS)
-    .select("*")
-    .order("name", { ascending: true });
-  if (error) throw error;
-  return (data ?? []) as Material[];
+  return [...allMaterials()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** Insert the default catalog. Used once to seed an empty materials table. */
+/** Insert the default catalog. Used once to seed an empty materials list. */
 export async function seedDefaultMaterials(): Promise<Material[]> {
-  const sb = requireSupabase();
-  const { data, error } = await sb
-    .from(MATERIALS)
-    .insert(DEFAULT_MATERIALS)
-    .select("*");
-  if (error) throw error;
-  return (data ?? []) as Material[];
+  const seeded: Material[] = DEFAULT_MATERIALS.map((m) => ({
+    ...m,
+    id: newId(),
+  }));
+  writeJSON(MATERIALS_KEY, seeded);
+  return seeded;
 }
 
 /** Add a new material and return it. */
@@ -34,14 +31,9 @@ export async function createMaterial(
   name: string,
   icon: string
 ): Promise<Material> {
-  const sb = requireSupabase();
-  const { data, error } = await sb
-    .from(MATERIALS)
-    .insert({ name, icon })
-    .select("*")
-    .single();
-  if (error) throw error;
-  return data as Material;
+  const material: Material = { id: newId(), name, icon };
+  writeJSON(MATERIALS_KEY, [...allMaterials(), material]);
+  return material;
 }
 
 /** Update a material's name and/or icon. */
@@ -49,14 +41,16 @@ export async function updateMaterial(
   id: string,
   patch: Partial<Pick<Material, "name" | "icon">>
 ): Promise<void> {
-  const sb = requireSupabase();
-  const { error } = await sb.from(MATERIALS).update(patch).eq("id", id);
-  if (error) throw error;
+  const next = allMaterials().map((m) =>
+    m.id === id ? { ...m, ...patch } : m
+  );
+  writeJSON(MATERIALS_KEY, next);
 }
 
 /** Remove a material from the catalog. */
 export async function deleteMaterial(id: string): Promise<void> {
-  const sb = requireSupabase();
-  const { error } = await sb.from(MATERIALS).delete().eq("id", id);
-  if (error) throw error;
+  writeJSON(
+    MATERIALS_KEY,
+    allMaterials().filter((m) => m.id !== id)
+  );
 }
