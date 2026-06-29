@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getRouteWithStops, updateStop } from "../api/routes";
+import AddressInput from "../components/AddressInput";
 import ItemPicker from "../components/ItemPicker";
 import { appleStopUrl, googleStopUrl } from "../lib/maps";
 import type { LineItem, Stop } from "../types";
@@ -42,7 +43,7 @@ export default function StopEditor() {
 
   /** Update local state now; persist the patch after a short debounce. */
   function patchField(
-    patch: Partial<Pick<Stop, "name" | "address" | "notes" | "items">>,
+    patch: Partial<Pick<Stop, "name" | "address" | "date" | "notes" | "items">>,
     immediate = false
   ) {
     if (!stop) return;
@@ -55,7 +56,7 @@ export default function StopEditor() {
   }
 
   async function persist(
-    patch: Partial<Pick<Stop, "name" | "address" | "notes" | "items">>
+    patch: Partial<Pick<Stop, "name" | "address" | "date" | "notes" | "items">>
   ) {
     if (!stopId) return;
     try {
@@ -131,16 +132,23 @@ export default function StopEditor() {
           </label>
 
           <label className="field">
-            <span className="field-label">Address</span>
+            <span className="field-label">Delivery date</span>
             <input
-              type="text"
-              inputMode="text"
-              autoComplete="street-address"
-              value={stop.address}
-              placeholder="123 Main St, Springfield, IL"
-              onChange={(e) => patchField({ address: e.target.value })}
+              type="date"
+              value={stop.date}
+              onChange={(e) => patchField({ date: e.target.value }, true)}
             />
           </label>
+
+          <div className="field">
+            <span className="field-label">Address</span>
+            <AddressInput
+              value={stop.address}
+              placeholder="Start typing an address…"
+              onChange={(address) => patchField({ address })}
+              onSelect={(address) => patchField({ address }, true)}
+            />
+          </div>
 
           {hasAddress && (
             <div className="nav-buttons">
@@ -175,8 +183,11 @@ export default function StopEditor() {
         </div>
 
         <div className="card">
-          <h2 className="card-title">Items to deliver</h2>
+          <h2 className="card-title">Delivery items</h2>
           <ItemPicker items={stop.items} onChange={setItems} />
+          <Link to="/materials" className="link-row">
+            Manage linens &amp; materials →
+          </Link>
         </div>
 
         {savedAt && <p className="saved-hint center">Saved ✓</p>}

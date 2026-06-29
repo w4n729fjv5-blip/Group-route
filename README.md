@@ -13,12 +13,20 @@ web app — no app store needed.
 
 ## Features
 
-- **Routes** — create, name, save, and delete delivery routes.
+- **Routes organized by day** — create, name, save, and delete delivery routes;
+  the home screen groups them by delivery weekday (Mon–Sun), with an
+  "Unscheduled" bucket.
 - **Delivery day** — tag each route with a weekday (Mon–Sun).
-- **Stops** — ordered list per route; reorder with ↑/↓; per-stop name, address,
-  and notes.
-- **Items** — pick from a preset catalog with quantity steppers, plus add custom
-  items.
+- **Stops** — ordered list per route; reorder with ↑/↓. Each stop has a
+  **date**, **delivery items**, **address**, and **notes** section.
+- **Address autofill** — start typing an address and pick from live suggestions
+  (powered by OpenStreetMap's free geocoder — no API key needed).
+- **Items dropdown** — add linens & materials to a stop from a dropdown sourced
+  from your catalog, with quantity steppers, plus one-off custom items.
+- **Editable materials catalog** — a **Materials** menu (top-right on the home
+  screen) where you add/remove the different linens and delivery materials, each
+  with an emoji. The catalog syncs across devices and feeds every stop's
+  dropdown.
 - **Maps export**
   - **Google Maps:** one tap opens the whole route as a multi-stop driving
     route (up to ~10 stops per link).
@@ -109,13 +117,21 @@ Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
 
 ```
 src/
-  api/routes.ts        Supabase CRUD for routes & stops
-  components/          DaySelector, ItemPicker, StopCard, ExportBar
-  data/catalog.ts      preset delivery items
-  lib/supabase.ts      Supabase client (from env vars)
-  lib/maps.ts          Apple/Google Maps URL builders
-  screens/             RoutesList, RouteEditor, StopEditor, SetupNeeded
-  types.ts             shared types
-supabase/schema.sql    database tables + RLS policies
-public/                PWA manifest + icons
+  api/routes.ts            Supabase CRUD for routes & stops
+  api/materials.ts         Supabase CRUD for the materials catalog
+  components/              DaySelector, ItemPicker, StopCard, ExportBar, AddressInput
+  data/catalog.ts          default materials + icon helpers
+  lib/supabase.ts          Supabase client (from env vars)
+  lib/maps.ts              Apple/Google Maps URL builders
+  materials/               MaterialsContext (shared, editable catalog)
+  screens/                 RoutesList, RouteEditor, StopEditor, Materials, SetupNeeded
+  types.ts                 shared types
+supabase/schema.sql        database tables + RLS policies
+public/                    PWA manifest + icons
 ```
+
+### Already have an older copy of the database?
+
+`supabase/schema.sql` is safe to re-run. Paste it into the Supabase SQL editor
+again to add the new `materials` table and the stops' `date` column to an
+existing project.

@@ -91,6 +91,7 @@ export async function createStop(
       route_id: routeId,
       name: "",
       address: "",
+      date: "",
       notes: "",
       position,
       items: [] as LineItem[],
@@ -104,7 +105,9 @@ export async function createStop(
 /** Update mutable fields on a stop. */
 export async function updateStop(
   stopId: string,
-  patch: Partial<Pick<Stop, "name" | "address" | "notes" | "position" | "items">>
+  patch: Partial<
+    Pick<Stop, "name" | "address" | "date" | "notes" | "position" | "items">
+  >
 ): Promise<void> {
   const sb = requireSupabase();
   const { error } = await sb.from(STOPS).update(patch).eq("id", stopId);

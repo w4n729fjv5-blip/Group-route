@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CATALOG, iconForItem } from "../data/catalog";
+import { useMaterials } from "../materials/MaterialsContext";
 import type { LineItem } from "../types";
 
 interface Props {
@@ -15,10 +15,12 @@ function indexOfItem(items: LineItem[], name: string): number {
 }
 
 /**
- * Lets the user pick catalog items (with quantity steppers) and add custom
- * items. Items with quantity 0 are removed from the list.
+ * Build a stop's delivery list. Pick linens & materials from a dropdown (sourced
+ * from the editable catalog), adjust quantities with steppers, and add one-off
+ * custom items. Items with quantity 0 are removed.
  */
 export default function ItemPicker({ items, onChange }: Props) {
+  const { materials, iconFor } = useMaterials();
   const [customName, setCustomName] = useState("");
 
   function setQuantity(name: string, quantity: number) {
@@ -34,50 +36,64 @@ export default function ItemPicker({ items, onChange }: Props) {
     onChange(next);
   }
 
-  function quantityOf(name: string): number {
-    const idx = indexOfItem(items, name);
-    return idx >= 0 ? items[idx].quantity : 0;
+  function addByName(name: string) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    if (indexOfItem(items, trimmed) >= 0) return; // already on the list
+    onChange([...items, { name: trimmed, quantity: 1 }]);
   }
 
   function addCustom() {
-    const name = customName.trim();
-    if (!name) return;
-    if (indexOfItem(items, name) >= 0) {
-      setCustomName("");
-      return;
-    }
-    onChange([...items, { name, quantity: 1 }]);
+    addByName(customName);
     setCustomName("");
   }
 
-  // Custom items are anything not in the preset catalog.
-  const catalogNames = new Set(CATALOG.map((c) => c.name.toLowerCase()));
-  const customItems = items.filter(
-    (it) => !catalogNames.has(it.name.trim().toLowerCase())
+  // Materials from the catalog that aren't already on this stop.
+  const onStop = new Set(items.map((it) => it.name.trim().toLowerCase()));
+  const available = materials.filter(
+    (m) => !onStop.has(m.name.trim().toLowerCase())
   );
 
   return (
     <div className="item-picker">
-      {CATALOG.map((cat) => {
-        const qty = quantityOf(cat.name);
-        return (
-          <ItemRow
-            key={cat.name}
-            label={`${cat.icon} ${cat.name}`}
-            quantity={qty}
-            onSet={(q) => setQuantity(cat.name, q)}
-          />
-        );
-      })}
+      <label className="field">
+        <span className="field-label">Add linen or material</span>
+        <select
+          className="material-select"
+          value=""
+          onChange={(e) => {
+            if (e.target.value) addByName(e.target.value);
+            e.target.value = "";
+          }}
+        >
+          <option value="">＋ Choose from catalog…</option>
+          {available.map((m) => (
+            <option key={m.id} value={m.name}>
+              {m.icon} {m.name}
+            </option>
+          ))}
+          {available.length === 0 && (
+            <option value="" disabled>
+              All catalog materials added
+            </option>
+          )}
+        </select>
+      </label>
 
-      {customItems.map((it) => (
-        <ItemRow
-          key={it.name}
-          label={`${iconForItem(it.name)} ${it.name}`}
-          quantity={it.quantity}
-          onSet={(q) => setQuantity(it.name, q)}
-        />
-      ))}
+      {items.length === 0 ? (
+        <p className="muted small">
+          No items yet. Pick from the dropdown above or add a custom item.
+        </p>
+      ) : (
+        items.map((it) => (
+          <ItemRow
+            key={it.name}
+            label={`${iconFor(it.name)} ${it.name}`}
+            quantity={it.quantity}
+            onSet={(q) => setQuantity(it.name, q)}
+          />
+        ))
+      )}
 
       <div className="add-custom">
         <input
@@ -110,16 +126,14 @@ function ItemRow({
   quantity: number;
   onSet: (q: number) => void;
 }) {
-  const active = quantity > 0;
   return (
-    <div className={`item-row${active ? " active" : ""}`}>
+    <div className="item-row active">
       <span className="item-label">{label}</span>
       <div className="stepper">
         <button
           type="button"
           aria-label={`Decrease ${label}`}
           onClick={() => onSet(Math.max(0, quantity - 1))}
-          disabled={quantity <= 0}
         >
           −
         </button>
@@ -132,6 +146,14 @@ function ItemRow({
           onClick={() => onSet(quantity + 1)}
         >
           +
+        </button>
+        <button
+          type="button"
+          className="item-remove"
+          aria-label={`Remove ${label}`}
+          onClick={() => onSet(0)}
+        >
+          ✕
         </button>
       </div>
     </div>

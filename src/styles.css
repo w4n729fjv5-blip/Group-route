@@ -122,6 +122,8 @@ button {
 }
 
 input[type="text"],
+input[type="date"],
+select,
 textarea {
   width: 100%;
   border: 1px solid var(--border);
@@ -131,7 +133,18 @@ textarea {
   color: var(--text);
 }
 
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%236b7280' d='M1 1l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+
 input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--teal);
@@ -523,6 +536,149 @@ textarea {
   background: #fef3c7;
   border-radius: 8px;
   padding: 8px 10px;
+}
+
+/* Address autofill -------------------------------------------------------- */
+.address-input {
+  position: relative;
+}
+
+.address-loading {
+  position: absolute;
+  right: 12px;
+  top: 11px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.address-suggestions {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px;
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.address-suggestions li button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 10px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.address-suggestions li button:hover,
+.address-suggestions li button:focus {
+  background: #f3faf9;
+  outline: none;
+}
+
+/* Material dropdown & list ------------------------------------------------ */
+.material-select {
+  font-weight: 600;
+}
+
+.item-remove {
+  border: 1px solid var(--border) !important;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 14px !important;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.link-row {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.appbar-link {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.stop-date {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal-dark);
+  background: #eef6f5;
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.icon-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.icon-chip {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.icon-chip.selected {
+  border-color: var(--teal);
+  background: #f3faf9;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
+}
+
+.material-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.material-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.material-label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.material-icon {
+  font-size: 18px;
+  margin-right: 4px;
 }
 
 /* Setup screen ------------------------------------------------------------ */
