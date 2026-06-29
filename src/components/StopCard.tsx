@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom";
-import { iconForItem } from "../data/catalog";
 import { appleStopUrl, googleStopUrl } from "../lib/maps";
+import { useMaterials } from "../materials/MaterialsContext";
 import type { Stop } from "../types";
+
+/** Format a 'YYYY-MM-DD' date as a short, human label, or '' if unset. */
+function formatDate(date: string): string {
+  if (!date) return "";
+  const parsed = new Date(`${date}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return date;
+  return parsed.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 interface Props {
   stop: Stop;
@@ -23,8 +35,10 @@ export default function StopCard({
   onMoveDown,
   onDelete,
 }: Props) {
+  const { iconFor } = useMaterials();
   const hasAddress = stop.address.trim().length > 0;
   const itemCount = stop.items.reduce((sum, it) => sum + it.quantity, 0);
+  const dateLabel = formatDate(stop.date);
 
   return (
     <div className="stop-card">
@@ -55,6 +69,7 @@ export default function StopCard({
         >
           <span className="stop-name">
             {stop.name.trim() || "Untitled stop"}
+            {dateLabel && <span className="stop-date">📅 {dateLabel}</span>}
           </span>
           {hasAddress ? (
             <span className="stop-address">{stop.address}</span>
@@ -65,7 +80,7 @@ export default function StopCard({
             <span className="stop-items">
               {stop.items.map((it) => (
                 <span key={it.name} className="item-pill">
-                  {iconForItem(it.name)} {it.name} ×{it.quantity}
+                  {iconFor(it.name)} {it.name} ×{it.quantity}
                 </span>
               ))}
             </span>

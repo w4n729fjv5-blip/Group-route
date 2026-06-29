@@ -14,12 +14,26 @@ export interface Stop {
   name: string;
   /** Full street address used for maps navigation. */
   address: string;
+  /** Delivery date for this stop, as 'YYYY-MM-DD', or '' if unset. */
+  date: string;
   /** Free-form notes for this stop (gate codes, contact, instructions). */
   notes: string;
   /** Order of the stop within the route (0-based). */
   position: number;
   /** Items to deliver here. */
   items: LineItem[];
+}
+
+/**
+ * A linen or delivery material the operator can choose from when building a
+ * stop's item list. The catalog is editable from the Materials screen.
+ */
+export interface Material {
+  id: string;
+  /** Display name, e.g. "Tablecloths". */
+  name: string;
+  /** Emoji shown next to the material for quick visual scanning. */
+  icon: string;
 }
 
 /** Days of the week a route can be assigned to. */
