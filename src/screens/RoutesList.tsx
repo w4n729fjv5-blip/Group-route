@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createRoute, deleteRoute, listRoutes } from "../api/routes";
 import { DELIVERY_DAYS, type DeliveryDay, type Route } from "../types";
+
+/** Format a YYYY-MM-DD date string for display, e.g. "Tue, Jun 30". */
+function formatDate(iso: string): string {
+  // Parse as local date (avoid timezone shifting a date-only string).
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
 
 /** Home screen: lists saved routes grouped by delivery day. */
 export default function RoutesList() {
@@ -62,14 +75,19 @@ export default function RoutesList() {
     <div className="screen">
       <header className="appbar">
         <h1>Linen Routes</h1>
-        <button
-          type="button"
-          className="btn primary"
-          onClick={handleCreate}
-          disabled={creating}
-        >
-          + New route
-        </button>
+        <div className="appbar-actions">
+          <Link to="/items" className="btn small ghost">
+            Manage items
+          </Link>
+          <button
+            type="button"
+            className="btn primary"
+            onClick={handleCreate}
+            disabled={creating}
+          >
+            + New route
+          </button>
+        </div>
       </header>
 
       <main className="content">
@@ -106,6 +124,11 @@ export default function RoutesList() {
                         onClick={() => navigate(`/routes/${route.id}`)}
                       >
                         <span className="route-name">{route.name}</span>
+                        {route.delivery_date && (
+                          <span className="route-date">
+                            📅 {formatDate(route.delivery_date)}
+                          </span>
+                        )}
                       </button>
                       <button
                         type="button"

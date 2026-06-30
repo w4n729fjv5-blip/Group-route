@@ -41,6 +41,8 @@ export interface Route {
   name: string;
   /** Weekday the route is delivered, or null if unscheduled. */
   delivery_day: DeliveryDay | null;
+  /** Specific calendar date for this delivery (YYYY-MM-DD), or null. */
+  delivery_date: string | null;
   /** Route-level notes. */
   notes: string;
   created_at: string;

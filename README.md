@@ -13,12 +13,20 @@ web app — no app store needed.
 
 ## Features
 
-- **Routes** — create, name, save, and delete delivery routes.
-- **Delivery day** — tag each route with a weekday (Mon–Sun).
+- **Routes** — create, name, save, and delete delivery routes, **organized by
+  day** on the home screen (Mon–Sun, plus an Unscheduled bucket).
+- **Delivery day & date** — tag each route with a weekday *and* a specific
+  calendar date.
 - **Stops** — ordered list per route; reorder with ↑/↓; per-stop name, address,
-  and notes.
-- **Items** — pick from a preset catalog with quantity steppers, plus add custom
-  items.
+  items, and notes.
+- **Address auto-fill** — every address you enter is remembered. The Address
+  field then suggests your saved addresses as you type, and picking one
+  auto-fills the customer name. (Stored on the device; no map API key needed.)
+- **Items** — add linens & materials from a **dropdown**, set quantities with
+  steppers, or type a one-off custom item.
+- **Manage items menu** — a "Manage items" screen lets you add and remove the
+  linens and materials that appear in the dropdown (with an emoji each). Saved
+  on the device; reset to defaults anytime.
 - **Maps export**
   - **Google Maps:** one tap opens the whole route as a multi-stop driving
     route (up to ~10 stops per link).
@@ -38,7 +46,9 @@ web app — no app store needed.
 1. Go to [supabase.com](https://supabase.com) and create a project.
 2. Open **SQL Editor → New query**, paste the contents of
    [`supabase/schema.sql`](supabase/schema.sql), and click **Run**. This creates
-   the `routes` and `stops` tables and the access policies.
+   the `routes` and `stops` tables and the access policies. The script is safe to
+   re-run; if you set up the database before the "delivery date" feature existed,
+   just run it again to add the new `delivery_date` column.
 3. Open **Project Settings → API** and copy:
    - **Project URL** (e.g. `https://abcd1234.supabase.co`)
    - **anon public** key
@@ -109,13 +119,23 @@ Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
 
 ```
 src/
-  api/routes.ts        Supabase CRUD for routes & stops
-  components/          DaySelector, ItemPicker, StopCard, ExportBar
-  data/catalog.ts      preset delivery items
-  lib/supabase.ts      Supabase client (from env vars)
-  lib/maps.ts          Apple/Google Maps URL builders
-  screens/             RoutesList, RouteEditor, StopEditor, SetupNeeded
-  types.ts             shared types
-supabase/schema.sql    database tables + RLS policies
-public/                PWA manifest + icons
+  api/routes.ts         Supabase CRUD for routes & stops
+  components/           DaySelector, ItemPicker, StopCard, ExportBar
+  data/catalog.ts       editable linen/material catalog (localStorage-backed)
+  lib/address-book.ts   saved-address store powering address auto-fill
+  lib/supabase.ts       Supabase client (from env vars)
+  lib/maps.ts           Apple/Google Maps URL builders
+  screens/              RoutesList, RouteEditor, StopEditor,
+                        CatalogManager (Manage items), SetupNeeded
+  types.ts              shared types
+supabase/schema.sql     database tables + RLS policies
+public/                 PWA manifest + icons
 ```
+
+### Device-stored vs cloud-synced data
+
+Routes and stops are stored in **Supabase** and sync across every device. Two
+conveniences are stored **in the browser on each device** (so they don't need a
+database or login): your editable **linen/material list** ("Manage items") and
+your **saved-address** book that powers address auto-fill. If you use the app on
+a second device, you can rebuild those quickly, or they fill back in as you work.

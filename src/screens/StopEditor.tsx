@@ -3,6 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import { getRouteWithStops, updateStop } from "../api/routes";
 import ItemPicker from "../components/ItemPicker";
 import { appleStopUrl, googleStopUrl } from "../lib/maps";
+import {
+  findByAddress,
+  recordAddress,
+  useAddressBook,
+} from "../lib/address-book";
 import type { LineItem, Stop } from "../types";
 
 /** Edit a single stop: name, address, notes, and items. */
@@ -13,6 +18,7 @@ export default function StopEditor() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const addressBook = useAddressBook();
 
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -71,6 +77,27 @@ export default function StopEditor() {
     patchField({ items }, true);
   }
 
+  /**
+   * Address field change. If the typed/picked address exactly matches one in
+   * the address book and the stop has no name yet, auto-fill the name too.
+   */
+  function onAddressChange(address: string) {
+    if (!stop) return;
+    const match = findByAddress(address);
+    if (match && match.name && !stop.name.trim()) {
+      patchField({ address, name: match.name });
+    } else {
+      patchField({ address });
+    }
+  }
+
+  /** Remember the current address (and name) in the address book. */
+  function rememberAddress() {
+    if (stop && stop.address.trim()) {
+      recordAddress(stop.name, stop.address);
+    }
+  }
+
   const backTo = `/routes/${routeId}`;
 
   if (loading) {
@@ -127,6 +154,7 @@ export default function StopEditor() {
               value={stop.name}
               placeholder="e.g. Riverside Hotel"
               onChange={(e) => patchField({ name: e.target.value })}
+              onBlur={rememberAddress}
             />
           </label>
 
@@ -136,10 +164,24 @@ export default function StopEditor() {
               type="text"
               inputMode="text"
               autoComplete="street-address"
+              list="address-book"
               value={stop.address}
               placeholder="123 Main St, Springfield, IL"
-              onChange={(e) => patchField({ address: e.target.value })}
+              onChange={(e) => onAddressChange(e.target.value)}
+              onBlur={rememberAddress}
             />
+            <datalist id="address-book">
+              {addressBook.map((entry) => (
+                <option key={entry.address} value={entry.address}>
+                  {entry.name}
+                </option>
+              ))}
+            </datalist>
+            {addressBook.length > 0 && (
+              <span className="field-hint">
+                Start typing to use a saved address — it auto-fills the name.
+              </span>
+            )}
           </label>
 
           {hasAddress && (

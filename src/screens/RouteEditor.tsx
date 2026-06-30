@@ -50,7 +50,9 @@ export default function RouteEditor() {
 
   /** Update local route state immediately and persist the patch (debounced). */
   function patchRouteField(
-    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day">>
+    patch: Partial<
+      Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">
+    >
   ) {
     if (!route) return;
     setRoute({ ...route, ...patch });
@@ -61,7 +63,9 @@ export default function RouteEditor() {
   }
 
   async function persistRoutePatch(
-    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day">>
+    patch: Partial<
+      Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">
+    >
   ) {
     if (!routeId) return;
     try {
@@ -167,6 +171,17 @@ export default function RouteEditor() {
               onChange={setDeliveryDay}
             />
           </div>
+
+          <label className="field">
+            <span className="field-label">Delivery date</span>
+            <input
+              type="date"
+              value={route.delivery_date ?? ""}
+              onChange={(e) =>
+                patchRouteField({ delivery_date: e.target.value || null })
+              }
+            />
+          </label>
 
           <label className="field">
             <span className="field-label">Route notes</span>
