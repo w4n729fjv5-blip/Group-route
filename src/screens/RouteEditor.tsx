@@ -10,7 +10,7 @@ import {
 import DaySelector from "../components/DaySelector";
 import ExportBar from "../components/ExportBar";
 import StopCard from "../components/StopCard";
-import type { DeliveryDay, RouteWithStops, Stop } from "../types";
+import { weekdayOf, type DeliveryDay, type RouteWithStops, type Stop } from "../types";
 
 /** Edit a route: name, delivery day, ordered stops, and map export. */
 export default function RouteEditor() {
@@ -24,11 +24,27 @@ export default function RouteEditor() {
 
   // Debounce timer for saving route name/notes as the user types.
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Latest not-yet-saved field edits, flushed on unmount so a quick navigate
+  // away never drops the last keystroke.
+  const pendingPatch = useRef<
+    Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">>
+  >({});
 
   useEffect(() => {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeId]);
+
+  // Flush any pending debounced save when leaving the screen.
+  useEffect(() => {
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (Object.keys(pendingPatch.current).length > 0) {
+        void persistRoutePatch(pendingPatch.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function load() {
     if (!routeId) return;
@@ -50,18 +66,20 @@ export default function RouteEditor() {
 
   /** Update local route state immediately and persist the patch (debounced). */
   function patchRouteField(
-    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day">>
+    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">>
   ) {
     if (!route) return;
     setRoute({ ...route, ...patch });
+    pendingPatch.current = { ...pendingPatch.current, ...patch };
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      void persistRoutePatch(patch);
+      void persistRoutePatch(pendingPatch.current);
+      pendingPatch.current = {};
     }, 500);
   }
 
   async function persistRoutePatch(
-    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day">>
+    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">>
   ) {
     if (!routeId) return;
     try {
@@ -77,6 +95,18 @@ export default function RouteEditor() {
     if (!route) return;
     setRoute({ ...route, delivery_day: day });
     void persistRoutePatch({ delivery_day: day });
+  }
+
+  function setDeliveryDate(date: string) {
+    if (!route) return;
+    const delivery_date = date || null;
+    // Picking a date also sets the weekday so the route lands in the right
+    // day group automatically.
+    const delivery_day = delivery_date
+      ? weekdayOf(delivery_date) ?? route.delivery_day
+      : route.delivery_day;
+    setRoute({ ...route, delivery_date, delivery_day });
+    void persistRoutePatch({ delivery_date, delivery_day });
   }
 
   async function handleAddStop() {
@@ -157,6 +187,15 @@ export default function RouteEditor() {
               value={route.name}
               placeholder="e.g. Downtown hotels"
               onChange={(e) => patchRouteField({ name: e.target.value })}
+            />
+          </label>
+
+          <label className="field">
+            <span className="field-label">Delivery date</span>
+            <input
+              type="date"
+              value={route.delivery_date ?? ""}
+              onChange={(e) => setDeliveryDate(e.target.value)}
             />
           </label>
 

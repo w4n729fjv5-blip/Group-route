@@ -122,6 +122,8 @@ button {
 }
 
 input[type="text"],
+input[type="date"],
+select,
 textarea {
   width: 100%;
   border: 1px solid var(--border);
@@ -131,7 +133,18 @@ textarea {
   color: var(--text);
 }
 
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
 input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--teal);
@@ -525,18 +538,122 @@ textarea {
   padding: 8px 10px;
 }
 
-/* Setup screen ------------------------------------------------------------ */
-.setup-steps {
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 15px;
-}
-
 code {
   background: #eef1f3;
   border-radius: 4px;
   padding: 1px 5px;
   font-size: 0.9em;
+}
+
+/* Toolbar (home screen quick links) -------------------------------------- */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 0;
+}
+
+.toolbar-link {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+}
+
+.route-date {
+  display: block;
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Item picker: add dropdown ---------------------------------------------- */
+.add-dropdown {
+  margin-top: 4px;
+}
+
+.inline-link {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* Address autofill actions ----------------------------------------------- */
+.address-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Manage screens (items & addresses) ------------------------------------- */
+.field-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.field.grow {
+  flex: 1;
+}
+
+.icon-field {
+  width: 76px;
+  flex: none;
+}
+
+.icon-field input {
+  text-align: center;
+}
+
+.manage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manage-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.place-row {
+  align-items: flex-start;
+}
+
+.place-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.place-name {
+  font-weight: 650;
+}
+
+.place-address {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.place-notes {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
 }

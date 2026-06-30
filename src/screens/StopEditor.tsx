@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getRouteWithStops, updateStop } from "../api/routes";
 import ItemPicker from "../components/ItemPicker";
+import { getSavedPlaces, upsertSavedPlace } from "../data/addressBook";
 import { appleStopUrl, googleStopUrl } from "../lib/maps";
-import type { LineItem, Stop } from "../types";
+import type { LineItem, SavedPlace, Stop } from "../types";
 
 /** Edit a single stop: name, address, notes, and items. */
 export default function StopEditor() {
@@ -13,13 +14,31 @@ export default function StopEditor() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [places, setPlaces] = useState<SavedPlace[]>(() => getSavedPlaces());
+  const [bookMsg, setBookMsg] = useState<string | null>(null);
 
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Latest not-yet-saved edits, flushed on unmount so navigating away quickly
+  // never drops the last keystroke.
+  const pendingPatch = useRef<
+    Partial<Pick<Stop, "name" | "address" | "notes" | "items">>
+  >({});
 
   useEffect(() => {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeId, stopId]);
+
+  // Flush any pending debounced save when leaving the screen.
+  useEffect(() => {
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (Object.keys(pendingPatch.current).length > 0) {
+        void persist(pendingPatch.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function load() {
     if (!routeId || !stopId) return;
@@ -48,8 +67,12 @@ export default function StopEditor() {
     if (!stop) return;
     const next = { ...stop, ...patch };
     setStop(next);
+    pendingPatch.current = { ...pendingPatch.current, ...patch };
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    const run = () => void persist(patch);
+    const run = () => {
+      void persist(pendingPatch.current);
+      pendingPatch.current = {};
+    };
     if (immediate) run();
     else saveTimer.current = setTimeout(run, 500);
   }
@@ -69,6 +92,38 @@ export default function StopEditor() {
   function setItems(items: LineItem[]) {
     // Items change on discrete taps, so save immediately.
     patchField({ items }, true);
+  }
+
+  /** Autofill name/address/notes from a saved address-book entry. */
+  function applySavedPlace(placeId: string) {
+    const place = places.find((p) => p.id === placeId);
+    if (!place || !stop) return;
+    const patch = {
+      name: place.name,
+      address: place.address,
+      // Keep any notes already typed; only fill if empty.
+      notes: stop.notes.trim() ? stop.notes : place.notes,
+    };
+    setStop({ ...stop, ...patch });
+    // We just wrote a full snapshot of the text fields; drop any stale pending
+    // edit so the unmount flush can't re-apply old text over it.
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    pendingPatch.current = {};
+    void persist(patch);
+    setBookMsg(`Filled from “${place.name}”`);
+  }
+
+  /** Save the current stop's name/address/notes into the address book. */
+  function saveToBook() {
+    if (!stop || !stop.name.trim() || !stop.address.trim()) return;
+    setPlaces(
+      upsertSavedPlace({
+        name: stop.name,
+        address: stop.address,
+        notes: stop.notes,
+      })
+    );
+    setBookMsg(`Saved “${stop.name.trim()}” to your addresses`);
   }
 
   const backTo = `/routes/${routeId}`;
@@ -120,6 +175,28 @@ export default function StopEditor() {
         {error && <div className="banner error">{error}</div>}
 
         <div className="card">
+          {places.length > 0 && (
+            <label className="field">
+              <span className="field-label">Use a saved address</span>
+              <select
+                value=""
+                onChange={(e) => {
+                  applySavedPlace(e.target.value);
+                  e.target.value = "";
+                }}
+              >
+                <option value="" disabled>
+                  Pick to autofill name & address…
+                </option>
+                {places.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} — {p.address}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
           <label className="field">
             <span className="field-label">Stop name</span>
             <input
@@ -136,11 +213,34 @@ export default function StopEditor() {
               type="text"
               inputMode="text"
               autoComplete="street-address"
+              list="saved-address-list"
               value={stop.address}
               placeholder="123 Main St, Springfield, IL"
               onChange={(e) => patchField({ address: e.target.value })}
             />
+            <datalist id="saved-address-list">
+              {places.map((p) => (
+                <option key={p.id} value={p.address}>
+                  {p.name}
+                </option>
+              ))}
+            </datalist>
           </label>
+
+          <div className="address-actions">
+            <button
+              type="button"
+              className="btn small"
+              onClick={saveToBook}
+              disabled={!stop.name.trim() || !stop.address.trim()}
+            >
+              ☆ Save address for reuse
+            </button>
+            <Link to="/addresses" className="inline-link">
+              Manage addresses
+            </Link>
+          </div>
+          {bookMsg && <p className="saved-hint">{bookMsg}</p>}
 
           {hasAddress && (
             <div className="nav-buttons">

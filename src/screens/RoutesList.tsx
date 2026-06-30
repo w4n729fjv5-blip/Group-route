@@ -1,7 +1,27 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createRoute, deleteRoute, listRoutes } from "../api/routes";
 import { DELIVERY_DAYS, type DeliveryDay, type Route } from "../types";
+
+/** Format a YYYY-MM-DD date as a short, friendly label. */
+function formatDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  if (!y || !m || !d) return dateStr;
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+/** Sort routes within a day group: dated routes first (by date), then the rest. */
+function byDate(a: Route, b: Route): number {
+  if (a.delivery_date && b.delivery_date) {
+    return a.delivery_date.localeCompare(b.delivery_date);
+  }
+  if (a.delivery_date) return -1;
+  if (b.delivery_date) return 1;
+  return 0;
+}
 
 /** Home screen: lists saved routes grouped by delivery day. */
 export default function RoutesList() {
@@ -53,9 +73,11 @@ export default function RoutesList() {
     [...DELIVERY_DAYS, "Unscheduled" as const].map((day) => ({
       label: day,
       key: day,
-      routes: routes.filter((r) =>
-        day === "Unscheduled" ? !r.delivery_day : r.delivery_day === day
-      ),
+      routes: routes
+        .filter((r) =>
+          day === "Unscheduled" ? !r.delivery_day : r.delivery_day === day
+        )
+        .sort(byDate),
     }));
 
   return (
@@ -71,6 +93,15 @@ export default function RoutesList() {
           + New route
         </button>
       </header>
+
+      <nav className="toolbar">
+        <Link to="/items" className="toolbar-link">
+          🧺 Manage items
+        </Link>
+        <Link to="/addresses" className="toolbar-link">
+          📍 Addresses
+        </Link>
+      </nav>
 
       <main className="content">
         {error && <div className="banner error">{error}</div>}
@@ -106,6 +137,11 @@ export default function RoutesList() {
                         onClick={() => navigate(`/routes/${route.id}`)}
                       >
                         <span className="route-name">{route.name}</span>
+                        {route.delivery_date && (
+                          <span className="route-date">
+                            {formatDate(route.delivery_date)}
+                          </span>
+                        )}
                       </button>
                       <button
                         type="button"

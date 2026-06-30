@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CATALOG, iconForItem } from "../data/catalog";
+import { Link } from "react-router-dom";
+import { getCatalog, iconForItem } from "../data/catalog";
 import type { LineItem } from "../types";
 
 interface Props {
@@ -15,11 +16,19 @@ function indexOfItem(items: LineItem[], name: string): number {
 }
 
 /**
- * Lets the user pick catalog items (with quantity steppers) and add custom
- * items. Items with quantity 0 are removed from the list.
+ * Lets the user build a stop's delivery list:
+ *  - a DROPDOWN to add any linen / material from the catalog,
+ *  - quantity steppers on each added item (drop to 0 to remove),
+ *  - a custom "type your own" field for one-off items.
+ *
+ * The catalog itself is edited on the "Manage items" screen; this reads the
+ * current catalog so new item types appear in the dropdown automatically.
  */
 export default function ItemPicker({ items, onChange }: Props) {
   const [customName, setCustomName] = useState("");
+  // Read once per mount; the manage screen is a separate route, so returning
+  // here remounts and picks up catalog changes.
+  const [catalog] = useState(() => getCatalog());
 
   function setQuantity(name: string, quantity: number) {
     const idx = indexOfItem(items, name);
@@ -34,43 +43,28 @@ export default function ItemPicker({ items, onChange }: Props) {
     onChange(next);
   }
 
-  function quantityOf(name: string): number {
-    const idx = indexOfItem(items, name);
-    return idx >= 0 ? items[idx].quantity : 0;
+  function addByName(name: string) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    if (indexOfItem(items, trimmed) >= 0) return; // already added
+    onChange([...items, { name: trimmed, quantity: 1 }]);
   }
 
   function addCustom() {
-    const name = customName.trim();
-    if (!name) return;
-    if (indexOfItem(items, name) >= 0) {
-      setCustomName("");
-      return;
-    }
-    onChange([...items, { name, quantity: 1 }]);
+    addByName(customName);
     setCustomName("");
   }
 
-  // Custom items are anything not in the preset catalog.
-  const catalogNames = new Set(CATALOG.map((c) => c.name.toLowerCase()));
-  const customItems = items.filter(
-    (it) => !catalogNames.has(it.name.trim().toLowerCase())
-  );
+  // Catalog entries not yet on this stop — these populate the dropdown.
+  const available = catalog.filter((c) => indexOfItem(items, c.name) < 0);
 
   return (
     <div className="item-picker">
-      {CATALOG.map((cat) => {
-        const qty = quantityOf(cat.name);
-        return (
-          <ItemRow
-            key={cat.name}
-            label={`${cat.icon} ${cat.name}`}
-            quantity={qty}
-            onSet={(q) => setQuantity(cat.name, q)}
-          />
-        );
-      })}
+      {items.length === 0 && (
+        <p className="muted small">No items yet. Add some below.</p>
+      )}
 
-      {customItems.map((it) => (
+      {items.map((it) => (
         <ItemRow
           key={it.name}
           label={`${iconForItem(it.name)} ${it.name}`}
@@ -79,11 +73,33 @@ export default function ItemPicker({ items, onChange }: Props) {
         />
       ))}
 
+      <label className="field add-dropdown">
+        <span className="field-label">Add linen / material</span>
+        <select
+          value=""
+          onChange={(e) => {
+            addByName(e.target.value);
+            e.target.value = "";
+          }}
+        >
+          <option value="" disabled>
+            {available.length > 0
+              ? "Choose from the list…"
+              : "All catalog items added"}
+          </option>
+          {available.map((c) => (
+            <option key={c.name} value={c.name}>
+              {c.icon} {c.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
       <div className="add-custom">
         <input
           type="text"
           inputMode="text"
-          placeholder="Add custom item…"
+          placeholder="Or type a one-off item…"
           value={customName}
           onChange={(e) => setCustomName(e.target.value)}
           onKeyDown={(e) => {
@@ -97,6 +113,14 @@ export default function ItemPicker({ items, onChange }: Props) {
           Add
         </button>
       </div>
+
+      <p className="muted small">
+        Need a new linen or material type?{" "}
+        <Link to="/items" className="inline-link">
+          Manage items
+        </Link>
+        .
+      </p>
     </div>
   );
 }

@@ -41,6 +41,8 @@ export interface Route {
   name: string;
   /** Weekday the route is delivered, or null if unscheduled. */
   delivery_day: DeliveryDay | null;
+  /** Specific delivery date as YYYY-MM-DD, or null if only a weekday is set. */
+  delivery_date: string | null;
   /** Route-level notes. */
   notes: string;
   created_at: string;
@@ -49,4 +51,27 @@ export interface Route {
 /** A route together with its ordered stops. */
 export interface RouteWithStops extends Route {
   stops: Stop[];
+}
+
+/**
+ * A reusable saved address ("address book" entry). Picking one autofills a
+ * stop's name, address, and notes so common drop-off points don't have to be
+ * retyped.
+ */
+export interface SavedPlace {
+  id: string;
+  name: string;
+  address: string;
+  notes: string;
+}
+
+/** Map a YYYY-MM-DD date string to its weekday name (local time). */
+export function weekdayOf(dateStr: string): DeliveryDay | null {
+  if (!dateStr) return null;
+  // Parse as local date (avoid UTC shifting the day).
+  const [y, m, d] = dateStr.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  const date = new Date(y, m - 1, d);
+  const idx = (date.getDay() + 6) % 7; // 0 = Monday
+  return DELIVERY_DAYS[idx] ?? null;
 }

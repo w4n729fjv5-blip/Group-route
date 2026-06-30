@@ -1,4 +1,5 @@
-import { requireSupabase } from "../lib/supabase";
+import { isSupabaseConfigured, requireSupabase } from "../lib/supabase";
+import { localStore } from "../lib/localStore";
 import type {
   DeliveryDay,
   LineItem,
@@ -7,14 +8,22 @@ import type {
   Stop,
 } from "../types";
 
-// CRUD helpers against the Supabase `routes` and `stops` tables.
-// No auth: all reads/writes go through the public anon role.
+// Data access for routes & stops.
+//
+// Two backends are supported:
+//  - LOCAL (default): browser localStorage, so the app works with zero setup.
+//  - SUPABASE (optional): cloud sync across devices, enabled by setting the
+//    VITE_SUPABASE_* env vars. See README.
+//
+// Every exported function picks the active backend, so screens never need to
+// know which one is in use.
 
 const ROUTES = "routes";
 const STOPS = "stops";
 
 /** Fetch all routes (without stops), newest first. */
 export async function listRoutes(): Promise<Route[]> {
+  if (!isSupabaseConfigured) return localStore.listRoutes();
   const sb = requireSupabase();
   const { data, error } = await sb
     .from(ROUTES)
@@ -28,6 +37,7 @@ export async function listRoutes(): Promise<Route[]> {
 export async function getRouteWithStops(
   routeId: string
 ): Promise<RouteWithStops | null> {
+  if (!isSupabaseConfigured) return localStore.getRouteWithStops(routeId);
   const sb = requireSupabase();
   const { data: route, error: routeErr } = await sb
     .from(ROUTES)
@@ -52,10 +62,11 @@ export async function createRoute(
   name: string,
   deliveryDay: DeliveryDay | null
 ): Promise<Route> {
+  if (!isSupabaseConfigured) return localStore.createRoute(name, deliveryDay);
   const sb = requireSupabase();
   const { data, error } = await sb
     .from(ROUTES)
-    .insert({ name, delivery_day: deliveryDay, notes: "" })
+    .insert({ name, delivery_day: deliveryDay, delivery_date: null, notes: "" })
     .select("*")
     .single();
   if (error) throw error;
@@ -65,8 +76,9 @@ export async function createRoute(
 /** Update mutable fields on a route. */
 export async function updateRoute(
   routeId: string,
-  patch: Partial<Pick<Route, "name" | "delivery_day" | "notes">>
+  patch: Partial<Pick<Route, "name" | "delivery_day" | "delivery_date" | "notes">>
 ): Promise<void> {
+  if (!isSupabaseConfigured) return localStore.updateRoute(routeId, patch);
   const sb = requireSupabase();
   const { error } = await sb.from(ROUTES).update(patch).eq("id", routeId);
   if (error) throw error;
@@ -74,6 +86,7 @@ export async function updateRoute(
 
 /** Delete a route. Stops are removed via ON DELETE CASCADE. */
 export async function deleteRoute(routeId: string): Promise<void> {
+  if (!isSupabaseConfigured) return localStore.deleteRoute(routeId);
   const sb = requireSupabase();
   const { error } = await sb.from(ROUTES).delete().eq("id", routeId);
   if (error) throw error;
@@ -84,6 +97,7 @@ export async function createStop(
   routeId: string,
   position: number
 ): Promise<Stop> {
+  if (!isSupabaseConfigured) return localStore.createStop(routeId, position);
   const sb = requireSupabase();
   const { data, error } = await sb
     .from(STOPS)
@@ -106,6 +120,7 @@ export async function updateStop(
   stopId: string,
   patch: Partial<Pick<Stop, "name" | "address" | "notes" | "position" | "items">>
 ): Promise<void> {
+  if (!isSupabaseConfigured) return localStore.updateStop(stopId, patch);
   const sb = requireSupabase();
   const { error } = await sb.from(STOPS).update(patch).eq("id", stopId);
   if (error) throw error;
@@ -113,6 +128,7 @@ export async function updateStop(
 
 /** Delete a single stop. */
 export async function deleteStop(stopId: string): Promise<void> {
+  if (!isSupabaseConfigured) return localStore.deleteStop(stopId);
   const sb = requireSupabase();
   const { error } = await sb.from(STOPS).delete().eq("id", stopId);
   if (error) throw error;
@@ -120,13 +136,11 @@ export async function deleteStop(stopId: string): Promise<void> {
 
 /** Persist a new ordering by writing each stop's position. */
 export async function persistStopOrder(stops: Stop[]): Promise<void> {
+  if (!isSupabaseConfigured) return localStore.persistStopOrder(stops);
   const sb = requireSupabase();
   await Promise.all(
     stops.map((stop, index) =>
       sb.from(STOPS).update({ position: index }).eq("id", stop.id)
     )
   );
-  // Surface the first error, if any, by re-reading is unnecessary; updates above
-  // throw via the network layer only on transport errors. Individual row errors
-  // are rare for position writes, so we keep this lightweight.
 }
