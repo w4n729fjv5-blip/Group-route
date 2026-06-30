@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CATALOG, iconForItem } from "../data/catalog";
+import { Link } from "react-router-dom";
+import { useMaterials } from "../lib/store";
 import type { LineItem } from "../types";
 
 interface Props {
@@ -7,19 +8,33 @@ interface Props {
   onChange: (items: LineItem[]) => void;
 }
 
-/** Find an item by case-insensitive name. */
+/** Case-insensitive index of an item by name. */
 function indexOfItem(items: LineItem[], name: string): number {
   return items.findIndex(
     (it) => it.name.trim().toLowerCase() === name.trim().toLowerCase()
   );
 }
 
+/** Icon for a material name from the catalog; box for anything custom. */
+function useIconLookup() {
+  const materials = useMaterials();
+  return (name: string) => {
+    const m = materials.find(
+      (x) => x.name.trim().toLowerCase() === name.trim().toLowerCase()
+    );
+    return m ? m.icon : "📦";
+  };
+}
+
 /**
- * Lets the user pick catalog items (with quantity steppers) and add custom
- * items. Items with quantity 0 are removed from the list.
+ * Build a delivery's item list. Pick any linen/material from the catalog via
+ * the dropdown to add it, then adjust quantities with the steppers. The
+ * catalog itself is managed on the Materials screen.
  */
 export default function ItemPicker({ items, onChange }: Props) {
-  const [customName, setCustomName] = useState("");
+  const materials = useMaterials();
+  const iconFor = useIconLookup();
+  const [pick, setPick] = useState("");
 
   function setQuantity(name: string, quantity: number) {
     const idx = indexOfItem(items, name);
@@ -34,106 +49,84 @@ export default function ItemPicker({ items, onChange }: Props) {
     onChange(next);
   }
 
-  function quantityOf(name: string): number {
-    const idx = indexOfItem(items, name);
-    return idx >= 0 ? items[idx].quantity : 0;
-  }
-
-  function addCustom() {
-    const name = customName.trim();
+  function addFromDropdown(name: string) {
     if (!name) return;
-    if (indexOfItem(items, name) >= 0) {
-      setCustomName("");
-      return;
+    if (indexOfItem(items, name) < 0) {
+      onChange([...items, { name, quantity: 1 }]);
     }
-    onChange([...items, { name, quantity: 1 }]);
-    setCustomName("");
+    setPick("");
   }
 
-  // Custom items are anything not in the preset catalog.
-  const catalogNames = new Set(CATALOG.map((c) => c.name.toLowerCase()));
-  const customItems = items.filter(
-    (it) => !catalogNames.has(it.name.trim().toLowerCase())
-  );
+  // Materials not yet added to this delivery — the dropdown's options.
+  const chosen = new Set(items.map((it) => it.name.trim().toLowerCase()));
+  const available = materials.filter((m) => !chosen.has(m.name.toLowerCase()));
 
   return (
     <div className="item-picker">
-      {CATALOG.map((cat) => {
-        const qty = quantityOf(cat.name);
-        return (
-          <ItemRow
-            key={cat.name}
-            label={`${cat.icon} ${cat.name}`}
-            quantity={qty}
-            onSet={(q) => setQuantity(cat.name, q)}
-          />
-        );
-      })}
+      {items.length === 0 ? (
+        <p className="muted small">
+          No items yet. Choose linens or materials from the menu below.
+        </p>
+      ) : (
+        items.map((it) => (
+          <div className="item-row active" key={it.name}>
+            <span className="item-label">
+              {iconFor(it.name)} {it.name}
+            </span>
+            <div className="stepper">
+              <button
+                type="button"
+                aria-label={`Decrease ${it.name}`}
+                onClick={() => setQuantity(it.name, it.quantity - 1)}
+              >
+                −
+              </button>
+              <span className="qty" aria-live="polite">
+                {it.quantity}
+              </span>
+              <button
+                type="button"
+                aria-label={`Increase ${it.name}`}
+                onClick={() => setQuantity(it.name, it.quantity + 1)}
+              >
+                +
+              </button>
+              <button
+                type="button"
+                className="item-remove"
+                aria-label={`Remove ${it.name}`}
+                onClick={() => setQuantity(it.name, 0)}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        ))
+      )}
 
-      {customItems.map((it) => (
-        <ItemRow
-          key={it.name}
-          label={`${iconForItem(it.name)} ${it.name}`}
-          quantity={it.quantity}
-          onSet={(q) => setQuantity(it.name, q)}
-        />
-      ))}
-
-      <div className="add-custom">
-        <input
-          type="text"
-          inputMode="text"
-          placeholder="Add custom item…"
-          value={customName}
-          onChange={(e) => setCustomName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addCustom();
-            }
-          }}
-        />
-        <button type="button" className="btn small" onClick={addCustom}>
-          Add
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function ItemRow({
-  label,
-  quantity,
-  onSet,
-}: {
-  label: string;
-  quantity: number;
-  onSet: (q: number) => void;
-}) {
-  const active = quantity > 0;
-  return (
-    <div className={`item-row${active ? " active" : ""}`}>
-      <span className="item-label">{label}</span>
-      <div className="stepper">
-        <button
-          type="button"
-          aria-label={`Decrease ${label}`}
-          onClick={() => onSet(Math.max(0, quantity - 1))}
-          disabled={quantity <= 0}
+      <div className="add-row">
+        <select
+          className="material-select"
+          value={pick}
+          onChange={(e) => addFromDropdown(e.target.value)}
         >
-          −
-        </button>
-        <span className="qty" aria-live="polite">
-          {quantity}
-        </span>
-        <button
-          type="button"
-          aria-label={`Increase ${label}`}
-          onClick={() => onSet(quantity + 1)}
-        >
-          +
-        </button>
+          <option value="">
+            {available.length ? "+ Add linen or material…" : "All materials added"}
+          </option>
+          {available.map((m) => (
+            <option key={m.id} value={m.name}>
+              {m.icon} {m.name}
+            </option>
+          ))}
+        </select>
       </div>
+
+      <p className="muted small">
+        Need a different item?{" "}
+        <Link to="/materials" className="inline-link">
+          Manage materials
+        </Link>
+      </p>
     </div>
   );
 }

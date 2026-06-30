@@ -1,7 +1,7 @@
 {
-  "name": "Linen Delivery Routes",
-  "short_name": "Linen Routes",
-  "description": "Build, save, and navigate linen delivery routes.",
+  "name": "Linen Delivery Organizer",
+  "short_name": "Linens",
+  "description": "Organize linen deliveries by day, with items, addresses, and notes.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

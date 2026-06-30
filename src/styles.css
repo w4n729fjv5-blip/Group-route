@@ -239,11 +239,32 @@ textarea {
 }
 
 .day-heading {
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
   margin: 4px 0;
+}
+
+.day-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.day-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.day-actions {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .route-list {
@@ -274,10 +295,74 @@ textarea {
   cursor: pointer;
 }
 
+.route-open {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.stop-index {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.route-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .route-name {
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
+}
+
+.route-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.route-items {
+  font-size: 12px;
+  color: var(--teal-dark);
+}
+
+/* Top menu bar (Materials / Addresses) ------------------------------------ */
+.menu-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px 0;
+}
+
+.menu-link {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--teal-dark);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+}
+
+.inline-link {
+  color: var(--teal);
+  font-weight: 600;
 }
 
 /* Empty states ------------------------------------------------------------ */
@@ -312,125 +397,132 @@ textarea {
   margin: 0;
 }
 
-/* Day selector ------------------------------------------------------------ */
-.day-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.day-chip {
+/* Form controls: date & select ------------------------------------------- */
+input[type="date"],
+select {
+  width: 100%;
   border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 12px;
   background: #fff;
   color: var(--text);
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  min-width: 48px;
-}
-
-.day-chip.selected {
-  background: var(--teal);
-  color: #fff;
-  border-color: var(--teal);
-}
-
-/* Stops ------------------------------------------------------------------- */
-.stop-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.stop-card {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  display: flex;
-  overflow: hidden;
-}
-
-.stop-order {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 8px;
-  background: #fafbfc;
-  border-right: 1px solid var(--border);
-}
-
-.stop-order button {
-  border: none;
-  background: none;
-  font-size: 18px;
-  line-height: 1;
-  padding: 4px 6px;
-  cursor: pointer;
-  color: var(--teal);
-}
-
-.stop-order button:disabled {
-  color: var(--border);
-  cursor: default;
-}
-
-.stop-num {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.stop-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.stop-main {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px;
-  text-decoration: none;
-  color: var(--text);
-}
-
-.stop-name {
   font-size: 16px;
-  font-weight: 650;
 }
 
-.stop-address {
-  font-size: 14px;
+input[type="date"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.btn.ghost {
+  background: none;
+  border: 1px dashed var(--border);
+  color: var(--teal-dark);
+  align-self: flex-start;
+}
+
+/* Address autocomplete ---------------------------------------------------- */
+.autocomplete {
+  position: relative;
+}
+
+.suggestions {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px;
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.suggestion.active,
+.suggestion:hover {
+  background: #f3faf9;
+}
+
+.suggestion-label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.suggestion-address {
+  font-size: 13px;
   color: var(--muted);
 }
 
-.stop-items {
+/* Materials & addresses management --------------------------------------- */
+.add-material {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 2px;
+  gap: 8px;
 }
 
-.item-pill {
-  background: #eef6f5;
-  color: var(--teal-dark);
-  border-radius: 999px;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 600;
+.add-material input {
+  flex: 1;
 }
 
-.stop-actions {
+.icon-select {
+  width: 64px;
+  flex: none;
+  text-align: center;
+  padding: 11px 4px;
+}
+
+.material-list,
+.address-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  gap: 6px;
-  padding: 0 12px 12px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.material-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.material-name {
+  flex: 1;
+}
+
+.address-row {
+  display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.address-label {
+  flex: 1 1 120px;
+}
+
+.address-text {
+  flex: 2 1 100%;
 }
 
 /* Item picker ------------------------------------------------------------- */
@@ -489,54 +581,27 @@ textarea {
   font-size: 16px;
 }
 
-.add-custom {
-  display: flex;
-  gap: 8px;
+.item-remove {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.add-row {
   margin-top: 4px;
 }
 
-.add-custom input {
-  flex: 1;
+.material-select {
+  font-weight: 600;
+  color: var(--teal-dark);
 }
 
-/* Navigation buttons & export -------------------------------------------- */
+/* Navigation buttons ------------------------------------------------------ */
 .nav-buttons {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.export-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-}
-
-.export-warning {
-  margin: 0;
-  font-size: 13px;
-  color: #92400e;
-  background: #fef3c7;
-  border-radius: 8px;
-  padding: 8px 10px;
-}
-
-/* Setup screen ------------------------------------------------------------ */
-.setup-steps {
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 15px;
-}
-
-code {
-  background: #eef1f3;
-  border-radius: 4px;
-  padding: 1px 5px;
-  font-size: 0.9em;
 }

@@ -1,52 +1,54 @@
-// Shared domain types for the Linen Delivery Route Creator.
+// Shared domain types for the Linen Delivery Organizer.
+//
+// The app is local-first: everything is stored in the browser (localStorage),
+// so it works instantly with no account or server setup.
 
-/** A line item to deliver at a stop, e.g. { name: "Napkins", quantity: 50 }. */
+/** A line item to deliver, e.g. { name: "Napkins", quantity: 50 }. */
 export interface LineItem {
   name: string;
   quantity: number;
 }
 
-/** A single delivery stop within a route. */
-export interface Stop {
+/**
+ * A single delivery. Deliveries are grouped by `date` on the schedule screen,
+ * so all deliveries on the same day form that day's route.
+ */
+export interface Delivery {
   id: string;
-  route_id: string;
-  /** Customer / location name, e.g. "Riverside Hotel". */
+  /** ISO date string, "YYYY-MM-DD". Empty string means "no date yet". */
+  date: string;
+  /** Customer / location name, e.g. "Riverside Hotel" (optional). */
   name: string;
   /** Full street address used for maps navigation. */
   address: string;
-  /** Free-form notes for this stop (gate codes, contact, instructions). */
-  notes: string;
-  /** Order of the stop within the route (0-based). */
-  position: number;
   /** Items to deliver here. */
   items: LineItem[];
+  /** Free-form notes (gate codes, contact, instructions). */
+  notes: string;
+  /** Order within its day, for routing. Lower comes first. */
+  position: number;
 }
 
-/** Days of the week a route can be assigned to. */
-export const DELIVERY_DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
-
-export type DeliveryDay = (typeof DELIVERY_DAYS)[number];
-
-/** A saved delivery route. */
-export interface Route {
+/**
+ * A linen or delivery material in the master catalog. The user manages this
+ * list (add / rename / delete) from the Materials menu, and picks from it when
+ * building a delivery.
+ */
+export interface Material {
   id: string;
   name: string;
-  /** Weekday the route is delivered, or null if unscheduled. */
-  delivery_day: DeliveryDay | null;
-  /** Route-level notes. */
-  notes: string;
-  created_at: string;
+  /** Emoji shown next to the material for quick visual scanning. */
+  icon: string;
 }
 
-/** A route together with its ordered stops. */
-export interface RouteWithStops extends Route {
-  stops: Stop[];
+/**
+ * A reusable address. Saved addresses power the autofill on the delivery
+ * screen: start typing and matching saved addresses appear to complete it.
+ */
+export interface SavedAddress {
+  id: string;
+  /** Short label, e.g. "Riverside Hotel". */
+  label: string;
+  /** Full street address. */
+  address: string;
 }
