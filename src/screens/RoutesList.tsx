@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createRoute, deleteRoute, listRoutes } from "../api/routes";
 import { DELIVERY_DAYS, type DeliveryDay, type Route } from "../types";
 
@@ -74,6 +74,16 @@ export default function RoutesList() {
 
       <main className="content">
         {error && <div className="banner error">{error}</div>}
+
+        <nav className="menu-links">
+          <Link to="/materials" className="menu-link">
+            🧺 Linens &amp; Materials
+          </Link>
+          <Link to="/addresses" className="menu-link">
+            📍 Saved Addresses
+          </Link>
+        </nav>
+
         {loading && <p className="muted">Loading…</p>}
 
         {!loading && routes.length === 0 && (

@@ -13,12 +13,18 @@ web app — no app store needed.
 
 ## Features
 
-- **Routes** — create, name, save, and delete delivery routes.
-- **Delivery day** — tag each route with a weekday (Mon–Sun).
-- **Stops** — ordered list per route; reorder with ↑/↓; per-stop name, address,
-  and notes.
-- **Items** — pick from a preset catalog with quantity steppers, plus add custom
-  items.
+- **Routes** — create, name, save, and delete delivery routes, organized by day.
+- **Delivery day** — tag each route with a weekday (Mon–Sun); the home screen
+  groups routes under each day.
+- **Stops** — ordered list per route; reorder with ↑/↓; per-stop **date**,
+  **delivery items**, **address**, and **notes**.
+- **Editable materials list** — a **Linens & Materials** screen to add, rename,
+  re-icon, and delete the linens/materials you deliver. No more hard-coded list.
+- **Add items from a dropdown** — on each stop, pick linens & materials from a
+  dropdown, then set quantities with steppers (plus one-off custom items).
+- **Saved addresses (auto-fill)** — a **Saved Addresses** address book. Pick a
+  saved address in a stop and it auto-fills the name + address, or type and let
+  the field auto-complete. Save a stop's address back to the book in one tap.
 - **Maps export**
   - **Google Maps:** one tap opens the whole route as a multi-stop driving
     route (up to ~10 stops per link).
@@ -38,7 +44,11 @@ web app — no app store needed.
 1. Go to [supabase.com](https://supabase.com) and create a project.
 2. Open **SQL Editor → New query**, paste the contents of
    [`supabase/schema.sql`](supabase/schema.sql), and click **Run**. This creates
-   the `routes` and `stops` tables and the access policies.
+   the `routes`, `stops`, `materials`, and `saved_addresses` tables, the access
+   policies, and seeds a starter list of linens/materials. (If you set the app
+   up before this update, run
+   [`supabase/migrations/0002_materials_addresses_date.sql`](supabase/migrations/0002_materials_addresses_date.sql)
+   instead — it's safe to run on an existing database.)
 3. Open **Project Settings → API** and copy:
    - **Project URL** (e.g. `https://abcd1234.supabase.co`)
    - **anon public** key
@@ -110,12 +120,15 @@ Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
 ```
 src/
   api/routes.ts        Supabase CRUD for routes & stops
+  api/materials.ts     CRUD for the editable linens/materials list
+  api/addresses.ts     CRUD for the saved-addresses book
   components/          DaySelector, ItemPicker, StopCard, ExportBar
-  data/catalog.ts      preset delivery items
+  data/catalog.ts      default materials (seed) + icon choices
   lib/supabase.ts      Supabase client (from env vars)
   lib/maps.ts          Apple/Google Maps URL builders
-  screens/             RoutesList, RouteEditor, StopEditor, SetupNeeded
+  screens/             RoutesList, RouteEditor, StopEditor,
+                       Materials, Addresses, SetupNeeded
   types.ts             shared types
-supabase/schema.sql    database tables + RLS policies
+supabase/schema.sql    database tables + RLS policies (+ migrations/)
 public/                PWA manifest + icons
 ```

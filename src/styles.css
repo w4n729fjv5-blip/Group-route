@@ -122,7 +122,9 @@ button {
 }
 
 input[type="text"],
-textarea {
+input[type="date"],
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -131,8 +133,19 @@ textarea {
   color: var(--text);
 }
 
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+
 input[type="text"]:focus,
-textarea:focus {
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
@@ -523,6 +536,103 @@ textarea {
   background: #fef3c7;
   border-radius: 8px;
   padding: 8px 10px;
+}
+
+/* Home menu links --------------------------------------------------------- */
+.menu-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.menu-link {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 12px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.menu-link:active {
+  opacity: 0.7;
+}
+
+/* Item picker dropdown + stop date --------------------------------------- */
+.item-select {
+  font-size: 16px;
+}
+
+.stop-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal-dark);
+}
+
+.save-address-btn {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+/* Materials management ---------------------------------------------------- */
+.material-add {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.material-add input {
+  flex: 1;
+}
+
+.icon-select {
+  width: 64px;
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: 20px;
+  padding-right: 12px;
+  background-image: none;
+}
+
+.material-list,
+.address-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.material-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 10px;
+}
+
+.material-name {
+  flex: 1;
+}
+
+.address-card {
+  position: relative;
+}
+
+.address-card .btn.danger {
+  align-self: flex-start;
 }
 
 /* Setup screen ------------------------------------------------------------ */

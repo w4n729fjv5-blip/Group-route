@@ -20,6 +20,31 @@ export interface Stop {
   position: number;
   /** Items to deliver here. */
   items: LineItem[];
+  /** Specific delivery date (ISO `YYYY-MM-DD`), or null if unscheduled. */
+  delivery_date: string | null;
+}
+
+/** An entry in the editable master list of linens & delivery materials. */
+export interface Material {
+  id: string;
+  name: string;
+  /** Emoji shown next to the material for quick visual scanning. */
+  icon: string;
+  /** Display order in pickers and the management screen. */
+  position: number;
+}
+
+/** A reusable address book entry used to auto-fill a stop's address. */
+export interface SavedAddress {
+  id: string;
+  /** Short label, e.g. "Riverside Hotel". */
+  label: string;
+  /** Full street address. */
+  address: string;
+  /** Optional default notes copied to the stop. */
+  notes: string;
+  /** Display order in the address book. */
+  position: number;
 }
 
 /** Days of the week a route can be assigned to. */

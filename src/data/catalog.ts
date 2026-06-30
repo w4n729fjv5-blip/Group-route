@@ -1,5 +1,7 @@
-// Preset catalog of items available for delivery. Users pick from these and set
-// a quantity per stop, and can also add custom items not in this list.
+// Default linens & delivery materials. These seed the editable `materials`
+// table the first time the app runs, and also act as a fallback icon lookup.
+// After seeding, the live list lives in Supabase and is managed on the
+// "Materials" screen.
 
 export interface CatalogItem {
   name: string;
@@ -7,7 +9,7 @@ export interface CatalogItem {
   icon: string;
 }
 
-export const CATALOG: CatalogItem[] = [
+export const DEFAULT_MATERIALS: CatalogItem[] = [
   { name: "Linens", icon: "🛏️" },
   { name: "Carpets", icon: "🪟" },
   { name: "Uniforms", icon: "👔" },
@@ -15,9 +17,18 @@ export const CATALOG: CatalogItem[] = [
   { name: "Tablecloths", icon: "🍽️" },
 ];
 
-/** Look up the icon for a catalog item by name; falls back to a box for custom items. */
+/** Emoji choices offered when creating/editing a material. */
+export const ICON_CHOICES = [
+  "📦", "🛏️", "🪟", "👔", "🧻", "🍽️", "🧺", "🧥", "🧦",
+  "🛁", "🚿", "🧼", "🪣", "🧷", "👕", "🥼", "🩳", "🧤",
+];
+
+/**
+ * Fallback icon lookup by name, used where the live materials list isn't
+ * loaded (e.g. stop summary pills). Custom items not in the defaults get a box.
+ */
 export function iconForItem(name: string): string {
-  const match = CATALOG.find(
+  const match = DEFAULT_MATERIALS.find(
     (item) => item.name.toLowerCase() === name.trim().toLowerCase()
   );
   return match ? match.icon : "📦";

@@ -3,6 +3,20 @@ import { iconForItem } from "../data/catalog";
 import { appleStopUrl, googleStopUrl } from "../lib/maps";
 import type { Stop } from "../types";
 
+/** Format an ISO date (YYYY-MM-DD) as a short readable label, e.g. "Mon, Jun 30". */
+function formatDate(iso: string | null): string {
+  if (!iso) return "";
+  // Parse as local date (avoid timezone shifting an all-day date).
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return "";
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 interface Props {
   stop: Stop;
   routeId: string;
@@ -25,6 +39,7 @@ export default function StopCard({
 }: Props) {
   const hasAddress = stop.address.trim().length > 0;
   const itemCount = stop.items.reduce((sum, it) => sum + it.quantity, 0);
+  const dateLabel = formatDate(stop.delivery_date);
 
   return (
     <div className="stop-card">
@@ -56,6 +71,7 @@ export default function StopCard({
           <span className="stop-name">
             {stop.name.trim() || "Untitled stop"}
           </span>
+          {dateLabel && <span className="stop-date">📅 {dateLabel}</span>}
           {hasAddress ? (
             <span className="stop-address">{stop.address}</span>
           ) : (
