@@ -41,9 +41,22 @@ export interface Route {
   name: string;
   /** Weekday the route is delivered, or null if unscheduled. */
   delivery_day: DeliveryDay | null;
+  /** Calendar date of the delivery (YYYY-MM-DD), or null if not dated. */
+  delivery_date: string | null;
   /** Route-level notes. */
   notes: string;
   created_at: string;
+}
+
+/** Weekday name for a YYYY-MM-DD date string, parsed as a local date. */
+export function weekdayForDate(date: string): DeliveryDay | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date.trim());
+  if (!match) return null;
+  const [, y, m, d] = match;
+  const local = new Date(Number(y), Number(m) - 1, Number(d));
+  // getDay(): 0 = Sunday ... 6 = Saturday. Map to our Monday-first list.
+  const index = (local.getDay() + 6) % 7;
+  return DELIVERY_DAYS[index];
 }
 
 /** A route together with its ordered stops. */

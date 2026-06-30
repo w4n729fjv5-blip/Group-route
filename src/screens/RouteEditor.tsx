@@ -10,7 +10,12 @@ import {
 import DaySelector from "../components/DaySelector";
 import ExportBar from "../components/ExportBar";
 import StopCard from "../components/StopCard";
-import type { DeliveryDay, RouteWithStops, Stop } from "../types";
+import {
+  weekdayForDate,
+  type DeliveryDay,
+  type RouteWithStops,
+  type Stop,
+} from "../types";
 
 /** Edit a route: name, delivery day, ordered stops, and map export. */
 export default function RouteEditor() {
@@ -50,7 +55,9 @@ export default function RouteEditor() {
 
   /** Update local route state immediately and persist the patch (debounced). */
   function patchRouteField(
-    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day">>
+    patch: Partial<
+      Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">
+    >
   ) {
     if (!route) return;
     setRoute({ ...route, ...patch });
@@ -61,7 +68,9 @@ export default function RouteEditor() {
   }
 
   async function persistRoutePatch(
-    patch: Partial<Pick<RouteWithStops, "name" | "notes" | "delivery_day">>
+    patch: Partial<
+      Pick<RouteWithStops, "name" | "notes" | "delivery_day" | "delivery_date">
+    >
   ) {
     if (!routeId) return;
     try {
@@ -77,6 +86,17 @@ export default function RouteEditor() {
     if (!route) return;
     setRoute({ ...route, delivery_day: day });
     void persistRoutePatch({ delivery_day: day });
+  }
+
+  function setDeliveryDate(date: string) {
+    if (!route) return;
+    const value = date || null;
+    // Picking a date also sets the weekday it falls on, which is how routes are
+    // grouped on the home screen. Clearing the date leaves the weekday as-is.
+    const day = value ? weekdayForDate(value) : route.delivery_day;
+    const patch = { delivery_date: value, delivery_day: day };
+    setRoute({ ...route, ...patch });
+    void persistRoutePatch(patch);
   }
 
   async function handleAddStop() {
@@ -157,6 +177,15 @@ export default function RouteEditor() {
               value={route.name}
               placeholder="e.g. Downtown hotels"
               onChange={(e) => patchRouteField({ name: e.target.value })}
+            />
+          </label>
+
+          <label className="field">
+            <span className="field-label">Delivery date</span>
+            <input
+              type="date"
+              value={route.delivery_date ?? ""}
+              onChange={(e) => setDeliveryDate(e.target.value)}
             />
           </label>
 

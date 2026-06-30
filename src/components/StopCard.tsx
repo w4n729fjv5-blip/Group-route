@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { iconForItem } from "../data/catalog";
+import { iconForMaterial } from "../lib/settings";
 import { appleStopUrl, googleStopUrl } from "../lib/maps";
 import type { Stop } from "../types";
 
@@ -65,7 +65,7 @@ export default function StopCard({
             <span className="stop-items">
               {stop.items.map((it) => (
                 <span key={it.name} className="item-pill">
-                  {iconForItem(it.name)} {it.name} ×{it.quantity}
+                  {iconForMaterial(it.name)} {it.name} ×{it.quantity}
                 </span>
               ))}
             </span>

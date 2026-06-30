@@ -11,12 +11,17 @@ create extension if not exists pgcrypto;
 
 -- Routes -------------------------------------------------------------------
 create table if not exists public.routes (
-  id           uuid primary key default gen_random_uuid(),
-  name         text not null default 'New route',
-  delivery_day text,                          -- 'Monday' .. 'Sunday', or null
-  notes        text not null default '',
-  created_at   timestamptz not null default now()
+  id            uuid primary key default gen_random_uuid(),
+  name          text not null default 'New route',
+  delivery_day  text,                          -- 'Monday' .. 'Sunday', or null
+  delivery_date date,                          -- calendar date of delivery, or null
+  notes         text not null default '',
+  created_at    timestamptz not null default now()
 );
+
+-- Additive migration for projects created before delivery_date existed.
+-- Safe to re-run; does nothing if the column is already present.
+alter table public.routes add column if not exists delivery_date date;
 
 -- Stops --------------------------------------------------------------------
 create table if not exists public.stops (

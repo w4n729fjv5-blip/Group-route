@@ -14,11 +14,19 @@ web app — no app store needed.
 ## Features
 
 - **Routes** — create, name, save, and delete delivery routes.
-- **Delivery day** — tag each route with a weekday (Mon–Sun).
+- **Delivery date & day** — give a route a calendar **date**; the **weekday** it
+  falls on is set automatically and used to group routes on the home screen
+  (routes are organized by day).
 - **Stops** — ordered list per route; reorder with ↑/↓; per-stop name, address,
-  and notes.
-- **Items** — pick from a preset catalog with quantity steppers, plus add custom
-  items.
+  items, and notes.
+- **Address autofill** — save the places you deliver to once, then auto-fill a
+  stop's address from a dropdown (or type-ahead suggestions). Save a stop's
+  address to the book with one tap.
+- **Items** — a dropdown adds any linen/material from your catalog, each with a
+  quantity stepper; custom one-off items too.
+- **Editable catalog** — a **Settings** screen where you add, rename, re-icon,
+  and remove the linens and materials offered in the items dropdown, and manage
+  your saved addresses.
 - **Maps export**
   - **Google Maps:** one tap opens the whole route as a multi-stop driving
     route (up to ~10 stops per link).
@@ -111,11 +119,18 @@ Supabase Auth and replace the `anon` policies in `schema.sql` with per-user
 src/
   api/routes.ts        Supabase CRUD for routes & stops
   components/          DaySelector, ItemPicker, StopCard, ExportBar
-  data/catalog.ts      preset delivery items
+  lib/settings.ts      device-local materials catalog + saved-address book
   lib/supabase.ts      Supabase client (from env vars)
   lib/maps.ts          Apple/Google Maps URL builders
-  screens/             RoutesList, RouteEditor, StopEditor, SetupNeeded
+  screens/             RoutesList, RouteEditor, StopEditor, Settings, SetupNeeded
   types.ts             shared types
 supabase/schema.sql    database tables + RLS policies
 public/                PWA manifest + icons
 ```
+
+> **Catalog & addresses are device-local.** The materials catalog and saved
+> addresses live in your browser's `localStorage` so the Settings menus work
+> with zero database setup. Routes and stops still sync via Supabase. If you
+> already created your Supabase tables before this version, re-run
+> `supabase/schema.sql` once — it adds the new `delivery_date` column to
+> `routes` (the migration is idempotent and safe to re-run).

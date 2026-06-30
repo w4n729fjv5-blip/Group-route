@@ -122,7 +122,9 @@ button {
 }
 
 input[type="text"],
-textarea {
+input[type="date"],
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -131,8 +133,19 @@ textarea {
   color: var(--text);
 }
 
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%236b7280' d='M1 1l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+
 input[type="text"]:focus,
-textarea:focus {
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
@@ -497,6 +510,81 @@ textarea {
 
 .add-custom input {
   flex: 1;
+}
+
+.manage-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.save-address {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.route-date {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Settings: materials catalog -------------------------------------------- */
+.material-list,
+.place-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.material-row,
+.material-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.material-icon {
+  width: 56px;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.material-name {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Settings: saved addresses ---------------------------------------------- */
+.place-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.place-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.place-label {
+  font-weight: 650;
+  font-size: 15px;
+}
+
+.place-address,
+.place-notes {
+  font-size: 13px;
+  color: var(--muted);
 }
 
 /* Navigation buttons & export -------------------------------------------- */

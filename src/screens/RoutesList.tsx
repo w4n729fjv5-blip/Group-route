@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createRoute, deleteRoute, listRoutes } from "../api/routes";
 import { DELIVERY_DAYS, type DeliveryDay, type Route } from "../types";
+
+/** Render a YYYY-MM-DD date as a short, friendly local label. */
+function formatDate(date: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date.trim());
+  if (!match) return date;
+  const [, y, m, d] = match;
+  const local = new Date(Number(y), Number(m) - 1, Number(d));
+  return local.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 /** Home screen: lists saved routes grouped by delivery day. */
 export default function RoutesList() {
@@ -62,6 +75,9 @@ export default function RoutesList() {
     <div className="screen">
       <header className="appbar">
         <h1>Linen Routes</h1>
+        <Link to="/settings" className="back-link" aria-label="Settings">
+          ⚙︎ Settings
+        </Link>
         <button
           type="button"
           className="btn primary"
@@ -106,6 +122,11 @@ export default function RoutesList() {
                         onClick={() => navigate(`/routes/${route.id}`)}
                       >
                         <span className="route-name">{route.name}</span>
+                        {route.delivery_date && (
+                          <span className="route-date">
+                            {formatDate(route.delivery_date)}
+                          </span>
+                        )}
                       </button>
                       <button
                         type="button"

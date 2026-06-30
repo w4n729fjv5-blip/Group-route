@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CATALOG, iconForItem } from "../data/catalog";
+import { Link } from "react-router-dom";
+import { iconForMaterial, useMaterials } from "../lib/settings";
 import type { LineItem } from "../types";
 
 interface Props {
@@ -15,10 +16,13 @@ function indexOfItem(items: LineItem[], name: string): number {
 }
 
 /**
- * Lets the user pick catalog items (with quantity steppers) and add custom
- * items. Items with quantity 0 are removed from the list.
+ * Pick what to deliver at a stop. A dropdown adds any linen/material from the
+ * catalog (managed on the Materials screen); each added item gets a quantity
+ * stepper. Custom one-off items can be typed in too. Items at quantity 0 are
+ * removed.
  */
 export default function ItemPicker({ items, onChange }: Props) {
+  const materials = useMaterials();
   const [customName, setCustomName] = useState("");
 
   function setQuantity(name: string, quantity: number) {
@@ -34,50 +38,67 @@ export default function ItemPicker({ items, onChange }: Props) {
     onChange(next);
   }
 
-  function quantityOf(name: string): number {
-    const idx = indexOfItem(items, name);
-    return idx >= 0 ? items[idx].quantity : 0;
+  function addByName(name: string) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const idx = indexOfItem(items, trimmed);
+    if (idx >= 0) {
+      // Already on the stop — bump the quantity so re-picking still feels useful.
+      setQuantity(trimmed, items[idx].quantity + 1);
+    } else {
+      onChange([...items, { name: trimmed, quantity: 1 }]);
+    }
   }
 
   function addCustom() {
-    const name = customName.trim();
-    if (!name) return;
-    if (indexOfItem(items, name) >= 0) {
-      setCustomName("");
-      return;
-    }
-    onChange([...items, { name, quantity: 1 }]);
+    addByName(customName);
     setCustomName("");
   }
 
-  // Custom items are anything not in the preset catalog.
-  const catalogNames = new Set(CATALOG.map((c) => c.name.toLowerCase()));
-  const customItems = items.filter(
-    (it) => !catalogNames.has(it.name.trim().toLowerCase())
+  // Catalog materials not yet on this stop — the options offered in the dropdown.
+  const availableMaterials = materials.filter(
+    (m) => indexOfItem(items, m.name) < 0
   );
 
   return (
     <div className="item-picker">
-      {CATALOG.map((cat) => {
-        const qty = quantityOf(cat.name);
-        return (
-          <ItemRow
-            key={cat.name}
-            label={`${cat.icon} ${cat.name}`}
-            quantity={qty}
-            onSet={(q) => setQuantity(cat.name, q)}
-          />
-        );
-      })}
+      <div className="field">
+        <span className="field-label">Add a linen or material</span>
+        <select
+          className="item-select"
+          value=""
+          onChange={(e) => {
+            if (e.target.value) addByName(e.target.value);
+            e.target.value = "";
+          }}
+        >
+          <option value="" disabled>
+            {availableMaterials.length > 0
+              ? "Choose from catalog…"
+              : "All catalog items added"}
+          </option>
+          {availableMaterials.map((m) => (
+            <option key={m.name} value={m.name}>
+              {m.icon} {m.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      {customItems.map((it) => (
-        <ItemRow
-          key={it.name}
-          label={`${iconForItem(it.name)} ${it.name}`}
-          quantity={it.quantity}
-          onSet={(q) => setQuantity(it.name, q)}
-        />
-      ))}
+      {items.length === 0 ? (
+        <p className="muted small">
+          No items yet. Pick from the dropdown above or add a custom item.
+        </p>
+      ) : (
+        items.map((it) => (
+          <ItemRow
+            key={it.name}
+            label={`${iconForMaterial(it.name)} ${it.name}`}
+            quantity={it.quantity}
+            onSet={(q) => setQuantity(it.name, q)}
+          />
+        ))
+      )}
 
       <div className="add-custom">
         <input
@@ -97,6 +118,10 @@ export default function ItemPicker({ items, onChange }: Props) {
           Add
         </button>
       </div>
+
+      <Link to="/settings" className="manage-link">
+        Manage materials catalog →
+      </Link>
     </div>
   );
 }

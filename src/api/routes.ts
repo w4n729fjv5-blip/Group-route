@@ -55,7 +55,7 @@ export async function createRoute(
   const sb = requireSupabase();
   const { data, error } = await sb
     .from(ROUTES)
-    .insert({ name, delivery_day: deliveryDay, notes: "" })
+    .insert({ name, delivery_day: deliveryDay, delivery_date: null, notes: "" })
     .select("*")
     .single();
   if (error) throw error;
@@ -65,7 +65,7 @@ export async function createRoute(
 /** Update mutable fields on a route. */
 export async function updateRoute(
   routeId: string,
-  patch: Partial<Pick<Route, "name" | "delivery_day" | "notes">>
+  patch: Partial<Pick<Route, "name" | "delivery_day" | "delivery_date" | "notes">>
 ): Promise<void> {
   const sb = requireSupabase();
   const { error } = await sb.from(ROUTES).update(patch).eq("id", routeId);
