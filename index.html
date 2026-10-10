@@ -228,6 +228,8 @@ button, input, select { font: inherit; color: inherit; }
 .rec-status .meter i { display: block; height: 100%; width: 0%; background: var(--bad); }
 .small-print { font-size: 12px; color: var(--muted); }
 .ytlink { font-size: 13px; font-weight: 600; color: var(--accent); overflow-wrap: anywhere; }
+.sheet-note { color: var(--ink); background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; margin: 0; }
+.sheet-note a { color: var(--accent); font-weight: 600; }
 .progress { margin-top: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
 .progress .bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
 .progress .bar i { display: block; height: 100%; width: 0%; background: var(--accent); }
@@ -377,7 +379,7 @@ button, input, select { font: inherit; color: inherit; }
       <div class="back-row"><button class="btn ghost" id="im-back" type="button">‹ Library</button></div>
       <div class="import-head">
         <h1>Add a song</h1>
-        <p>Turn a recording into notes you can practice. Solo piano works best, such as a piano cover or tutorial video. With singing, drums or a full band, expect a rough melody that you can tidy by ear.</p>
+        <p>Turn a recording or a piece of sheet music into notes you can practice. For recordings, solo piano works best, such as a piano cover or tutorial video. With singing, drums or a full band, expect a rough melody.</p>
       </div>
       <div class="methods">
         <div class="method" id="m-listen">
@@ -407,11 +409,17 @@ button, input, select { font: inherit; color: inherit; }
           </div>
           <button class="btn primary" id="file-go" type="button" hidden>Write the notes</button>
         </div>
-        <div class="method" id="m-midi">
-          <span class="eyebrow">Exact notes</span>
-          <h2>MIDI file</h2>
-          <p>A MIDI file already contains the notes, so it imports exactly, both hands included. GarageBand and most notation apps can export one.</p>
-          <span class="btn file-btn">Choose a MIDI file<input type="file" id="file-midi" accept=".mid,.midi,audio/midi,audio/x-midi"></span>
+        <div class="method" id="m-sheet">
+          <span class="eyebrow">From sheet music</span>
+          <h2>Sheet music</h2>
+          <p>A PDF, a photo of the page, or a MusicXML or MIDI file. MusicXML and MIDI come in note for note. Claude reads PDFs and photos, so listen back to check them.</p>
+          <span class="btn file-btn">Choose sheet music<input type="file" id="file-sheet" accept=".pdf,application/pdf,image/*,.musicxml,.xml,.mxl,.mid,.midi,.zip,audio/midi,audio/x-midi"></span>
+          <label class="field" for="sheet-url">Or paste a link to the file
+            <input type="url" id="sheet-url" placeholder="https://…/piece.musicxml" autocomplete="off" inputmode="url">
+          </label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="sheet-go" type="button">Get it</button></div>
+          <p class="small-print sheet-note" id="sheet-note" hidden></p>
+          <p class="small-print" id="sheet-claude" hidden>Reading PDFs and photos uses Claude, so it happens in <a class="ytlink" id="claude-copy" href="#" target="_blank" rel="noopener">Keyfall on Claude ↗</a>. Save the song there, tap Export MIDI on it, then choose that file here.</p>
         </div>
       </div>
 
@@ -435,6 +443,7 @@ button, input, select { font: inherit; color: inherit; }
         </div>
         <canvas id="rv-roll"></canvas>
         <div class="summary" id="rv-summary"></div>
+        <p class="small-print" id="rv-note" hidden></p>
         <div class="actions">
           <button class="btn" id="rv-hear" type="button">Hear it</button>
           <button class="btn" id="rv-discard" type="button">Discard</button>
@@ -467,11 +476,203 @@ button, input, select { font: inherit; color: inherit; }
   KF.round4 = round4;
 
   KF.parsePitch = function (s) {
-    const m = /^([A-Ga-g])([#b]?)(-?\d)$/.exec(String(s).trim());
+    const clean = String(s).trim().replace(/♯/g, '#').replace(/♭/g, 'b').replace(/𝄪/g, '##').replace(/𝄫/g, 'bb').replace(/♮/g, '');
+    const m = /^([A-Ga-g])(##|bb|#|b|x)?(-?\d)$/.exec(clean);
     if (!m) throw new Error('Bad pitch ' + s);
     const base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()];
-    const acc = m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0;
+    const acc = { '#': 1, b: -1, '##': 2, x: 2, bb: -2 }[m[2]] || 0;
     return (parseInt(m[3], 10) + 1) * 12 + base + acc;
+  };
+
+  /* ---------- bar notation from sheet reading: tolerant parse + bar-aligned assembly ---------- */
+  const parseDur = (s) => {
+    s = String(s).trim();
+    if (/^\d+\s*\/\s*\d+$/.test(s)) { const [a, b] = s.split('/').map(Number); return b ? a / b : NaN; }
+    return parseFloat(s);
+  };
+  // "C4:1 D4+F#4:0.5 r:0.5" -> notes relative to bar start, total length, count of unreadable tokens
+  KF.parseBar = function (bar, hand) {
+    const notes = [];
+    let t = 0, bad = 0;
+    for (const tok of String(bar || '').trim().split(/\s+/)) {
+      if (!tok) continue;
+      const i = tok.lastIndexOf(':');
+      if (i < 1) { bad++; continue; }
+      const d = parseDur(tok.slice(i + 1));
+      if (!(d > 0 && d <= 16)) { bad++; continue; }
+      const head = tok.slice(0, i);
+      if (!/^(r|rest|R)$/.test(head)) {
+        for (const one of head.split('+')) {
+          try { const p = KF.parsePitch(one); if (p >= 21 && p <= 108) notes.push({ p, t, d, h: hand }); else bad++; } catch (e) { bad++; }
+        }
+      }
+      t += d;
+    }
+    return { notes, len: t, bad };
+  };
+  // Hands are laid out bar by bar, so a misread bar never pushes one hand out of step with the other.
+  KF.assembleBars = function (rhBars, lhBars, meterLen, pickup) {
+    const notes = [];
+    const n = Math.max(rhBars.length, lhBars.length);
+    let cursor = 0, off = 0, bad = 0;
+    for (let i = 0; i < n; i++) {
+      const r = KF.parseBar(rhBars[i], 'R'), l = KF.parseBar(lhBars[i], 'L');
+      bad += r.bad + l.bad;
+      const isPickup = i === 0 && pickup > 0 && Math.max(r.len, l.len) <= pickup + 1e-6;
+      const want = isPickup ? pickup : meterLen;
+      const longest = Math.max(r.len, l.len);
+      if (Math.abs(r.len - want) > 0.01 && r.len > 0) off++;
+      else if (Math.abs(l.len - want) > 0.01 && l.len > 0) off++;
+      for (const x of r.notes.concat(l.notes)) notes.push({ p: x.p, t: round4(cursor + x.t), d: x.d, h: x.h });
+      cursor += Math.max(want, longest);
+    }
+    return { notes, bars: n, offBars: off, bad };
+  };
+  KF.splitBars = (s) => String(s || '').split('|').map((b) => b.trim()).filter((b, i, a) => b || (i > 0 && i < a.length - 1));
+
+  /* ---------- file sniffing + zip reading ---------- */
+  KF.sniff = function (u8, name, mime) {
+    const s = (a, b) => String.fromCharCode.apply(null, u8.subarray(a, b));
+    name = (name || '').toLowerCase(); mime = (mime || '').toLowerCase();
+    if (u8.length >= 4 && s(0, 4) === 'MThd') return 'midi';
+    if (u8.length >= 4 && u8[0] === 0x50 && u8[1] === 0x4b && u8[2] === 3 && u8[3] === 4) return 'zip';
+    if (u8.length >= 5 && s(0, 5) === '%PDF-') return 'pdf';
+    if (u8[0] === 0xff && u8[1] === 0xd8 && u8[2] === 0xff) return 'image';
+    if (u8[0] === 0x89 && s(1, 4) === 'PNG') return 'image';
+    if (s(0, 4) === 'GIF8') return 'image';
+    if (s(0, 4) === 'RIFF' && s(8, 12) === 'WEBP') return 'image';
+    if (s(4, 8) === 'ftyp') return /^(heic|heix|hevc|heim|heis|mif1|msf1|avif)/.test(s(8, 12)) ? 'image' : 'audio';
+    if (s(0, 4) === 'RIFF' || s(0, 3) === 'ID3' || s(0, 4) === 'fLaC' || s(0, 4) === 'OggS' || (u8[0] === 0xff && (u8[1] & 0xe0) === 0xe0)) return 'audio';
+    const head = new TextDecoder().decode(u8.subarray(0, 4096));
+    if (/<score-partwise|<score-timewise/.test(head)) return 'musicxml';
+    if (/^image\//.test(mime)) return 'image';
+    if (/^(audio|video)\//.test(mime)) return 'audio';
+    if (/\.(musicxml|xml)$/.test(name)) return 'musicxml';
+    if (/<html|<!doctype html/i.test(head)) return 'html';
+    return 'unknown';
+  };
+  KF.unzip = function (u8) {
+    let eocd = -1;
+    for (let i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) {
+      if (u8[i] === 0x50 && u8[i + 1] === 0x4b && u8[i + 2] === 5 && u8[i + 3] === 6) { eocd = i; break; }
+    }
+    if (eocd < 0) throw new Error('This zip file is damaged.');
+    const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    const count = dv.getUint16(eocd + 10, true);
+    let p = dv.getUint32(eocd + 16, true);
+    const out = [], dec = new TextDecoder();
+    for (let i = 0; i < count && p + 46 <= u8.length; i++) {
+      if (dv.getUint32(p, true) !== 0x02014b50) break;
+      const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+      const nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+      const lho = dv.getUint32(p + 42, true);
+      const name = dec.decode(u8.subarray(p + 46, p + 46 + nlen));
+      p += 46 + nlen + xlen + clen;
+      const start = lho + 30 + dv.getUint16(lho + 26, true) + dv.getUint16(lho + 28, true);
+      out.push({ name, method, data: u8.subarray(start, start + csize) });
+    }
+    return out;
+  };
+  KF.inflate = async function (entry) {
+    if (entry.method === 0) return entry.data;
+    if (entry.method !== 8) throw new Error('This zip uses a compression Keyfall cannot open.');
+    if (typeof DecompressionStream === 'undefined') throw new Error('This browser cannot open compressed files. Update Safari, or export the music uncompressed (.musicxml).');
+    const stream = new Blob([entry.data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  };
+
+  /* ---------- MusicXML (score-partwise) ---------- */
+  KF.parseMusicXML = function (text) {
+    const doc = new DOMParser().parseFromString(text, 'application/xml');
+    if (doc.getElementsByTagName('parsererror').length) throw new Error("This MusicXML file couldn't be read.");
+    const root = doc.documentElement;
+    if (root.nodeName === 'score-timewise') throw new Error('This MusicXML file uses the "timewise" layout. Export it again as standard (partwise) MusicXML.');
+    if (root.nodeName !== 'score-partwise') throw new Error('This file is not MusicXML.');
+    const kids = (el, name) => Array.from(el.children).filter((c) => c.nodeName === name);
+    const kid = (el, name) => kids(el, name)[0] || null;
+    const txt = (el, name) => { const e = el && kid(el, name); return e ? e.textContent.trim() : ''; };
+    const work = kid(root, 'work');
+    const title = txt(work, 'work-title') || txt(root, 'movement-title');
+    const ident = kid(root, 'identification');
+    const comp = ident ? kids(ident, 'creator').find((c) => c.getAttribute('type') === 'composer') : null;
+    const names = {};
+    const plist = kid(root, 'part-list');
+    if (plist) for (const sp of kids(plist, 'score-part')) names[sp.getAttribute('id')] = txt(sp, 'part-name');
+    const STEP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    let bpm = 0, meter = null, pickup = 0;
+    const parts = kids(root, 'part').map((part, pi) => {
+      let divisions = 1, staves = 1, mStart = 0, lastStart = 0;
+      const notes = [], ties = new Map();
+      kids(part, 'measure').forEach((m, mi) => {
+        let cur = mStart, maxPos = mStart;
+        for (const el of Array.from(m.children)) {
+          const nm = el.nodeName;
+          if (nm === 'attributes') {
+            const d = parseFloat(txt(el, 'divisions')); if (d > 0) divisions = d;
+            const st = parseInt(txt(el, 'staves'), 10); if (st > 0) staves = st;
+            const time = kid(el, 'time');
+            if (time && !meter) {
+              const beats = txt(time, 'beats').split('+').reduce((a, v) => a + (parseInt(v, 10) || 0), 0);
+              const bt = parseInt(txt(time, 'beat-type'), 10);
+              if (beats > 0 && bt > 0) meter = [beats, bt];
+            }
+          } else if (nm === 'backup') cur -= (parseFloat(txt(el, 'duration')) || 0) / divisions;
+          else if (nm === 'forward') { cur += (parseFloat(txt(el, 'duration')) || 0) / divisions; maxPos = Math.max(maxPos, cur); }
+          else if (nm === 'direction' || nm === 'sound') {
+            const snd = nm === 'sound' ? el : kid(el, 'sound');
+            const tp = snd && parseFloat(snd.getAttribute('tempo'));
+            if (tp > 0 && !bpm) bpm = tp;
+          } else if (nm === 'note') {
+            if (kid(el, 'grace') || kid(el, 'cue')) continue;
+            const dur = (parseFloat(txt(el, 'duration')) || 0) / divisions;
+            const chord = !!kid(el, 'chord');
+            const start = chord ? lastStart : cur;
+            if (!chord) { lastStart = cur; cur += dur; maxPos = Math.max(maxPos, cur); }
+            const pitch = kid(el, 'pitch');
+            if (!pitch || !(dur > 0)) continue;
+            const step = STEP[txt(pitch, 'step').toUpperCase()];
+            if (step === undefined) continue;
+            const p = (parseInt(txt(pitch, 'octave'), 10) + 1) * 12 + step + Math.round(parseFloat(txt(pitch, 'alter')) || 0);
+            const staff = parseInt(txt(el, 'staff'), 10) || 1;
+            const tieT = kids(el, 'tie').map((t) => t.getAttribute('type'));
+            const key = staff + ':' + p;
+            if (tieT.includes('stop') && ties.has(key)) {
+              const n = ties.get(key);
+              n.d = start + dur - n.t;
+              if (!tieT.includes('start')) ties.delete(key);
+              continue;
+            }
+            const n = { p, t: start, d: dur, staff };
+            notes.push(n);
+            if (tieT.includes('start')) ties.set(key, n);
+          }
+        }
+        const len = maxPos - mStart;
+        if (pi === 0 && mi === 0 && len > 0 && (m.getAttribute('implicit') === 'yes' || (meter && len < KF.measureLen(meter) - 1e-6))) pickup = len;
+        mStart += len > 0 ? len : meter ? KF.measureLen(meter) : 4;
+      });
+      return { notes, staves, name: names[part.getAttribute('id')] || '' };
+    }).filter((pt) => pt.notes.length);
+    if (!parts.length) throw new Error('This MusicXML file has no notes Keyfall can play.');
+    let use = parts.filter((pt) => pt.staves >= 2 || /piano|pno|keyboard|klavier/i.test(pt.name));
+    if (!use.length) use = parts;
+    const all = [];
+    const avg = use.map((pt) => pt.notes.reduce((s, n) => s + n.p, 0) / pt.notes.length);
+    const top = avg.indexOf(Math.max(...avg));
+    use.forEach((pt, i) => {
+      for (const n of pt.notes) {
+        let h;
+        if (pt.staves >= 2) h = n.staff >= 2 ? 'L' : 'R';
+        else if (use.length > 1) h = i === top ? 'R' : 'L';
+        else h = avg[i] < 55 ? 'L' : 'R';
+        all.push({ p: n.p, t: round4(n.t), d: n.d, h });
+      }
+    });
+    all.sort((a, b) => a.t - b.t || a.p - b.p);
+    return KF.normalizeSong({
+      title, composer: comp ? comp.textContent.trim() : '', bpm: Math.round(bpm) || 100, meter: meter || [4, 4],
+      pickup, notes: all.slice(0, 6000), truncated: all.length > 6000,
+    });
   };
 
   /* Compact song notation: "C4:1 D4:0.5 r:0.5 C4+E4+G4:2 |" — durations in quarter-note beats. */
@@ -2515,7 +2716,7 @@ button, input, select { font: inherit; color: inherit; }
   }
 
   /* ---------- add a song ---------- */
-  const IM = { busy: false, cancel: false, rec: null, recRaf: 0, analysis: null, raw: [], poly: 1, grid: 0.5, bpm: 100, phase: 0, bpmTouched: false, kind: null, source: '', song: null, buf: null, fileName: '', play: null };
+  const IM = { busy: false, cancel: false, rec: null, recRaf: 0, analysis: null, raw: [], poly: 1, grid: 0.5, bpm: 100, phase: 0, bpmTouched: false, kind: null, source: '', song: null, buf: null, fileName: '', play: null, note: '', ctl: null };
   function openImport() {
     if (S.view === 'practice') leavePractice();
     show('import');
@@ -2526,7 +2727,7 @@ button, input, select { font: inherit; color: inherit; }
     $('#progress').hidden = !on;
     if (label) $('#prog-label').textContent = label;
     $('#prog-bar').style.width = '0%';
-    for (const id of ['#rec-start', '#file-go', '#file-audio', '#file-midi']) { const el = $(id); if (el) el.disabled = on; }
+    for (const id of ['#rec-start', '#file-go', '#file-audio', '#file-sheet', '#sheet-go']) { const el = $(id); if (el) el.disabled = on; }
   }
   const setProgress = (f) => { $('#prog-bar').style.width = Math.round(f * 100) + '%'; };
   function normalizeUrl(v) {
@@ -2624,6 +2825,10 @@ button, input, select { font: inherit; color: inherit; }
       ? n + ' notes · ' + KF.fmtTime(songSeconds(s)) + ' · ♩ = ' + s.bpm + ' · ' + KF.noteName(lo) + ' to ' + KF.noteName(hi) + (s.truncated ? ' · trimmed to the first 6000 notes' : '')
       : 'No clear notes found. Try “Melody + chords”, or a recording where the piano is louder.';
     $('#rv-save').disabled = !n; $('#rv-practice').disabled = !n; $('#rv-hear').disabled = !n;
+    let note = IM.kind === 'sheet' ? IM.note || '' : '';
+    if (IN_VIEWER && n) note += (note ? ' ' : '') + 'To practice it with your piano, save it, tap Export MIDI on the song, and choose that file in Keyfall on your GitHub page.';
+    $('#rv-note').textContent = note;
+    $('#rv-note').hidden = !note;
   }
   function stopReviewSound() {
     if (IM.play) { clearInterval(IM.play.timer); IM.play = null; Sound.stopAll(); $('#rv-hear').textContent = 'Hear it'; }
@@ -2690,20 +2895,296 @@ button, input, select { font: inherit; color: inherit; }
     const x = KF.mixdown(IM.buf, a, b);
     await transcribe(x, IM.buf.sampleRate, { title: IM.fileName || 'New song', source: '' });
   }
-  async function onMidiFile(file) {
-    if (!file) return;
+  /* ---------- sheet music: MusicXML / MIDI / zip exactly, PDFs and photos read by Claude ---------- */
+  const CLAUDE_COPY = 'https://claude.ai/artifact/QGkGt3dSZvEDYNoWwzxguu';
+  const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  const MAX_PAGES = 8, MAX_PARTS = 12;
+  class SheetError extends Error {}
+  let samplePromise = null;
+  function getSample() {
+    if (!IN_VIEWER) return Promise.resolve(null);
+    if (!samplePromise) samplePromise = Promise.resolve(window.claude.use('sample')).catch(() => null);
+    return samplePromise;
+  }
+  const baseName = (n) => String(n || '').replace(/\.[^.]+$/, '').trim();
+  function sheetNote(msg, href, linkText) {
+    const el = $('#sheet-note');
+    el.textContent = msg ? msg + ' ' : '';
+    if (msg && href) {
+      const a = document.createElement('a');
+      a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = linkText || 'Open the page ↗';
+      el.appendChild(a);
+    }
+    el.hidden = !msg;
+  }
+  function finishSheet(song, name, composerFallback, source, note) {
+    song.id = newId(); song.user = true; song.level = 2;
+    song.composer = song.composer || composerFallback;
+    song.source = source || '';
+    song.title = song.title && song.title.length > 1 ? song.title : baseName(name) || 'New song';
+    IM.kind = 'sheet'; IM.song = song; IM.analysis = null; IM.note = note || '';
+    $('#rv-title').value = song.title;
+    $('#rv-bpm').value = song.bpm;
+    sheetNote('');
+    showReview();
+    if (song.truncated) toast('Long piece: kept the first 6000 notes.');
+  }
+  async function openSheetBytes(u8, name, mime, blob, source) {
+    const kind = KF.sniff(u8, name, mime);
+    if (kind === 'midi') return finishSheet(KF.parseMidi(u8.slice().buffer), name, 'Imported from MIDI', source);
+    if (kind === 'musicxml') return finishSheet(KF.parseMusicXML(new TextDecoder().decode(u8)), name, 'Imported from MusicXML', source);
+    if (kind === 'zip') {
+      const entries = KF.unzip(u8);
+      let pick = null;
+      const container = entries.find((e) => /META-INF\/container\.xml$/i.test(e.name));
+      if (container) {
+        const m = /full-path="([^"]+)"/.exec(new TextDecoder().decode(await KF.inflate(container)));
+        if (m) pick = entries.find((e) => e.name === m[1]);
+      }
+      pick = pick || entries.find((e) => /\.(musicxml|xml)$/i.test(e.name) && !/META-INF/i.test(e.name)) || entries.find((e) => /\.midi?$/i.test(e.name));
+      if (!pick) throw new SheetError('That zip file has no MusicXML or MIDI inside.');
+      return openSheetBytes(await KF.inflate(pick), pick.name, '', null, source);
+    }
+    if (kind === 'pdf') return readWithClaude({ pdf: u8 }, name, source);
+    if (kind === 'image') return readWithClaude({ image: blob || new Blob([u8]) }, name, source);
+    if (kind === 'audio') {
+      toast('That is a recording, so Keyfall will listen to it instead.');
+      return onAudioFile(blob instanceof File ? blob : new File([u8], name || 'recording', { type: mime || '' }));
+    }
+    if (kind === 'html') throw new SheetError('That link is a web page, not a sheet music file. Open it, download the MusicXML, MIDI or PDF, then choose the file here.');
+    throw new SheetError("Keyfall doesn't recognise this file. Use a PDF, a photo, MusicXML (.musicxml or .mxl) or MIDI (.mid).");
+  }
+  async function onSheetFile(file) {
+    if (!file || IM.busy) return;
     stopReviewSound();
+    sheetNote('');
     try {
-      const s = KF.parseMidi(await file.arrayBuffer());
-      s.id = newId(); s.user = true; s.level = 2; s.composer = 'Imported from MIDI'; s.source = '';
-      s.title = s.title && s.title.length > 1 ? s.title : file.name.replace(/\.[^.]+$/, '');
-      IM.kind = 'midi'; IM.song = s; IM.analysis = null;
-      $('#rv-title').value = s.title;
-      $('#rv-bpm').value = s.bpm;
-      showReview();
-      if (s.truncated) toast('Long file: kept the first 6000 notes.');
+      await openSheetBytes(new Uint8Array(await file.arrayBuffer()), file.name, file.type, file, '');
     } catch (e) {
-      toast(e && e.message ? e.message : "That MIDI file couldn't be read.", 6000);
+      sheetNote(e instanceof SheetError || (e && /MIDI|MusicXML|zip|compress/i.test(e.message)) ? e.message : "That file couldn't be read. Check that it's sheet music, then try again.");
+    }
+  }
+  async function onSheetLink() {
+    if (IM.busy) return;
+    const url = normalizeUrl($('#sheet-url').value);
+    sheetNote('');
+    if (!url) { sheetNote('Paste a link first.'); return; }
+    if (/(^|\.)youtube\.com|youtu\.be/i.test(new URL(url).hostname)) {
+      sheetNote('That is a video link. Use “Listen while it plays” to turn a video into notes.');
+      return;
+    }
+    stopReviewSound();
+    setBusy(true, 'Downloading…');
+    $('#prog-cancel').hidden = true;
+    let res = null;
+    try { res = await fetch(url, { mode: 'cors', credentials: 'omit' }); } catch (e) { res = null; }
+    setBusy(false); $('#prog-cancel').hidden = false;
+    if (!res || !res.ok) {
+      sheetNote("Keyfall couldn't download from that site. Most sheet music sites only allow downloads on their own page: open it, save the MusicXML, MIDI or PDF, then choose the file here.", url);
+      return;
+    }
+    try {
+      const blob = await res.blob();
+      const name = decodeURIComponent(new URL(url).pathname.split('/').pop() || 'sheet music');
+      await openSheetBytes(new Uint8Array(await blob.arrayBuffer()), name, blob.type, blob, url);
+    } catch (e) {
+      sheetNote(e instanceof SheetError ? e.message : "The download wasn't sheet music Keyfall can read.", url);
+    }
+  }
+
+  // --- PDF pages and photos -> canvases -> trimmed sections -> Claude
+  let pdfjsPromise = null;
+  function loadScript(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = res; s.onerror = () => rej(new Error('script'));
+      document.head.appendChild(s);
+    });
+  }
+  function loadPdfJs() {
+    if (!pdfjsPromise) {
+      pdfjsPromise = loadScript(PDFJS + 'pdf.min.js')
+        .then(() => loadScript(PDFJS + 'pdf.worker.min.js'))
+        .then(() => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; return window.pdfjsLib; });
+      pdfjsPromise.catch(() => { pdfjsPromise = null; });
+    }
+    return pdfjsPromise;
+  }
+  function makeCanvas(w, h) { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; }
+  async function pdfCanvases(u8) {
+    const lib = await loadPdfJs();
+    const doc = await lib.getDocument({ data: u8.slice(), isEvalSupported: false }).promise;
+    const n = Math.min(doc.numPages, MAX_PAGES), out = [];
+    for (let i = 1; i <= n; i++) {
+      const page = await doc.getPage(i);
+      const v1 = page.getViewport({ scale: 1 });
+      const vp = page.getViewport({ scale: Math.min(3, 2400 / Math.max(v1.width, v1.height)) });
+      const cv = makeCanvas(vp.width, vp.height), c = cv.getContext('2d');
+      c.fillStyle = '#ffffff'; c.fillRect(0, 0, cv.width, cv.height);
+      await page.render({ canvasContext: c, viewport: vp }).promise;
+      out.push(cv);
+      setProgress((0.1 * i) / n);
+    }
+    return { pages: out, total: doc.numPages };
+  }
+  async function imageCanvas(blob) {
+    let src;
+    try { src = await createImageBitmap(blob); }
+    catch (e) {
+      src = await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => res(img); img.onerror = () => rej(new SheetError("That picture couldn't be opened. Try a JPEG or PNG photo."));
+        img.src = URL.createObjectURL(blob);
+      });
+    }
+    const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
+    const k = Math.min(1, 3000 / Math.max(w, h));
+    const cv = makeCanvas(w * k, h * k), c = cv.getContext('2d');
+    c.fillStyle = '#ffffff'; c.fillRect(0, 0, cv.width, cv.height);
+    c.drawImage(src, 0, 0, cv.width, cv.height);
+    return cv;
+  }
+  function inkProfile(cv) {
+    const s = Math.min(1, 600 / Math.max(cv.width, cv.height));
+    const w = Math.max(1, Math.round(cv.width * s)), h = Math.max(1, Math.round(cv.height * s));
+    const small = makeCanvas(w, h), c = small.getContext('2d');
+    c.drawImage(cv, 0, 0, w, h);
+    const d = c.getImageData(0, 0, w, h).data;
+    const rows = new Uint32Array(h), cols = new Uint32Array(w);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      if (d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11 < 150) { rows[y]++; cols[x]++; }
+    }
+    return { s, w, h, rows, cols };
+  }
+  function cropCanvas(cv) {
+    const P = inkProfile(cv);
+    const first = (a, min) => { for (let i = 0; i < a.length; i++) if (a[i] > min) return i; return -1; };
+    const last = (a, min) => { for (let i = a.length - 1; i >= 0; i--) if (a[i] > min) return i; return -1; };
+    const y0 = first(P.rows, 1), y1 = last(P.rows, 1), x0 = first(P.cols, 1), x1 = last(P.cols, 1);
+    if (y0 < 0 || x0 < 0) return cv;
+    const m = 0.015 * Math.max(P.w, P.h);
+    const sx = Math.max(0, (x0 - m) / P.s), sy = Math.max(0, (y0 - m) / P.s);
+    const ex = Math.min(cv.width, (x1 + m) / P.s), ey = Math.min(cv.height, (y1 + m) / P.s);
+    if (ex - sx < cv.width * 0.3 || ey - sy < cv.height * 0.2) return cv;
+    const out = makeCanvas(ex - sx, ey - sy);
+    out.getContext('2d').drawImage(cv, sx, sy, ex - sx, ey - sy, 0, 0, out.width, out.height);
+    return out;
+  }
+  // Tall pages go to Claude in two halves (cut at the widest blank band between systems) for sharper reading.
+  function splitCanvas(cv) {
+    if (cv.height / cv.width < 1.05) return [cv];
+    const P = inkProfile(cv);
+    const lim = P.w * 0.01;
+    let best = null, run = 0;
+    for (let y = Math.floor(P.h * 0.3); y < Math.ceil(P.h * 0.72); y++) {
+      if (P.rows[y] <= lim) { run++; if (!best || run > best.len) best = { len: run, end: y }; } else run = 0;
+    }
+    if (!best || best.len < P.h * 0.012) return [cv];
+    const cut = Math.round((best.end - best.len / 2) / P.s);
+    const a = makeCanvas(cv.width, cut), b = makeCanvas(cv.width, cv.height - cut);
+    a.getContext('2d').drawImage(cv, 0, 0);
+    b.getContext('2d').drawImage(cv, 0, -cut);
+    return [a, b];
+  }
+  const toJpeg = (cv) => new Promise((res) => cv.toBlob(res, 'image/jpeg', 0.9));
+
+  function sheetPrompt(k, n, ctx) {
+    const L = [];
+    L.push('You are reading piano sheet music from an image so a practice app can play it back note for note.');
+    L.push(n > 1 ? 'This image is part ' + (k + 1) + ' of ' + n + ' of the same piece, in reading order.' : 'This image is the piece, or one page of it.');
+    if (k > 0) {
+      L.push('The earlier parts were in ' + (ctx.key || 'the key shown at the start') + ', in ' + (ctx.meter ? ctx.meter.join('/') : 'the printed') + ' time, and covered ' + ctx.rh.length + ' bars. Continue with the first bar in this image.');
+    }
+    L.push('');
+    L.push('How to write the notes:');
+    L.push('- Pitch: letter, then # or b if needed, then octave. C4 is middle C. Write the pitch that actually sounds: apply the key signature, accidentals earlier in the same bar, naturals, and 8va signs.');
+    L.push('- Length in quarter-note beats: whole 4, dotted half 3, half 2, dotted quarter 1.5, quarter 1, dotted eighth 0.75, eighth 0.5, sixteenth 0.25, triplet eighth 1/3.');
+    L.push('- Each note is pitch:length, e.g. F#4:0.5. Tied notes become one note with the combined length. Chords join pitches with +, e.g. C4+E4+G4:1. Rests are r:length.');
+    L.push('- Separate bars with |. "rh" is the upper staff and "lh" the lower staff; give both the same number of bars.');
+    L.push('- Every bar must add up to the time signature (4/4 = 4 beats, 3/4 = 3, 2/4 = 2, 6/8 = 3, 3/8 = 1.5), except an incomplete pickup bar at the very start of the piece.');
+    L.push('- If a staff has two voices, merge notes that start together into chords and keep the bar total right.');
+    L.push('- Leave out lyrics, chord symbols, fingering, dynamics and pedal marks. Write repeats once, as printed.');
+    L.push('');
+    L.push('Reply with only this JSON object:');
+    L.push('{"title": "", "composer": "", "tempo_bpm": 0, "meter": [4, 4], "key": "C major", "pickup_beats": 0, "rh": "E4:1 E4:1 F4:1 G4:1 | G4:2 r:2", "lh": "C3:4 | G2:2 r:2", "notes": ""}');
+    L.push('"title" and "composer": only if printed in this image, else "". "tempo_bpm": quarter notes per minute from a metronome mark; if there is only a word such as Allegro, estimate; 0 if none. "pickup_beats": length of an incomplete first bar of the piece in quarter-note beats, else 0. "notes": one short sentence on anything you were unsure about, or "".');
+    L.push('If the image is not sheet music, reply {"rh": "", "lh": "", "notes": "not sheet music"}.');
+    return L.join('\n');
+  }
+  const str = (v) => (typeof v === 'string' ? v.trim() : '');
+  const okMeter = (m) => Array.isArray(m) && m.length === 2 && m[0] >= 1 && m[0] <= 16 && [1, 2, 4, 8, 16].includes(Number(m[1]));
+
+  async function readWithClaude(src, name, source) {
+    const sample = await getSample();
+    if (!sample) {
+      if (IN_VIEWER) sheetNote("Reading PDFs and photos needs Claude, which isn't available in this view.");
+      else sheetNote('Reading PDFs and photos uses Claude, so it works in Keyfall on Claude. Read the sheet there, save it, tap Export MIDI, then choose that file here.', CLAUDE_COPY, 'Open Keyfall on Claude ↗');
+      return;
+    }
+    const lim = await sample.limits().catch(() => null);
+    if (!lim || !lim.images) { sheetNote("Reading pictures of sheet music isn't available in this view."); return; }
+    setBusy(true, 'Getting the pages ready…');
+    IM.cancel = false;
+    IM.ctl = new AbortController();
+    try {
+      let canvases, totalPages = 1;
+      if (src.pdf) {
+        let r;
+        try { r = await pdfCanvases(src.pdf); } catch (e) { throw new SheetError("That PDF couldn't be opened. Try another copy, or take a photo of each page."); }
+        canvases = r.pages; totalPages = r.total;
+      } else canvases = [await imageCanvas(src.image)];
+      let parts = [];
+      for (const cv of canvases) parts = parts.concat(splitCanvas(cropCanvas(cv)));
+      parts = parts.slice(0, MAX_PARTS);
+      const ctx = { title: '', composer: '', bpm: 0, meter: null, key: '', pickup: 0, rh: [], lh: [], notes: [] };
+      for (let k = 0; k < parts.length; k++) {
+        if (IM.cancel) throw { code: 'cancelled' };
+        $('#prog-label').textContent = parts.length > 1 ? 'Claude is reading part ' + (k + 1) + ' of ' + parts.length + '…' : 'Claude is reading the music…';
+        setProgress(0.1 + (0.9 * k) / parts.length);
+        const blob = await toJpeg(parts[k]);
+        const r = await sample.json(sheetPrompt(k, parts.length, ctx), { images: [blob], modelTier: 'complex', signal: IM.ctl.signal });
+        if (!r || typeof r !== 'object') throw { code: 'invalid_json' };
+        if (k === 0) {
+          ctx.title = str(r.title); ctx.composer = str(r.composer); ctx.key = str(r.key);
+          ctx.bpm = Number(r.tempo_bpm) || 0; ctx.pickup = Math.max(0, Number(r.pickup_beats) || 0);
+        }
+        if (!ctx.meter && okMeter(r.meter)) ctx.meter = [Number(r.meter[0]), Number(r.meter[1])];
+        if (!ctx.key) ctx.key = str(r.key);
+        const rb = KF.splitBars(r.rh), lb = KF.splitBars(r.lh);
+        const nb = Math.max(rb.length, lb.length);
+        while (rb.length < nb) rb.push('');
+        while (lb.length < nb) lb.push('');
+        ctx.rh.push(...rb); ctx.lh.push(...lb);
+        const note = str(r.notes);
+        if (note && !/^none\.?$/i.test(note) && !ctx.notes.includes(note)) ctx.notes.push(note);
+      }
+      setProgress(1);
+      const meter = ctx.meter || [4, 4];
+      const asm = KF.assembleBars(ctx.rh, ctx.lh, KF.measureLen(meter), ctx.pickup);
+      if (!asm.notes.length) {
+        throw new SheetError(ctx.notes.some((x) => /not sheet music/i.test(x)) ? "That doesn't look like sheet music. Try a straight-on photo of the page." : "Claude didn't find notes it could read. Try a sharper photo or the PDF.");
+      }
+      const song = KF.normalizeSong({ title: ctx.title, composer: ctx.composer, bpm: ctx.bpm >= 30 && ctx.bpm <= 240 ? Math.round(ctx.bpm) : 90, meter, pickup: ctx.pickup && ctx.pickup < KF.measureLen(meter) ? ctx.pickup : 0, notes: asm.notes.slice(0, 6000) });
+      let note = 'Read ' + asm.bars + ' bars' + (src.pdf ? ' from ' + Math.min(totalPages, MAX_PAGES) + (Math.min(totalPages, MAX_PAGES) === 1 ? ' page' : ' pages') : '') + '.';
+      if (totalPages > MAX_PAGES) note += ' Only the first ' + MAX_PAGES + ' pages were read.';
+      if (asm.offBars) note += ' ' + asm.offBars + (asm.offBars === 1 ? " bar doesn't" : " bars don't") + ' add up, so some timing may be off there.';
+      if (ctx.notes.length) note += ' Claude noted: ' + ctx.notes.slice(0, 3).join(' ');
+      note += ' Tap Hear it and compare with the page before you practice.';
+      finishSheet(song, name, 'Read from sheet music', source, note);
+    } catch (e) {
+      const code = e && e.code;
+      if (code === 'cancelled') { /* stopped by the viewer */ }
+      else if (e instanceof SheetError) sheetNote(e.message);
+      else if (code === 'not_granted' || code === 'sampling_disabled') sheetNote('Keyfall needs your OK to use Claude for reading sheet music. Try again and choose Allow.');
+      else if (code === 'rate_limited') sheetNote("You've reached a Claude usage limit for now. Try again later.");
+      else if (code === 'image_rejected') sheetNote("That picture couldn't be sent to Claude. Try a smaller photo, or a PDF.");
+      else if (code === 'invalid_json') sheetNote("Claude's reading didn't come back in a form Keyfall understands. Try again.");
+      else if (code === 'refused') sheetNote("Claude couldn't read this one. Try a different page or photo.");
+      else sheetNote('Reading the sheet music failed. Check your connection and try again.');
+    } finally {
+      IM.ctl = null;
+      setBusy(false);
     }
   }
 
@@ -2749,8 +3230,12 @@ button, input, select { font: inherit; color: inherit; }
     $('#rec-stop').addEventListener('click', stopRecording);
     $('#file-audio').addEventListener('change', (e) => { onAudioFile(e.target.files[0]); e.target.value = ''; });
     $('#file-go').addEventListener('click', transcribeFile);
-    $('#file-midi').addEventListener('change', (e) => { onMidiFile(e.target.files[0]); e.target.value = ''; });
-    $('#prog-cancel').addEventListener('click', () => { IM.cancel = true; });
+    $('#file-sheet').addEventListener('change', (e) => { onSheetFile(e.target.files[0]); e.target.value = ''; });
+    $('#sheet-go').addEventListener('click', onSheetLink);
+    $('#sheet-url').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); onSheetLink(); } });
+    $('#prog-cancel').addEventListener('click', () => { IM.cancel = true; if (IM.ctl) IM.ctl.abort(); });
+    $('#claude-copy').href = CLAUDE_COPY;
+    $('#sheet-claude').hidden = IN_VIEWER;
     bindSeg('#rv-poly', (v) => { IM.poly = Number(v); syncSeg('#rv-poly', v); if (IM.analysis) rebuildFromAnalysis(); });
     bindSeg('#rv-grid', (v) => { IM.grid = Number(v); syncSeg('#rv-grid', v); if (IM.analysis) requantize(); });
     $('#rv-bpm').addEventListener('change', (e) => {
@@ -2774,7 +3259,7 @@ button, input, select { font: inherit; color: inherit; }
   }
 
   function boot() {
-    if (/kfdebug/.test(location.search)) window.__kf = { P, ear, log: [] };
+    if (/kfdebug/.test(location.search)) window.__kf = { P, ear, log: [], IM };
     readColors();
     if (IN_VIEWER) $('#viewer-note').hidden = false;
     Store.songs = Store.loadLocal().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
