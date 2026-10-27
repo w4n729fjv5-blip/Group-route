@@ -370,6 +370,8 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .song-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
 .song-card { display: flex; flex-direction: column; gap: 8px; text-align: left; padding: 14px; border-radius: var(--r); border: 1px solid var(--rule); background: var(--card); color: var(--ink); min-width: 0; }
 .song-card:hover { border-color: var(--accent); }
+.song-open { all: unset; display: flex; flex-direction: column; gap: 8px; cursor: pointer; min-width: 0; }
+.song-open:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
 .song-card h3 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.15; }
 .song-card .by { font-size: 13px; color: var(--muted); margin-top: -4px; }
 .song-card .snip { overflow: hidden; border-radius: 10px; background: var(--paper); padding: 4px 8px; height: 92px; display: flex; align-items: center; }
@@ -2565,21 +2567,23 @@ const BK = {
   cv: null, ctx: null, W: 0, H: 0, dpr: 1, layout: null, raf: 0, last: 0, off: null, ro: null, ptr: new Map(),
   lastStrip: -1, nextClick: 0, demoNext: 0, t0: 0, view: 'blocks',
 };
-const bkPrefs = Object.assign({ speed: 100, names: true, strip: true, metro: true, exView: 'blocks', songView: 'both', fingers: true }, store.get('bk', {}));
+const bkPrefs = Object.assign({ speed: 100, names: true, strip: true, metro: true, exView: 'blocks', songView: 'both', readView: 'scroll', fingers: true, tails: true, scrollNames: false }, store.get('bk', {}));
 const saveBk = () => store.set('bk', bkPrefs);
 
 function openBlocks(id, opts = {}) {
   closeBlocks(true);
   const ex = prepareExercise(EXERCISES.find((e) => e.id === id));
   BK.ex = ex; BK.onDone = opts.onDone || null; BK.queue = opts.queue || null;
-  BK.isSong = ex.group === 'Songs';
-  BK.view = opts.view || (BK.isSong ? bkPrefs.songView : bkPrefs.exView) || 'blocks';
+  BK.isSong = ex.group === 'Songs'; BK.isRead = ex.group === 'Reading';
+  if (ex.gen && opts.fresh !== false) regenExercise(ex);
+  BK.sg = null;
+  BK.view = opts.view || (BK.isRead ? bkPrefs.readView : BK.isSong ? bkPrefs.songView : bkPrefs.exView) || 'blocks';
   const viewSeg = h('div', { class: 'seg', id: 'bk-view', 'aria-label': 'View' },
-    [['blocks', 'Blocks'], ['both', 'Both'], ['sheet', 'Sheet music']].map(([v, l]) => h('button', { type: 'button', 'data-v': v, text: l, 'aria-pressed': String(v === BK.view) })));
+    [['blocks', 'Blocks'], ['both', 'Both'], ['sheet', 'Sheet music'], ['scroll', 'Scrolling staff']].map(([v, l]) => h('button', { type: 'button', 'data-v': v, text: l, 'aria-pressed': String(v === BK.view) })));
   viewSeg.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     BK.view = b.dataset.v;
-    if (BK.isSong) bkPrefs.songView = BK.view; else bkPrefs.exView = BK.view;
+    if (BK.isRead) bkPrefs.readView = BK.view; else if (BK.isSong) bkPrefs.songView = BK.view; else bkPrefs.exView = BK.view;
     saveBk();
     $$('#bk-view button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.v === BK.view)));
     resizeBlocks(); renderStrip(true); renderSheet(true);
@@ -2594,7 +2598,7 @@ function openBlocks(id, opts = {}) {
   modeSeg.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; BK.mode = b.dataset.v; syncMode(); restartBlocks(); });
   const chk = (key, label) => { const i = h('input', { type: 'checkbox', id: 'bko-' + key }); i.checked = !!bkPrefs[key]; i.addEventListener('change', () => { bkPrefs[key] = i.checked; saveBk(); if (key === 'strip') renderStrip(true); if (key === 'fingers') renderSheet(true); }); return h('label', null, h('span', { text: label }), i); };
   const more = h('details', { class: 'more' }, h('summary', { class: 'btn small', role: 'button' }, 'Options'),
-    h('div', { class: 'more-panel' }, chk('names', 'Note names on blocks'), chk('fingers', 'Finger numbers in sheet music'), chk('strip', 'Small staff over the blocks'), chk('metro', 'Metronome in Keep the beat')));
+    h('div', { class: 'more-panel' }, chk('names', 'Note names on blocks'), chk('fingers', 'Finger numbers in sheet music'), chk('tails', 'Note-length bars on the scrolling staff'), chk('scrollNames', 'Note names on the scrolling staff'), chk('strip', 'Small staff over the blocks'), chk('metro', 'Metronome in Keep the beat')));
   sheet.append(
     h('div', { class: 'sheet-bar' },
       h('button', { class: 'btn icon small', type: 'button', 'aria-label': 'Close', onclick: () => closeBlocks() }, iconEl('close')),
@@ -2604,6 +2608,7 @@ function openBlocks(id, opts = {}) {
       h('label', { class: 'tb-speed' }, 'Speed', speedIn, speedOut),
       h('button', { class: 'btn small', type: 'button', onclick: () => startDemo() }, iconEl('ear'), 'Listen'),
       h('button', { class: 'btn small', type: 'button', onclick: () => restartBlocks() }, iconEl('replay'), 'Restart'),
+      ex.gen ? h('button', { class: 'btn small', type: 'button', onclick: () => { regenExercise(BK.ex); BK.sg = null; SHEET.ex = null; resizeBlocks(); resetBlocks(); showStart(); } }, 'New notes') : null,
       more),
     h('div', { class: 'stage', id: 'bk-stage' },
       h('canvas', { id: 'bk-cv' }),
@@ -2843,6 +2848,7 @@ function resizeBlocks() {
     const want = lh ? (lh * 2 + 24 <= hitY * 0.56 ? lh * 2 : lh) + 22 : hitY * 0.5;
     cover = Math.round(clamp(want, Math.min(150, hitY - 90), hitY * 0.62));
   }
+  BK.sg = null;
   BK.layout = { lo, hi, keys, kbH, hitY, ww, cover, pxb: Math.max(40, (hitY - cover)) / (BK.view === 'both' ? 3.4 : 4.6), key: (p) => map.get(p) };
   const hud = $('#blocks .stage-hud'); if (hud) { hud.style.top = (BK.view === 'both' ? cover : 0) + 'px'; hud.style.zIndex = BK.view === 'sheet' ? '4' : ''; }
   const pr = $('#blocks .hud-prog'); if (pr) { pr.style.top = (BK.view === 'both' ? cover : 0) + 'px'; pr.style.zIndex = BK.view === 'sheet' ? '4' : ''; }
@@ -2929,6 +2935,10 @@ function drawBlocks(now, dt) {
   };
   c.setTransform(BK.dpr, 0, 0, BK.dpr, 0, 0);
   c.fillStyle = col.stage; c.fillRect(0, 0, BK.W, BK.H);
+  const step = ex.steps[BK.stepIdx];
+  const pulse = 0.5 + 0.5 * Math.sin(now / 160);
+  if (BK.view === 'scroll') drawScroll(c, L, now, col);
+  else {
   /* lanes */
   for (const k of L.keys) if (k.black) { c.fillStyle = col.lane; c.fillRect(k.x, 0, k.w, L.hitY); }
   c.fillStyle = col.line;
@@ -2942,8 +2952,6 @@ function drawBlocks(now, dt) {
     c.fillRect(0, y, BK.W, Math.abs(mod(b + pkOff, beats)) < 1e-6 ? 2 : 1);
   }
   /* blocks */
-  const step = ex.steps[BK.stepIdx];
-  const pulse = 0.5 + 0.5 * Math.sin(now / 160);
   c.textAlign = 'center'; c.textBaseline = 'middle';
   for (const n of ex.notes) {
     const yb = L.hitY - (n.t - BK.beat) * pxb;
@@ -2975,6 +2983,7 @@ function drawBlocks(now, dt) {
       c.fillText(nameOf(n.p, false, ex.key || 0), x + w / 2, yt + 12);
     }
     c.globalAlpha = 1;
+  }
   }
   /* hit line */
   c.fillStyle = col.accent; c.globalAlpha = 0.85; c.fillRect(0, L.hitY - 2, BK.W, 3); c.globalAlpha = 1;
@@ -3671,9 +3680,9 @@ function renderPractice() {
   v.textContent = '';
   v.append(h('div', { class: 'sec-head' }, h('h2', { text: 'Falling blocks' }), h('p', { text: 'Notes fall toward the keys with finger numbers on every block. Wait for me stops until you play the right keys; Keep the beat keeps time. Any exercise can also show sheet music.' })));
   v.append(h('p', { class: 'overall-note', style: { marginTop: '-4px' } }, 'Looking for songs? They have their own tab: ', h('button', { class: 'btn small', type: 'button', onclick: () => showView('songs') }, 'Open Songs')));
-  for (const g of EX_GROUPS) {
+  for (const g of ['Reading'].concat(EX_GROUPS)) {
     const exs = EXERCISES.filter((e) => e.group === g);
-    v.append(h('div', { class: 'group-title', text: g }));
+    v.append(h('div', { class: 'group-title', text: g === 'Reading' ? 'Reading runs · scrolling staff · new notes every time' : g }));
     v.append(h('div', { class: 'cards' }, exs.map((ex) => {
       prepareExercise(ex);
       const cv = h('canvas', { 'aria-hidden': 'true' });
@@ -4125,7 +4134,7 @@ function sheetModel(ex) {
   const slotAt = (t) => { const k = Math.round(t * 1000); if (!map.has(k)) map.set(k, { t, notes: [], durBy: {}, restBy: {} }); return map.get(k); };
   for (const n of ex.notes) {
     const sl = slotAt(n.t), st = staffFor(n.hand);
-    sl.notes.push(Object.assign({}, N(n.name), { staff: st, f: n.f, hand: n.hand }));
+    sl.notes.push(Object.assign({}, N(n.name), { staff: st, f: n.f, hand: n.hand, src: n }));
     sl.durBy[st] = n.dur;
   }
   for (const r of ex.rests || []) slotAt(r.t).restBy[staffFor(r.hand)] = r.dur;
@@ -4178,7 +4187,7 @@ function drawSheetLine(line, curIdx) {
 function renderSheet(force) {
   const el = $('#bk-sheet');
   if (!el || !BK.ex || !BK.layout) return;
-  if (BK.view === 'blocks') { el.hidden = true; return; }
+  if (BK.view === 'blocks' || BK.view === 'scroll') { el.hidden = true; return; }
   el.hidden = false;
   el.style.height = BK.layout.cover + 'px';
   const W = Math.max(240, el.clientWidth - 28);
@@ -4210,7 +4219,7 @@ function lineOfSlot(m, idx) {
   return sl ? SHEET.lines.find((ln) => sl.measure >= ln.from && sl.measure <= ln.to) : null;
 }
 function updateSheet() {
-  if (!BK.ex || BK.view === 'blocks' || SHEET.ex !== BK.ex || !SHEET.lines.length) return;
+  if (!BK.ex || BK.view === 'blocks' || BK.view === 'scroll' || SHEET.ex !== BK.ex || !SHEET.lines.length) return;
   const m = sheetModel(BK.ex);
   const idx = curSlotIndex(m);
   if (idx === SHEET.cur) return;
@@ -4250,7 +4259,7 @@ function renderSongs() {
   v.textContent = '';
   const songs = EXERCISES.filter((e) => e.group === 'Songs').map(prepareExercise).sort((a, b) => (a.level || 1) - (b.level || 1));
   v.append(h('div', { class: 'sec-head' }, h('h2', { text: 'Songs' }),
-    h('p', { text: 'Read the sheet music and follow the falling blocks at the same time. Switch between Blocks, Both and Sheet music at the top of any song. Start with Wait for me and a slower speed.' })));
+    h('p', { text: 'Read the sheet music and follow the falling blocks at the same time. Switch between Blocks, Both, Sheet music and Scrolling staff at the top of any song. Scrolling staff slides the real notation toward a line, like falling notes. Start with Wait for me and a slower speed.' })));
   for (const lv of [1, 2, 3]) {
     const list = songs.filter((s0) => (s0.level || 1) === lv);
     if (!list.length) continue;
@@ -4259,8 +4268,12 @@ function renderSongs() {
       const snip = h('div', { class: 'snip', 'aria-hidden': 'true' });
       try { snip.append(songSnippet(ex)); } catch (e) { console.error(e); }
       const lvl = h('span', { class: 'level', 'aria-label': 'Level ' + lv }, [1, 2, 3].map((i) => h('i', { class: i <= lv ? 'on' : '' })));
-      return h('button', { class: 'song-card', type: 'button', onclick: () => openBlocks(ex.id, { queue: songs.map((s0) => s0.id) }) },
-        h('h3', { text: ex.title }), h('div', { class: 'by', text: ex.by || '' }), snip,
+      const q = songs.map((s0) => s0.id);
+      return h('div', { class: 'song-card' },
+        h('button', { class: 'song-open', type: 'button', onclick: () => openBlocks(ex.id, { queue: q }), 'aria-label': 'Play ' + ex.title }, h('h3', { text: ex.title }), h('div', { class: 'by', text: ex.by || '' }), snip),
+        h('div', { class: 'row', style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+          h('button', { class: 'btn small primary', type: 'button', onclick: () => openBlocks(ex.id, { queue: q }) }, iconEl('play'), 'Play'),
+          h('button', { class: 'btn small', type: 'button', onclick: () => openBlocks(ex.id, { queue: q, view: 'scroll' }) }, 'Read on a scrolling staff')),
         h('div', { class: 'meta' }, lvl,
           h('span', { class: 'hand-chip ' + ex.hands, text: ex.hands === 'B' ? 'Both' : ex.hands === 'R' ? 'Right' : 'Left' }),
           h('span', { class: 'tag', text: (ex.time ? ex.time.join('/') : '4/4') + ' · ' + (ex.keyName || 'C major') }),
@@ -4978,6 +4991,11 @@ lesson('readfg', 'F and G: the five-finger position', 'Reading C to G in the tre
   ['Lines and spaces alternate', '<p>Going up: line (E), space (F), line (G). C and D sit below the staff. If a note moves line to space, it moved one step.</p>', { type: 'staff', clef: 'treble', items: ['E4', 'F4', 'G4', 'F4', 'E4', 'D4', 'C4'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.4, bpm: 80 }],
 ], { drills: ['read-cg', 'sight-c'], blocks: ['song-mary'] });
 
+lesson('scrollread', 'Reading on a scrolling staff', 'Play the notes as they reach the line.', ['Reading', 'Blocks'], [
+  ['Like falling notes, but real music', '<p>On the <b>scrolling staff</b>, real sheet music slides from right to left toward a line, the <b>playhead</b>. When a note reaches the line, play it. In <b>Wait for me</b> mode the music stops at the line until you find the right key; in <b>Keep the beat</b> it keeps moving.</p><p>The faint bars behind the notes show how long each note lasts. Turn them off in Options when you’re ready to read the note shapes alone.</p>' + tip('Read ahead', 'Look at the next note while you play this one. Your eyes should always be a little to the right of the line.') ],
+  ['Every song works this way', '<p>Every song and exercise in Keystone has a <b>Scrolling staff</b> button at the top of the player. The reading runs below give you fresh random notes each time, so you can’t just memorise them.</p>' ],
+], { blocks: ['rr-c', 'rr-c2', 'rr-bass', 'rr-g'] });
+
 lesson('highnotes', 'High notes and ledger lines', 'Reading above the treble staff.', ['Reading'], [
   ['Past the top line', '<p>The top line of the treble staff is <b>F5</b>. Above it, <b>G5</b> sits on top of the staff. Then ledger lines take over: <b>A5</b> on the first ledger line, <b>B5</b> above it, <b>C6</b> on the second ledger line.</p>', { type: 'staff', clef: 'treble', items: ['C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5', 'C6'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.4 }],
   ['Count the ledger lines', '<p>Ledger lines work exactly like staff lines: line, space, line. Count up from the top line, F, one letter per line or space.</p>' + tip('Landmark', 'Treble C (C5) sits in the third space. High C (C6) has two ledger lines.') ],
@@ -5030,7 +5048,7 @@ lesson('octsigns', 'Octave signs', '8va, 8vb and reading very high or low notes.
 lesson('sightread', 'Sight-reading', 'Playing music you’ve never seen before.', ['Reading'], [
   ['Before you play: scan', '<ol><li>Look at the <b>clef</b> and <b>key signature</b>.</li><li>Check the <b>time signature</b> and count one bar in your head.</li><li>Find the <b>first note</b> and the hand position.</li><li>Notice the <b>shape</b>: steps, skips, repeated notes.</li></ol>' ],
   ['While you play', '<ul><li>Keep going. Don’t stop to fix mistakes. A steady beat matters more than every note.</li><li>Look one note ahead of the one you’re playing.</li><li>Don’t look down at your hands. Feel the black-key groups instead.</li><li>Choose a slow tempo you can keep.</li></ul>' + tip('Little and often', 'Two minutes of sight-reading every day builds this skill faster than anything else.') ],
-], { drills: ['sight-c', 'sight-c2', 'sight-oct', 'sight-bass'] });
+], { drills: ['sight-c', 'sight-c2', 'sight-oct', 'sight-bass'], blocks: ['rr-octave', 'rr-rhythm', 'rr-turns', 'rr-grand'] });
 
 /* ===== 23-course-b.js ===== */
 /* ---------- the full course: new lessons (part 2: rhythm, ear, scales, chords, expression, practice) ---------- */
@@ -5251,7 +5269,7 @@ const COURSE = [
   { id: 'hands', title: 'Hands and technique', color: 'var(--u2)', desc: 'Posture, hand shape, finger independence, both hands together, shifting, touch and the pedal.',
     lessons: [['posture', 'B'], ['handshape', 'B'], ['fingers', 'B'], ['warmup', 'B'], ['legato', 'B'], ['independence', 'B'], ['coordination', 'B'], ['thumbunder', 'B'], ['shifts', 'I'], ['touch', 'I'], ['pedal', 'I']] },
   { id: 'reading', title: 'Reading notes', color: 'var(--u4)', desc: 'The staff and clefs, note by note from middle C outward, ledger lines, intervals, accidentals, key signatures, chords and sight-reading.',
-    lessons: [['staff', 'B'], ['readcde', 'B'], ['readfg', 'B'], ['treble', 'B'], ['highnotes', 'B'], ['bassnear', 'B'], ['bass', 'B'], ['landmarks', 'B'], ['readint', 'B'], ['readacc', 'B'], ['signs', 'B'], ['sightread', 'B'], ['lownotes', 'I'], ['wholestaff', 'I'], ['readkey', 'I'], ['readchords', 'I'], ['octsigns', 'I']] },
+    lessons: [['staff', 'B'], ['readcde', 'B'], ['readfg', 'B'], ['scrollread', 'B'], ['treble', 'B'], ['highnotes', 'B'], ['bassnear', 'B'], ['bass', 'B'], ['landmarks', 'B'], ['readint', 'B'], ['readacc', 'B'], ['signs', 'B'], ['sightread', 'B'], ['lownotes', 'I'], ['wholestaff', 'I'], ['readkey', 'I'], ['readchords', 'I'], ['octsigns', 'I']] },
   { id: 'rhythm', title: 'Rhythm and counting', color: 'var(--u7)', desc: 'Every note value one at a time, rests, dots and ties, time signatures, then sixteenths, triplets, 6/8 and syncopation. Tap along to check yourself.',
     lessons: [['beat', 'B'], ['wholenote', 'B'], ['halfnote', 'B'], ['quarternote', 'B'], ['rhythm', 'B'], ['meter', 'B'], ['eighthnote', 'B'], ['dottednotes', 'B'], ['ties', 'B'], ['pickup', 'B'], ['sixteenth', 'I'], ['triplets', 'I'], ['compound', 'I'], ['syncopation', 'I']] },
   { id: 'ear', title: 'Ear training', color: 'var(--u3)', desc: 'High and low, notes by ear at your own speed, melodies, rhythms, intervals, chord colours, scale degrees and chord changes.',
@@ -5279,6 +5297,256 @@ const COURSE = [
     });
   });
 })();
+
+/* ===== 24-scroll.js ===== */
+/* ---------- scrolling staff: real notation sliding toward a playhead ---------- */
+const GLYPH_PATHS = {};
+function drawGlyph(c, name, x, top, bottom) {
+  const g = GLYPH[name]; if (!g) return 0;
+  if (!GLYPH_PATHS[name]) GLYPH_PATHS[name] = new Path2D(g.d);
+  const [x0, y0, x1, y1] = g.bb, k = (bottom - top) / (y1 - y0);
+  c.save(); c.translate(x - x0 * k, top - y0 * k); c.scale(k, k); c.fill(GLYPH_PATHS[name]); c.restore();
+  return (x1 - x0) * k;
+}
+function scrollGeom(ex, L) {
+  const m = sheetModel(ex);
+  const A = L.hitY, grand = m.clef === 'grand';
+  const staves = grand ? ['t', 'b'] : [m.clef === 'bass' ? 'b' : 't'];
+  const sp = Math.max(5.5, Math.min(grand ? clamp((A - 24) / 23, 5.5, 15) : clamp((A - 24) / 15, 7, 18), BK.W / 36));
+  const span = grand ? 14 * sp : 4 * sp;
+  const top0 = Math.round((A - span) / 2 + (grand ? 0.4 * sp : 0.3 * sp));
+  const topOf = (st) => (st === 't' ? top0 : grand ? top0 + 10 * sp : top0);
+  const diY = (di, st) => (st === 't' ? topOf('t') + 4 * sp - (di - 30) * sp / 2 : topOf('b') + 4 * sp - (di - 18) * sp / 2);
+  const ks = Math.abs(ex.key || 0);
+  const panelW = (grand ? 1.8 : 0.8) * sp + 4 * sp + ks * 1.05 * sp + 0.9 * sp;
+  const playX = panelW + 3.2 * sp;
+  let minGap = 1;
+  for (let i = 1; i < ex.steps.length; i++) minGap = Math.min(minGap, ex.steps[i].t - ex.steps[i - 1].t);
+  let pxb = Math.max(sp * 5.6, (sp * 3.1) / Math.max(0.12, minGap));
+  pxb = Math.min(pxb, Math.max(sp * 4, (BK.W - playX) / (BK.W < 600 ? 2.2 : 3.2)));
+  return { m, sp, staves, grand, topOf, diY, panelW, playX, pxb, key: ex.key || 0 };
+}
+function drawScroll(c, L, now, col) {
+  const ex = BK.ex;
+  if (!BK.sg || BK.sg.ex !== ex || BK.sg.W !== BK.W || BK.sg.H !== BK.H) BK.sg = Object.assign(scrollGeom(ex, L), { ex, W: BK.W, H: BK.H });
+  const G = BK.sg, sp = G.sp, m = G.m;
+  const ink = cssVar('--staff'), paper = cssVar('--card'), accent = col.accent;
+  const X = (t) => G.playX + (t - BK.beat) * G.pxb;
+  /* paper */
+  c.fillStyle = paper; c.fillRect(0, 0, BK.W, L.hitY);
+  /* playhead glow */
+  c.fillStyle = accent; c.globalAlpha = 0.08; c.fillRect(G.playX - 1.6 * sp, 0, 3.2 * sp, L.hitY); c.globalAlpha = 1;
+  /* staff lines */
+  c.strokeStyle = ink; c.lineWidth = Math.max(1, sp * 0.1);
+  const line = (x1, y1, x2, y2) => { c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); };
+  for (const st of G.staves) for (let i = 0; i < 5; i++) { const y = Math.round(G.topOf(st) + i * sp) + 0.5; line(0, y, BK.W, y); }
+  const yTop = G.topOf(G.staves[0]), yBot = G.topOf(G.staves[G.staves.length - 1]) + 4 * sp;
+  /* bar lines */
+  const off = ex.pickup ? m.bpb - ex.pickup : 0;
+  for (let k = 1; k <= m.measures; k++) {
+    const tb = k * m.bpb - off;
+    const x = X(tb) - 1.3 * sp;
+    if (x < G.panelW - 4 || x > BK.W + 4) continue;
+    c.lineWidth = Math.max(1, sp * 0.12); line(x, yTop, x, yBot);
+    if (k === m.measures) { c.fillStyle = ink; c.fillRect(x + 0.45 * sp, yTop, 0.5 * sp, yBot - yTop); }
+  }
+  /* time signature at the start */
+  const tsX = X(-1.1);
+  if (tsX > G.panelW && tsX < BK.W) {
+    c.fillStyle = ink; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = (2.9 * sp) + 'px "Young Serif", Georgia, serif';
+    for (const st of G.staves) { c.fillText(String(m.time[0]), tsX, G.topOf(st) + sp); c.fillText(String(m.time[1]), tsX, G.topOf(st) + 3 * sp); }
+  }
+  /* notes */
+  const hw = 0.66 * sp, hh = 0.46 * sp;
+  const tMin = BK.beat - (G.playX + 4 * sp) / G.pxb, tMax = BK.beat + (BK.W - G.playX + 4 * sp) / G.pxb;
+  const pulse = 0.5 + 0.5 * Math.sin(now / 160);
+  const curStep = BK.stepIdx;
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+  for (const sl of m.list) {
+    if (sl.t < tMin - 4 || sl.t > tMax) continue;
+    const x = X(sl.t);
+    const groups = {};
+    for (const n of sl.notes) (groups[n.staff] = groups[n.staff] || []).push(n);
+    /* rests */
+    for (const st in sl.restBy) if (!groups[st] && G.staves.includes(st)) {
+      const kind = sl.restBy[st], b0 = kind.replace('.', ''), mid = G.topOf(st) + 2 * sp;
+      c.fillStyle = ink; c.globalAlpha = x < G.playX - sp ? 0.45 : 1;
+      if (b0 === 'q') drawGlyph(c, 'qrest', x - 0.55 * sp, mid - 1.49 * sp, mid + 1.5 * sp);
+      else if (b0 === 'e' || b0 === 's') drawGlyph(c, 'erest', x - 0.5 * sp, mid - 0.7 * sp, mid + 1.0 * sp);
+      else if (b0 === 'h') c.fillRect(x - 0.65 * sp, mid - 0.5 * sp, 1.3 * sp, 0.5 * sp);
+      else if (b0 === 'w') c.fillRect(x - 0.65 * sp, mid - sp, 1.3 * sp, 0.5 * sp);
+      c.globalAlpha = 1;
+    }
+    for (const st in groups) {
+      const g = groups[st].map((n) => ({ n, di: diaOf(n) })).sort((a, b) => a.di - b.di);
+      const dur = sl.durBy[st] || 'q', base = dur.replace('.', ''), dotted = dur.includes('.');
+      const middle = st === 't' ? 34 : 22, bottomDi = st === 't' ? 30 : 18, topDi = st === 't' ? 38 : 26;
+      const up = g.reduce((a, v) => a + v.di, 0) / g.length < middle;
+      const colorOf = (n) => { const s0 = n.src; if (s0 && s0.hit) return col.good; if (s0 && s0.missed) return col.bad; if (sl.step === curStep && BK.running && !BK.demo) return accent; return ink; };
+      const fade = x < G.playX - 2 * sp ? clamp(1 - (G.playX - 2 * sp - x) / (G.playX - G.panelW), 0.25, 1) : 1;
+      /* note-length tails */
+      if (bkPrefs.tails) for (const v of g) {
+        const s0 = v.n.src; if (!s0) continue;
+        const x2 = X(sl.t + s0.d) - 1.2 * sp;
+        if (x2 - x < 1.6 * sp) continue;
+        c.globalAlpha = 0.16 * fade; c.fillStyle = s0.hand === 'L' ? col.lh : col.rh;
+        roundRect(c, x, G.diY(v.di, st) - 0.42 * sp, x2 - x, 0.84 * sp, 0.42 * sp); c.fill();
+      }
+      c.globalAlpha = fade;
+      /* ledger lines */
+      c.strokeStyle = ink; c.lineWidth = Math.max(1, sp * 0.1);
+      const lowDi = g[0].di, highDi = g[g.length - 1].di, led = 1.45 * sp;
+      for (let d = bottomDi - 2; d >= lowDi; d -= 2) line(x - led, G.diY(d, st), x + led, G.diY(d, st));
+      for (let d = topDi + 2; d <= highDi; d += 2) line(x - led, G.diY(d, st), x + led, G.diY(d, st));
+      /* heads, accidentals, dots */
+      let prev = null;
+      g.forEach((v, k) => {
+        let hx = x;
+        if (prev && v.di - prev.di === 1 && !prev.shift) { v.shift = true; hx += (up ? 1 : -1) * hw * 1.9; }
+        prev = v;
+        const y = G.diY(v.di, st), cl = colorOf(v.n);
+        c.fillStyle = cl; c.strokeStyle = cl;
+        c.beginPath();
+        if (base === 'w') { c.ellipse(hx, y, 0.8 * sp, 0.5 * sp, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = paper; c.beginPath(); c.ellipse(hx, y, 0.42 * sp, 0.27 * sp, 1.08, 0, Math.PI * 2); c.fill(); }
+        else if (base === 'h') { c.ellipse(hx, y, hw, hh, -0.38, 0, Math.PI * 2); c.fill(); c.fillStyle = paper; c.beginPath(); c.ellipse(hx, y, 0.46 * sp, 0.2 * sp, -0.52, 0, Math.PI * 2); c.fill(); }
+        else { c.ellipse(hx, y, hw, hh, -0.38, 0, Math.PI * 2); c.fill(); }
+        if (cl === accent && v.n.src && !v.n.src.hit) { c.globalAlpha = fade * (0.25 + 0.3 * pulse); c.beginPath(); c.arc(hx, y, sp * 1.25, 0, Math.PI * 2); c.fillStyle = accent; c.fill(); c.globalAlpha = fade; }
+        c.fillStyle = cl;
+        if (dotted) { const dy = v.di % 2 === bottomDi % 2 ? -sp / 2 : 0; c.beginPath(); c.arc(hx + hw + 0.55 * sp, y + dy, 0.18 * sp, 0, Math.PI * 2); c.fill(); }
+        if (v.n.showAcc) {
+          const ax = x - hw - 1.45 * sp - (k % 2 && g.length > 1 ? 1.1 * sp : 0);
+          if (v.n.acc === 1) drawGlyph(c, 'sharp', ax, y - 1.4 * sp, y + 1.4 * sp);
+          else if (v.n.acc === -1) drawGlyph(c, 'flat', ax + 0.1 * sp, y - 1.9 * sp, y + 0.55 * sp);
+          else drawGlyph(c, 'natural', ax + 0.15 * sp, y - 1.35 * sp, y + 1.35 * sp);
+        }
+        if (bkPrefs.scrollNames) { c.font = '700 ' + (1.05 * sp) + 'px Figtree, sans-serif'; c.fillText(v.n.letter + accStr(v.n.acc), hx, up ? y + 1.6 * sp : y - 1.6 * sp); }
+      });
+      /* stem and flags */
+      const cl0 = colorOf(g[0].n);
+      c.strokeStyle = cl0; c.fillStyle = cl0;
+      if (base !== 'w') {
+        const sx = up ? x + hw * 0.93 : x - hw * 0.93;
+        const yLow = G.diY(lowDi, st), yHigh = G.diY(highDi, st);
+        let y2 = up ? yHigh - 3.4 * sp : yLow + 3.4 * sp;
+        if (up && y2 > G.topOf(st) + 2 * sp) y2 = G.topOf(st) + 2 * sp;
+        if (!up && y2 < G.topOf(st) + 2 * sp) y2 = G.topOf(st) + 2 * sp;
+        c.lineWidth = Math.max(1, 0.13 * sp); line(sx, up ? yLow - 0.15 * sp : yHigh + 0.15 * sp, sx, y2);
+        const flags = base === 's' ? 2 : base === 'e' || base === 't' ? 1 : 0;
+        for (let fi = 0; fi < flags; fi++) {
+          const fy = y2 + (up ? 1 : -1) * fi * 0.95 * sp, d = up ? 1 : -1;
+          c.beginPath(); c.moveTo(sx, fy);
+          c.bezierCurveTo(sx + 0.2 * sp, fy + d * 1.2 * sp, sx + 1.6 * sp, fy + d * 1.4 * sp, sx + 1.2 * sp, fy + d * 3 * sp);
+          c.bezierCurveTo(sx + 1.7 * sp, fy + d * 1.5 * sp, sx + 0.3 * sp, fy + d * 1 * sp, sx, fy + d * 0.8 * sp);
+          c.closePath(); c.fill();
+        }
+        if (base === 't') { c.font = 'italic ' + (1.2 * sp) + 'px "Young Serif", Georgia, serif'; c.fillText('3', x, up ? y2 - 0.9 * sp : y2 + 0.9 * sp); }
+      }
+      /* finger numbers */
+      const fing = g.filter((v) => v.n.f);
+      if (bkPrefs.fingers && fing.length) {
+        c.font = '800 ' + (1.2 * sp) + 'px Figtree, sans-serif';
+        c.fillStyle = st === 'b' && G.grand ? col.lh : (g[0].n.hand === 'L' ? col.lh : col.rh);
+        if (st === G.staves[0] && !(G.grand && st === 'b')) {
+          let yy = Math.min(G.diY(highDi, st) - (up && base !== 'w' ? 4.2 : 1.4) * sp, G.topOf(st) - 1 * sp);
+          fing.slice().reverse().forEach((v) => { c.fillText(String(v.n.f), x, yy); yy -= 1.2 * sp; });
+        } else {
+          let yy = Math.max(G.diY(lowDi, st) + (!up && base !== 'w' ? 4.4 : 1.6) * sp, G.topOf(st) + 5.2 * sp);
+          fing.forEach((v) => { c.fillText(String(v.n.f), x, yy); yy += 1.2 * sp; });
+        }
+      }
+      c.globalAlpha = 1;
+    }
+  }
+  /* playhead */
+  c.fillStyle = accent; c.globalAlpha = 0.9; c.fillRect(G.playX - 1, yTop - 2.5 * sp, 2.5, yBot - yTop + 5 * sp); c.globalAlpha = 1;
+  /* fixed clef panel */
+  c.fillStyle = paper; c.fillRect(0, 0, G.panelW, L.hitY);
+  const grd = c.createLinearGradient(G.panelW, 0, G.panelW + 2.4 * sp, 0);
+  grd.addColorStop(0, paper); grd.addColorStop(1, hexAlpha(paper, 0));
+  c.fillStyle = grd; c.fillRect(G.panelW, 0, 2.4 * sp, L.hitY);
+  c.strokeStyle = ink; c.lineWidth = Math.max(1, sp * 0.1);
+  for (const st of G.staves) for (let i = 0; i < 5; i++) { const y = Math.round(G.topOf(st) + i * sp) + 0.5; line(G.grand ? 1.6 * sp : 0.8 * sp, y, G.panelW, y); }
+  const lx = G.grand ? 1.6 * sp : 0.8 * sp;
+  line(lx, yTop, lx, yBot);
+  c.fillStyle = ink;
+  if (G.grand) drawGlyph(c, 'brace', 0.2 * sp, yTop - 0.1 * sp, yBot + 0.1 * sp);
+  for (const st of G.staves) {
+    const tl = G.topOf(st);
+    if (st === 't') drawGlyph(c, 'treble', lx + 0.5 * sp, tl + 3.3 * sp - 4.392 * sp, tl + 3.3 * sp + 2.632 * sp);
+    else drawGlyph(c, 'bass', lx + 0.5 * sp, tl + sp - 1.02 * sp, tl + sp + 2.55 * sp);
+    const kf = G.key, kind = kf > 0 ? 'sharp' : 'flat';
+    for (let i = 0; i < Math.abs(kf); i++) {
+      const di = KEYSIG_DI[kind][i] - (st === 'b' ? 14 : 0), y = G.diY(di, st), gx = lx + 4.3 * sp + i * 1.05 * sp;
+      if (kind === 'sharp') drawGlyph(c, 'sharp', gx, y - 1.4 * sp, y + 1.4 * sp); else drawGlyph(c, 'flat', gx, y - 1.9 * sp, y + 0.55 * sp);
+    }
+  }
+}
+
+/* ---------- reading runs: fresh notes every time ---------- */
+function genRun(o) {
+  const pool = o.pool.map((x) => (Array.isArray(x) ? x : [x, null]));
+  const bars = o.bars || 8;
+  const rhythms = o.rhythms || [['q', 'q', 'q', 'q']];
+  let i = Math.floor(pool.length / 2);
+  if (o.start != null) i = o.start;
+  const voice = [];
+  for (let b = 0; b < bars; b++) {
+    const rh = b === bars - 1 ? (o.lastBar || ['w']) : pick(rhythms);
+    const toks = [];
+    for (const d of rh) {
+      if (d.startsWith('r')) { toks.push('r/' + d.slice(1)); continue; }
+      const stepSet = o.skips ? [-2, -1, -1, 1, 1, 2, 0, 3, -3] : [-1, -1, 1, 1, 0, 2, -2];
+      i = clamp(i + pick(stepSet), 0, pool.length - 1);
+      if (b === bars - 1 && o.home != null) i = o.home;
+      const [nm, f] = pool[i];
+      toks.push(nm + (f ? '.' + f : '') + '/' + d);
+    }
+    voice.push(toks.join(' '));
+  }
+  return voice.join(' | ');
+}
+function restBars(n, bar = 'w') { return Array.from({ length: n }, () => 'r/' + bar).join(' | '); }
+const C_RH = [['C4', 1], ['D4', 2], ['E4', 3], ['F4', 4], ['G4', 5]];
+const G_RH = [['G4', 1], ['A4', 2], ['B4', 3], ['C5', 4], ['D5', 5]];
+const F_RH = [['F4', 1], ['G4', 2], ['A4', 3], ['Bb4', 4], ['C5', 5]];
+const C_LH = [['C3', 5], ['D3', 4], ['E3', 3], ['F3', 2], ['G3', 1]];
+const MID_LH = [['F3', 5], ['G3', 4], ['A3', 3], ['B3', 2], ['C4', 1]];
+const MIX = [['q', 'q', 'q', 'q'], ['h', 'q', 'q'], ['q', 'q', 'h'], ['h', 'h'], ['e', 'e', 'q', 'q', 'q'], ['q', 'e', 'e', 'h'], ['q.', 'e', 'q', 'q']];
+const READ_RUNS = [
+  { id: 'rr-c', title: 'Read: treble C position', desc: 'Quarter notes from middle C to G. Read the note at the playhead, then play it.', bpm: 66, level: 1, gen: () => ({ R: genRun({ pool: C_RH, home: 0, start: 0 }) }) },
+  { id: 'rr-c2', title: 'Read: treble with skips', desc: 'C position with skips (C–E, D–F, E–G). Notice line-to-line jumps.', bpm: 66, level: 2, gen: () => ({ R: genRun({ pool: C_RH, skips: true, home: 0, start: 0 }) }) },
+  { id: 'rr-g', title: 'Read: treble G position', desc: 'G4 to D5: the five notes around the treble clef’s curl.', bpm: 66, level: 2, gen: () => ({ R: genRun({ pool: G_RH, home: 0, start: 0 }) }) },
+  { id: 'rr-bass', title: 'Read: bass C position', desc: 'Left hand from bass C (C3) up to G3.', bpm: 66, level: 1, gen: () => ({ L: genRun({ pool: C_LH, home: 0, start: 0 }) }) },
+  { id: 'rr-bassmid', title: 'Read: bass near middle C', desc: 'Left hand from F3 up to middle C, thumb on C.', bpm: 66, level: 2, gen: () => ({ L: genRun({ pool: MID_LH, home: 4, start: 4 }) }) },
+  { id: 'rr-rhythm', title: 'Read: notes and rhythms', desc: 'C position with halves, eighths and dotted notes. Read the pitch and the length.', bpm: 60, level: 3, gen: () => ({ R: genRun({ pool: C_RH, rhythms: MIX, skips: true, home: 0, start: 0 }) }) },
+  { id: 'rr-f', title: 'Read: key of F', desc: 'F position with B♭ from the key signature. Every B is flat.', bpm: 60, level: 3, key: -1, keyName: 'F major', gen: () => ({ R: genRun({ pool: F_RH, skips: true, home: 0, start: 0 }) }) },
+  { id: 'rr-turns', title: 'Read: hands take turns', desc: 'Right hand on the treble staff, then left hand on the bass staff, two bars each.', bpm: 66, level: 3, gen: () => {
+    const R = [], L = [];
+    for (let k = 0; k < 4; k++) {
+      const right = k % 2 === 0;
+      const a = genRun({ pool: right ? C_RH : C_LH, bars: 2, lastBar: ['h', 'h'], skips: k > 1 });
+      if (right) { R.push(a); L.push(restBars(2)); } else { L.push(a); R.push(restBars(2)); }
+    }
+    return { R: R.join(' | '), L: L.join(' | ') };
+  } },
+  { id: 'rr-grand', title: 'Read: both hands together', desc: 'Right-hand melody in C position over left-hand half notes.', bpm: 56, level: 4, gen: () => ({ R: genRun({ pool: C_RH, home: 0, start: 2 }), L: genRun({ pool: [['C3', 5], ['E3', 3], ['G3', 1]], rhythms: [['h', 'h']], home: 0, start: 0 }) }) },
+  { id: 'rr-octave', title: 'Read: the whole octave', desc: 'Middle C to treble C with steps and skips. Find each note from a landmark.', bpm: 60, level: 4, gen: () => ({ R: genRun({ pool: ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'], skips: true, home: 0, start: 0 }) }) },
+];
+for (const r of READ_RUNS) EXERCISES.push(Object.assign({ group: 'Reading', key: 0 }, r, r.gen()));
+function regenExercise(ex) {
+  if (!ex.gen) return ex;
+  delete ex.R; delete ex.L;
+  Object.assign(ex, ex.gen());
+  ex._ready = false; ex._sheet = null;
+  return prepareExercise(ex);
+}
+
+function hexAlpha(hex, a) {
+  const m = /^#?([0-9a-f]{6})$/i.exec((hex || '').trim());
+  if (!m) return 'rgba(255,255,255,0)';
+  const n = parseInt(m[1], 16);
+  return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+}
 
 /* ===== 99-main.js ===== */
 /* ---------- boot ---------- */
