@@ -34,7 +34,7 @@
   --good: #1B8A57;
   --bad: #CF3B2B;
   --warn: #B7791F;
-  --u1: #0C8580; --u2: #D2691A; --u3: #7246CC; --u4: #2762C9; --u5: #368F3A; --u6: #C2386A;
+  --u1: #0C8580; --u2: #D2691A; --u3: #7246CC; --u4: #2762C9; --u5: #368F3A; --u6: #C2386A; --u7: #8B5A2B; --u8: #46607A; --u9: #A07A12;
   --kw: #FCFCFB; --kw-down: #DCE3F2; --kb: #1A1D27; --kb-down: #3B4462; --kedge: #B8BFCB; --klabel: #6B7385;
   --stage: #E4E8EE; --lane: #D9DEE6; --lane-line: rgba(21, 25, 38, 0.08);
   --staff: #20253A;
@@ -51,7 +51,7 @@
     --paper: #0F121A; --card: #181C27; --well: #232838; --ink: #E9ECF3; --muted: #9AA2B6; --rule: #2C3244;
     --accent: #8EA2FF; --accent-soft: rgba(142, 162, 255, 0.14); --accent-ink: #0E1430;
     --rh: #F29A4E; --lh: #5FA8F0; --good: #45C285; --bad: #F2705F; --warn: #E3B04E;
-    --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F;
+    --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F; --u7: #D29A66; --u8: #93ABC6; --u9: #DDB84E;
     --kw: #E8EAEF; --kw-down: #B8C4E6; --kb: #10121A; --kb-down: #42507C; --kedge: #7E8598; --klabel: #5C6477;
     --stage: #0B0D13; --lane: #121520; --lane-line: rgba(233, 236, 243, 0.06);
     --staff: #DDE2EE;
@@ -64,7 +64,7 @@
   --paper: #0F121A; --card: #181C27; --well: #232838; --ink: #E9ECF3; --muted: #9AA2B6; --rule: #2C3244;
   --accent: #8EA2FF; --accent-soft: rgba(142, 162, 255, 0.14); --accent-ink: #0E1430;
   --rh: #F29A4E; --lh: #5FA8F0; --good: #45C285; --bad: #F2705F; --warn: #E3B04E;
-  --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F;
+  --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F; --u7: #D29A66; --u8: #93ABC6; --u9: #DDB84E;
   --kw: #E8EAEF; --kw-down: #B8C4E6; --kb: #10121A; --kb-down: #42507C; --kedge: #7E8598; --klabel: #5C6477;
   --stage: #0B0D13; --lane: #121520; --lane-line: rgba(233, 236, 243, 0.06);
   --staff: #DDE2EE;
@@ -252,6 +252,7 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .keys [data-m="rh"] { --mk: var(--rh); } .keys [data-m="lh"] { --mk: var(--lh); }
 .keys [data-m="u1"] { --mk: var(--u1); } .keys [data-m="u2"] { --mk: var(--u2); } .keys [data-m="u3"] { --mk: var(--u3); }
 .keys [data-m="u4"] { --mk: var(--u4); } .keys [data-m="u5"] { --mk: var(--u5); } .keys [data-m="u6"] { --mk: var(--u6); }
+.keys [data-m="u7"] { --mk: var(--u7); } .keys [data-m="u8"] { --mk: var(--u8); } .keys [data-m="u9"] { --mk: var(--u9); }
 .keys [data-m="root"] { --mk: var(--u6); }
 .keys [data-m="faint"] { --mk: var(--muted); }
 .keys .kw.flash-good { background: color-mix(in srgb, var(--good) 40%, var(--kw)) !important; }
@@ -349,6 +350,23 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .sheet-panel svg { max-width: none !important; display: block; }
 .sheet-line { display: flex; }
 /* songs */
+.tap-pad { width: min(520px, 100%); min-height: 110px; border-radius: 18px; border: 2px dashed var(--rule); background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-weight: 800; font-size: 20px; color: var(--ink); align-self: center; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.tap-pad small { font-size: 13px; font-weight: 600; color: var(--muted); }
+.tap-pad.hit { background: var(--accent-soft); border-color: var(--accent); }
+.drill-choices .btn svg.staff-svg { width: auto !important; height: 70px !important; max-width: none !important; }
+.drill-choices .btn:has(svg.staff-svg) { padding: 6px 12px; min-height: 76px; }
+.metro { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.metro .bpm { font-family: var(--font-display); font-size: 56px; line-height: 1; }
+.metro .term { font-family: var(--font-display); font-style: italic; color: var(--muted); font-size: 18px; }
+.metro .dots { display: flex; gap: 10px; }
+.metro .dots i { width: 22px; height: 22px; border-radius: 50%; background: var(--well); transition: background .06s; }
+.metro .dots i.on { background: var(--ink); }
+.metro .dots i.on.first { background: var(--accent); }
+.metro input[type=range] { width: min(360px, 100%); accent-color: var(--accent); }
+.filter-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-top: 34px; }
+.filter-row p { margin: 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
+.tag.lvl-I { background: color-mix(in srgb, var(--u3) 16%, var(--card)); color: var(--u3); }
+.tag.lvl-B { background: color-mix(in srgb, var(--u5) 14%, var(--card)); color: var(--u5); }
 .song-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
 .song-card { display: flex; flex-direction: column; gap: 8px; text-align: left; padding: 14px; border-radius: var(--r); border: 1px solid var(--rule); background: var(--card); color: var(--ink); min-width: 0; }
 .song-card:hover { border-color: var(--accent); }
@@ -632,6 +650,12 @@ const SCALES = {
   majpent: { iv: [0, 2, 4, 7, 9], name: 'Major pentatonic' },
   minpent: { iv: [0, 3, 5, 7, 10], name: 'Minor pentatonic' },
   blues: { iv: [0, 3, 5, 6, 7, 10], name: 'Blues' },
+  melodic: { iv: [0, 2, 3, 5, 7, 9, 11], name: 'Melodic minor (up)' },
+  dorian: { iv: [0, 2, 3, 5, 7, 9, 10], name: 'Dorian' },
+  phrygian: { iv: [0, 1, 3, 5, 7, 8, 10], name: 'Phrygian' },
+  lydian: { iv: [0, 2, 4, 6, 7, 9, 11], name: 'Lydian' },
+  mixolydian: { iv: [0, 2, 4, 5, 7, 9, 10], name: 'Mixolydian' },
+  chromatic: { iv: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], name: 'Chromatic' },
 };
 /* major keys around the circle of fifths: fifths count (+ sharps / - flats) */
 const MAJOR_KEYS = [
@@ -1170,7 +1194,7 @@ function fitRange(lo, hi, widthPx, minWhite = 34) {
 /* ---------- music staff renderer (SVG) ---------- */
 const GLYPH = {"treble":{"d":"M4.3 -0Q4.6 1 4.6 1.7Q4.6 2.2 4.3 2.6Q3.9 2.9 3.4 2.9Q2.9 2.9 2.5 2.6Q2.1 2.3 2.1 1.9Q2.1 1.6 2.3 1.3Q2.5 1.1 2.8 1.1Q3.1 1.1 3.3 1.3Q3.5 1.5 3.5 1.8Q3.5 2.4 2.8 2.4Q3 2.7 3.4 2.7Q3.5 2.7 3.7 2.6Q3.8 2.6 4 2.5Q4.2 2.4 4.3 2.1Q4.4 1.9 4.4 1.6Q4.4 1.4 4.1 0.1Q3.9 0.1 3.6 0.1Q2.6 0.1 1.9 -0.6Q1.2 -1.3 1.2 -2.3Q1.2 -2.7 1.3 -3Q1.4 -3.4 1.6 -3.7Q1.7 -3.9 2 -4.3Q2.3 -4.6 2.5 -4.8Q2.7 -5 3 -5.4Q2.8 -6.2 2.8 -6.9Q2.8 -7.8 3.1 -8.4Q3.5 -9 3.8 -9Q3.9 -9 4 -8.9Q4.1 -8.7 4.3 -8.5Q4.4 -8.3 4.5 -7.9Q4.5 -7.5 4.5 -7.1Q4.5 -5.5 3.4 -4.5L3.7 -3.3Q3.8 -3.3 4 -3.3Q4.6 -3.3 5 -2.8Q5.4 -2.3 5.4 -1.6Q5.4 -0.4 4.3 -0ZM4.3 -7.5Q4.3 -8 3.9 -8Q3.6 -8 3.3 -7.5Q3.1 -7 3.1 -6.3Q3.1 -5.9 3.2 -5.6Q3.6 -5.8 3.9 -6.4Q4.3 -7 4.3 -7.5ZM5 -1.3Q5 -1.8 4.7 -2.2Q4.3 -2.5 3.8 -2.5L4.3 -0.2Q5 -0.5 5 -1.3ZM4.1 -0.2 3.6 -2.5Q3.3 -2.4 3.1 -2.1Q2.9 -1.9 2.9 -1.6Q2.9 -1.4 3 -1.3Q3 -1.1 3.1 -1Q3.2 -0.9 3.3 -0.9Q3.4 -0.8 3.4 -0.7Q3.5 -0.7 3.5 -0.7L3.4 -0.7Q3.1 -0.8 2.8 -1.1Q2.5 -1.4 2.5 -1.8Q2.5 -2.3 2.8 -2.7Q3.1 -3.1 3.4 -3.2L3.2 -4.3Q1.7 -3 1.7 -1.8Q1.7 -1 2.2 -0.6Q2.8 -0.1 3.5 -0.1Q3.6 -0.1 4.1 -0.2Z","bb":[1.2,-9.0,5.42,2.91]},"bass":{"d":"M5.6 -7Q5.8 -7 5.9 -6.9Q6.1 -6.8 6.1 -6.6Q6.1 -6.4 5.9 -6.3Q5.8 -6.2 5.6 -6.2Q5.2 -6.2 5.2 -6.6Q5.2 -6.8 5.3 -6.9Q5.5 -7 5.6 -7ZM6.1 -4.7Q6.1 -4.5 5.9 -4.4Q5.8 -4.2 5.6 -4.2Q5.2 -4.2 5.2 -4.7Q5.2 -4.9 5.3 -5Q5.5 -5.1 5.6 -5.1Q5.8 -5.1 5.9 -5Q6.1 -4.8 6.1 -4.7ZM2.9 -7.6Q3.7 -7.6 4.2 -7Q4.8 -6.5 4.8 -5.7Q4.8 -5.3 4.7 -5Q4.5 -4.6 4.3 -4.3Q4.1 -3.9 3.9 -3.7Q3.6 -3.4 3.3 -3.1Q2.9 -2.9 2.6 -2.7Q2.4 -2.5 2 -2.3Q1.5 -2 1.4 -1.9Q1.2 -1.8 0.8 -1.7L0.8 -1.8Q0.8 -1.8 1 -2Q1.3 -2.2 1.4 -2.3Q1.6 -2.4 1.9 -2.6Q2.2 -2.9 2.4 -3.1Q2.6 -3.3 2.9 -3.6Q3.2 -4 3.3 -4.3Q3.5 -4.6 3.6 -5Q3.7 -5.4 3.7 -5.8Q3.7 -7.4 2.6 -7.4Q2.2 -7.4 2 -7.3Q1.7 -7.2 1.6 -7Q1.5 -6.9 1.5 -6.8Q1.4 -6.7 1.4 -6.6Q1.4 -6.4 1.6 -6.4Q1.7 -6.4 1.8 -6.5Q1.9 -6.5 1.9 -6.5Q2.2 -6.5 2.4 -6.3Q2.6 -6.2 2.6 -5.9Q2.6 -5.6 2.3 -5.4Q2.1 -5.2 1.8 -5.2Q1.4 -5.2 1.2 -5.5Q0.9 -5.7 0.9 -6.1Q0.9 -6.7 1.5 -7.2Q2.1 -7.6 2.9 -7.6Z","bb":[0.75,-7.57,6.07,-1.66]},"sharp":{"d":"M3.6 -0.2 3.2 -0.1V1.9L2.8 2.1V0.1L1.4 0.6V2.6L0.9 2.8V0.8L0.5 1V0L0.9 -0.2V-2.6L0.5 -2.5V-3.4L0.9 -3.6V-5.9L1.4 -6.1V-3.8L2.8 -4.3V-6.6L3.2 -6.8V-4.5L3.6 -4.6V-3.7L3.2 -3.5V-1L3.6 -1.2ZM2.8 -0.9V-3.3L1.4 -2.8V-0.3Z","bb":[0.5,-6.75,3.65,2.79]},"flat":{"d":"M2.2 -4.4Q2.8 -4.4 3 -4.1Q3.3 -3.8 3.3 -3.2Q3.3 -2.7 3 -2.3Q2.7 -1.9 1.9 -1.2Q1.2 -0.4 0.6 0.3V-7.8L1 -8V-4Q1.5 -4.4 2.2 -4.4ZM2.3 -3.1Q2.3 -3.7 1.8 -3.7Q1.6 -3.7 1.3 -3.6Q1.1 -3.4 1 -3.2V-0.9Q1.6 -1.6 2 -2.1Q2.3 -2.7 2.3 -3.1Z","bb":[0.56,-8.02,3.29,0.34]},"natural":{"d":"M3.2 2.7 2.8 2.9V-0L0.6 0.9V-6.6L1 -6.8V-3.4L3.2 -4.3ZM2.8 -0.9V-3.3L1 -2.5V-0.2Z","bb":[0.56,-6.75,3.24,2.9]},"qrest":{"d":"M0.6 -2.1Q0.6 -2.4 0.8 -2.6Q1 -2.8 1.3 -2.8Q1.5 -2.8 1.8 -2.7L0.7 -4.2Q1.4 -4.9 1.4 -5.4Q1.4 -5.9 0.9 -6.6H1.4L2.6 -5Q1.8 -4 1.8 -3.6Q1.8 -3.1 2.6 -2.2L2.4 -1.9Q2 -2.2 1.8 -2.2Q1.4 -2.2 1.4 -1.7Q1.4 -1.3 1.8 -0.8L1.7 -0.6Q0.6 -1.4 0.6 -2.1Z","bb":[0.55,-6.58,2.64,-0.62]},"erest":{"d":"M1.4 -4.4Q1.5 -4.4 1.8 -4.7Q2 -4.9 2.1 -5.1H2.3L1.4 -1.7H1L1.7 -4.3Q1.3 -4 1 -4Q0.7 -4 0.4 -4.2Q0.2 -4.4 0.2 -4.7Q0.2 -5 0.3 -5.1Q0.5 -5.3 0.8 -5.3Q1.1 -5.3 1.2 -5.1Q1.4 -5 1.4 -4.7Q1.4 -4.6 1.3 -4.5Q1.4 -4.4 1.4 -4.4Z","bb":[0.19,-5.32,2.34,-1.66]},"brace":{"d":"M2 -2.2Q2 -2.1 1.7 -1.5Q1.4 -0.9 1.4 -0.6Q1.4 -0.1 2.3 0.1L2.2 0.2Q0.7 0.2 0.7 -0.9Q0.7 -1.2 1 -1.9Q1.3 -2.6 1.3 -2.7Q1.3 -3 0.4 -3.6V-3.8Q1.3 -4.3 1.3 -4.7Q1.3 -4.8 1 -5.4Q0.7 -6.1 0.7 -6.5Q0.7 -7.5 2.2 -7.6L2.3 -7.5Q1.4 -7.3 1.4 -6.7Q1.4 -6.5 1.7 -5.9Q2 -5.3 2 -5.1Q2 -4.2 0.8 -3.7Q2 -3.1 2 -2.2Z","bb":[0.38,-7.59,2.3,0.24]},"fermata":{"d":"M0.2 -1.8Q0.3 -3 1 -3.8Q1.7 -4.6 2.8 -4.6Q3.9 -4.6 4.6 -3.8Q5.3 -3 5.4 -1.8H5Q5 -2.6 4.3 -3.2Q3.7 -3.7 2.8 -3.7Q1.9 -3.7 1.2 -3.2Q0.6 -2.6 0.5 -1.8ZM2.8 -2.6Q3 -2.6 3.1 -2.5Q3.3 -2.4 3.3 -2.2Q3.3 -2 3.1 -1.9Q3 -1.8 2.8 -1.8Q2.6 -1.8 2.4 -1.9Q2.3 -2 2.3 -2.2Q2.3 -2.4 2.5 -2.5Q2.6 -2.6 2.8 -2.6Z","bb":[0.18,-4.6,5.38,-1.79]}};
 const KEYSIG_DI = { sharp: [38, 35, 39, 36, 33, 37, 34], flat: [34, 37, 33, 36, 32, 35, 31] };
-const DUR_BEATS = { w: 4, 'h.': 3, h: 2, 'q.': 1.5, q: 1, 'e.': 0.75, e: 0.5, s: 0.25 };
+const DUR_BEATS = { w: 4, 'h.': 3, h: 2, 'q.': 1.5, q: 1, 'e.': 0.75, e: 0.5, 's.': 0.375, s: 0.25, t: 1 / 3, 'w.': 6 };
 function glyphPath(name, x, top, bottom, style) {
   const g = GLYPH[name], [x0, y0, x1, y1] = g.bb;
   const k = (bottom - top) / (y1 - y0);
@@ -1207,6 +1231,7 @@ function Staff(opts) {
     if (n.f && grand && staffOf(it, n) === 'b') maxY = Math.max(maxY, y + 6.2 * sp, yB + 8.4 * sp);
     lowest = Math.max(lowest, y);
   }
+  if (o.beam) minY -= 1.6 * sp;
   const labelY = Math.max(topLine(staves[staves.length - 1]) + 4 * sp + 3.4 * sp, lowest + 2.6 * sp);
   if (o.labels) maxY = Math.max(maxY, labelY + 0.9 * sp);
   /* horizontal layout */
@@ -1261,6 +1286,31 @@ function Staff(opts) {
   /* items */
   const hw = 0.66 * sp, hh = 0.46 * sp;
   const pos = [];
+  /* beam groups: consecutive eighths/sixteenths/triplets inside one beat (single staff only) */
+  const beamOf = new Map(), beams = [];
+  if (o.beam && staves.length === 1) {
+    const bt = o.beamTime || o.time; const glen = bt && bt[1] === 8 ? 1.5 : 1;
+    let p0 = 0, cur = null;
+    items.forEach((it, idx) => {
+      if (it.bar) { cur = null; p0 = 0; return; }
+      const d = it.rest || it.dur || 'q';
+      const b0 = d.replace('.', '');
+      const len = DUR_BEATS[d] || 1;
+      const key = Math.floor((it.bpos != null ? it.bpos : p0) / glen + 1e-6);
+      if (!it.rest && it.notes && it.notes.length && ['e', 's', 't'].includes(b0) && !it.noBeam) {
+        if (cur && cur.key === key && !(cur.trip !== (b0 === 't'))) cur.members.push(idx);
+        else { cur = { key, members: [idx], trip: b0 === 't' }; beams.push(cur); }
+      } else cur = null;
+      p0 += len;
+    });
+    for (const bm of beams) if (bm.members.length > 1) bm.members.forEach((i) => beamOf.set(i, bm));
+    for (const bm of beams) if (bm.members.length > 1) {
+      const ds = bm.members.flatMap((i) => items[i].notes.map((n) => diaOf(n)));
+      const middle = staves[0] === 't' ? 34 : 22;
+      bm.up = ds.reduce((a, v) => a + v, 0) / ds.length < middle;
+      bm.info = [];
+    }
+  }
   items.forEach((it, idx) => {
     const slot = (it.bar ? 1.6 : (it.w || 1) * o.gap) * sp * gapK;
     const cx = x + slot / 2;
@@ -1279,7 +1329,12 @@ function Staff(opts) {
       else if (base0 === 'w') gFront.append(s('rect', { x: cx - 0.65 * sp, y: mid - sp, width: 1.3 * sp, height: 0.5 * sp, style }));
       if (kind.includes('.')) gFront.append(s('circle', { cx: cx + 1.1 * sp, cy: mid - sp / 2, r: 0.18 * sp, style }));
     };
-    if (it.rest) { drawRest(it.rest, it.staff || staves[0]); x += slot; return; }
+    if (it.rest) {
+      drawRest(it.rest, it.staff || staves[0]);
+      if (o.labels && it.label) gFront.append(s('text', { x: cx, y: labelY, 'text-anchor': 'middle', style: `font-family:var(--font-ui);font-weight:600;font-size:${(1.2 * sp).toFixed(1)}px;fill:var(--muted);opacity:.7` }, it.label));
+      if (o.onNoteClick) { const hit = s('rect', { x: cx - slot / 2, y: minY, width: slot, height: H, style: 'fill:transparent' }); gFront.append(hit); }
+      x += slot; return;
+    }
     const groups = {};
     it.notes.forEach((n, ni) => { const st = staffOf(it, n); (groups[st] = groups[st] || []).push({ n, ni, di: diaOf(n) }); });
     for (const st in it.restBy || {}) if (!groups[st] && staves.includes(st)) drawRest(it.restBy[st], st);
@@ -1290,7 +1345,8 @@ function Staff(opts) {
       const middle = st === 't' ? 34 : 22;
       const bottomDi = st === 't' ? 30 : 18, topDi = st === 't' ? 38 : 26;
       const mean = g.reduce((a, v) => a + v.di, 0) / g.length;
-      const up = it.stem ? it.stem === 'up' : mean < middle;
+      const bmg = beamOf.get(idx);
+      const up = bmg ? bmg.up : it.stem ? it.stem === 'up' : mean < middle;
       /* ledger lines */
       const lowDi = g[0].di, highDi = g[g.length - 1].di;
       const ledW = (base === 'w' ? 1.1 : 1.0) * sp * 1.45;
@@ -1328,7 +1384,7 @@ function Staff(opts) {
         const fc = st === 'b' && grand ? 'var(--lh)' : (it.fingerColor || 'var(--rh)');
         const fs = `font-family:var(--font-ui);font-weight:800;font-size:${(1.25 * sp).toFixed(1)}px;fill:${fc}`;
         if (st === staves[0] && !(grand && st === 'b')) {
-          let yy = Math.min(diY(highDi, st) - (up && base !== 'w' ? 4.1 : 1.3) * sp, topLine(st) - 0.9 * sp);
+          let yy = Math.min(diY(highDi, st) - (up && base !== 'w' ? 4.1 : 1.3) * sp, topLine(st) - 0.9 * sp) - (bmg && bmg.trip ? 1.9 * sp : 0);
           fing.forEach((v) => { gFront.append(s('text', { x: cx, y: yy, 'text-anchor': 'middle', style: fs }, String(v.n.f))); yy -= 1.25 * sp; });
         } else {
           let yy = Math.max(diY(lowDi, st) + (!up && base !== 'w' ? 4.6 : 1.9) * sp, topLine(st) + 5.6 * sp);
@@ -1347,12 +1403,17 @@ function Staff(opts) {
         let y2 = up ? yHigh - 3.4 * sp : yLow + 3.4 * sp;
         if (up && y2 > topLine(st) + 2 * sp) y2 = topLine(st) + 2 * sp; // stems reach the middle line
         if (!up && y2 < topLine(st) + 2 * sp) y2 = topLine(st) + 2 * sp;
-        gFront.append(s('line', { x1: sx, x2: sx, y1, y2, style: `stroke:${col};stroke-width:${(0.13 * sp).toFixed(2)}` }));
-        if (base === 'e') {
-          const f = up
-            ? `M${sx} ${y2} c ${0.2 * sp} ${1.2 * sp} ${1.6 * sp} ${1.4 * sp} ${1.2 * sp} ${3 * sp} c ${0.5 * sp} ${-1.5 * sp} ${-0.9 * sp} ${-2 * sp} ${-1.2 * sp} ${-2.2 * sp} z`
-            : `M${sx} ${y2} c ${0.2 * sp} ${-1.2 * sp} ${1.6 * sp} ${-1.4 * sp} ${1.2 * sp} ${-3 * sp} c ${0.5 * sp} ${1.5 * sp} ${-0.9 * sp} ${2 * sp} ${-1.2 * sp} ${2.2 * sp} z`;
-          gFront.append(s('path', { d: f, style: `fill:${col}` }));
+        if (bmg) { bmg.info.push({ idx, sx, y1, yTip: up ? yHigh : yLow, up, base, col }); }
+        else {
+          gFront.append(s('line', { x1: sx, x2: sx, y1, y2, style: `stroke:${col};stroke-width:${(0.13 * sp).toFixed(2)}` }));
+          const flags = base === 's' ? 2 : base === 'e' || base === 't' ? 1 : 0;
+          for (let fi = 0; fi < flags; fi++) {
+            const fy = y2 + (up ? 1 : -1) * fi * 0.95 * sp;
+            const f = up
+              ? `M${sx} ${fy} c ${0.2 * sp} ${1.2 * sp} ${1.6 * sp} ${1.4 * sp} ${1.2 * sp} ${3 * sp} c ${0.5 * sp} ${-1.5 * sp} ${-0.9 * sp} ${-2 * sp} ${-1.2 * sp} ${-2.2 * sp} z`
+              : `M${sx} ${fy} c ${0.2 * sp} ${-1.2 * sp} ${1.6 * sp} ${-1.4 * sp} ${1.2 * sp} ${-3 * sp} c ${0.5 * sp} ${1.5 * sp} ${-0.9 * sp} ${2 * sp} ${-1.2 * sp} ${2.2 * sp} z`;
+            gFront.append(s('path', { d: f, style: `fill:${col}` }));
+          }
         }
       }
     }
@@ -1367,6 +1428,27 @@ function Staff(opts) {
     }
     x += slot;
   });
+  for (const bm of beams) {
+    if (!bm.info || bm.info.length < 2) continue;
+    const inf = bm.info, up = bm.up, th = 0.48 * sp;
+    const tip = up ? Math.min(...inf.map((v) => v.yTip)) - 3.3 * sp : Math.max(...inf.map((v) => v.yTip)) + 3.3 * sp;
+    const by = up ? Math.min(tip, topLine(staves[0]) + 2 * sp) : Math.max(tip, topLine(staves[0]) + 2 * sp);
+    const col = inf[0].col;
+    inf.forEach((v) => gFront.append(s('line', { x1: v.sx, x2: v.sx, y1: v.y1, y2: by, style: `stroke:${v.col};stroke-width:${(0.13 * sp).toFixed(2)}` })));
+    const beamRect = (xa, xb, yy) => gFront.append(s('rect', { x: Math.min(xa, xb) - 0.065 * sp, y: up ? yy : yy - th, width: Math.abs(xb - xa) + 0.13 * sp, height: th, style: `fill:${col}` }));
+    beamRect(inf[0].sx, inf[inf.length - 1].sx, by);
+    const by2 = by + (up ? 1 : -1) * 0.8 * sp;
+    inf.forEach((v, k) => {
+      if (v.base !== 's') return;
+      const nx = inf[k + 1], pv = inf[k - 1];
+      if (nx && nx.base === 's') beamRect(v.sx, nx.sx, by2);
+      else if (!(pv && pv.base === 's')) beamRect(v.sx, v.sx + (nx ? 1.2 : -1.2) * sp, by2);
+    });
+    if (bm.trip) {
+      const mx = (inf[0].sx + inf[inf.length - 1].sx) / 2;
+      gFront.append(s('text', { x: mx, y: up ? by - 0.7 * sp : Math.min(...inf.map((v) => v.yTip)) - 1.2 * sp, 'text-anchor': 'middle', style: `font-family:var(--font-display);font-style:italic;font-size:${(1.5 * sp).toFixed(1)}px;fill:${col}` }, '3'));
+    }
+  }
   for (const [i, j] of o.curves || []) {
     const a = pos[i], b = pos[j];
     if (!a || !b) continue;
@@ -1420,8 +1502,16 @@ W.keys = (o) => {
     line.innerHTML = html;
     last = p;
   });
-  const el = h('div', { class: 'widget' }, frame, line, o.cap ? h('p', { class: 'cap', text: o.cap }) : null);
-  return { el, destroy() { off(); k.destroy(); } };
+  let pedalBtn = null, offP = null;
+  if (o.pedal) {
+    pedalBtn = h('button', { class: 'btn small', type: 'button', 'aria-pressed': 'false' }, h('span', { class: 'dot' }), 'Hold the sustain pedal');
+    const down = (e) => { e.preventDefault(); Input.pedal(true); };
+    const up = () => { if (Input.sustain) Input.pedal(false); };
+    pedalBtn.addEventListener('pointerdown', down); pedalBtn.addEventListener('pointerup', up); pedalBtn.addEventListener('pointerleave', up); pedalBtn.addEventListener('pointercancel', up);
+    offP = Input.on((type, v) => { if (type === 'pedal') pedalBtn.setAttribute('aria-pressed', String(!!v)); });
+  }
+  const el = h('div', { class: 'widget' }, frame, line, pedalBtn ? h('div', { class: 'row' }, pedalBtn, h('span', { class: 'cap', text: 'Press and hold, or use the pedal on your MIDI keyboard.' })) : null, o.cap ? h('p', { class: 'cap', text: o.cap }) : null);
+  return { el, destroy() { off(); if (offP) offP(); if (Input.sustain && o.pedal) Input.pedal(false); k.destroy(); } };
 };
 
 /* find every target key */
@@ -1488,9 +1578,11 @@ W.listen = (o) => {
     const ev = [];
     let t = 0;
     (b.seq || []).forEach((step) => {
-      const [notes, beats = 1, label] = step;
-      const ps = [].concat(notes).map(midiOf);
-      ev.push({ p: ps, t, d: (b.staccato ? 0.25 : beats * 0.96) * spb, v: b.vel || 0.62, label, beats });
+      const [notes, beats = 1, label, vel] = step;
+      if (notes != null) {
+        const ps = [].concat(notes).map(midiOf);
+        ev.push({ p: ps, t, d: (b.staccato ? Math.min(0.25, beats * 0.5) : beats * 0.96 * (b.hold || 1)) * spb, v: vel || b.vel || 0.62, label, beats });
+      }
       t += beats * spb;
     });
     if (b.chord) { const ps = b.chord.map(midiOf); ps.forEach((p, i) => ev.push({ p, t: (b.roll || 0) * i, d: b.dur || 1.8, v: b.vel || 0.6, label: i === 0 ? b.label : null })); }
@@ -1532,7 +1624,7 @@ function scaleBlock(tonic, type, fingers, hand) {
     steps.append(h('b', { text: n.letter + accStr(n.acc), style: { fontFamily: 'var(--font-display)', fontWeight: '400', fontSize: '19px' } }));
     if (i < notes.length - 1) { const d = notes[i + 1].midi - n.midi; steps.append(h('span', { text: d === 1 ? 'H' : d === 2 ? 'W' : d === 3 ? 'W+H' : d, style: { color: d === 1 ? 'var(--bad)' : 'var(--muted)', fontWeight: '700' } })); }
   });
-  const key = type === 'minor' || type === 'harmonic' ? fifthsFor(N(tonic).midi % 12, true) : fifthsFor(N(tonic).midi % 12);
+  const key = ['minor', 'harmonic', 'melodic'].includes(type) ? fifthsFor(N(tonic).midi % 12, true) : fifthsFor(N(tonic).midi % 12);
   const staffWrap = h('div', { class: 'stf-wrap' }, Staff({ clef: midiOf(tonic) < 57 ? 'bass' : 'treble', sp: 9, key: type === 'harmonic' ? key : key, items: notes.map((n) => ({ notes: [n], dur: 'q' })), gap: 3 }));
   return { notes, frame, k, steps, staffWrap };
 }
@@ -1799,6 +1891,10 @@ W.symbols = (o) => {
   }
   return { el: h('div', { class: 'widget' }, grid) };
 };
+const markSign = (m) => () => s('svg', { viewBox: '0 0 120 60', width: 120, height: 60 },
+  ...[0, 1, 2, 3, 4].map((i) => s('line', { x1: 20, x2: 100, y1: 22 + i * 7, y2: 22 + i * 7, style: 'stroke:var(--staff);stroke-width:1' })),
+  s('path', { d: epath(60, 43, 4.8, 3.4, -22), style: 'fill:var(--staff)' }), s('line', { x1: 64.5, x2: 64.5, y1: 43, y2: 20, style: 'stroke:var(--staff);stroke-width:1.2' }),
+  s('text', { x: 60, y: m === '>' ? 60 : 58, 'text-anchor': 'middle', style: 'font-family:var(--font-ui);font-weight:800;font-size:' + (m === '>' ? 18 : 22) + 'px;fill:var(--staff)' }, m));
 const dynText = (t) => () => s('svg', { viewBox: '0 0 120 60', width: 120, height: 60 }, s('text', { x: 60, y: 40, 'text-anchor': 'middle', style: 'font-family:var(--font-display);font-style:italic;font-size:38px;fill:var(--staff);font-weight:700' }, t));
 const miniStaff = (opts) => () => Staff(Object.assign({ clef: 'treble', sp: 7, noClef: true, gap: 3.6 }, opts));
 const SIGNS = {
@@ -1813,6 +1909,10 @@ const SIGNS = {
   slur: { name: 'slur', meaning: 'play these notes smoothly', draw: miniStaff({ items: [{ notes: ['E4'], dur: 'q' }, { notes: ['F4'], dur: 'q' }, { notes: ['G4'], dur: 'q' }], curves: [[0, 2]] }) },
   repeat: { name: 'repeat sign', meaning: 'go back and play again', draw: () => s('svg', { viewBox: '0 0 120 60', width: 120, height: 60 }, ...[0, 1, 2, 3, 4].map((i) => s('line', { x1: 20, x2: 100, y1: 14 + i * 8, y2: 14 + i * 8, style: 'stroke:var(--staff);stroke-width:1' })), s('circle', { cx: 80, cy: 26, r: 2.4, style: 'fill:var(--staff)' }), s('circle', { cx: 80, cy: 34, r: 2.4, style: 'fill:var(--staff)' }), s('line', { x1: 87, x2: 87, y1: 14, y2: 46, style: 'stroke:var(--staff);stroke-width:1.4' }), s('rect', { x: 91, y: 14, width: 4, height: 32, style: 'fill:var(--staff)' })) },
   fermata: { name: 'fermata', meaning: 'hold longer than written', draw: () => s('svg', { viewBox: '0 0 120 60', width: 120, height: 60 }, glyphPath('fermata', 42, 12, 40, 'fill:var(--staff)')) },
+  pp: { name: 'pianissimo (pp)', meaning: 'very soft', draw: dynText('pp') },
+  ff: { name: 'fortissimo (ff)', meaning: 'very loud', draw: dynText('ff') },
+  accent: { name: 'accent', meaning: 'play this note stronger', draw: markSign('>') },
+  tenuto: { name: 'tenuto', meaning: 'hold it full length, gently leaned on', draw: markSign('–') },
   natural: { name: 'natural ♮', meaning: 'cancels a sharp or flat', draw: miniStaff({ items: [{ notes: ['F#4'], dur: 'q' }, { notes: ['F4'], dur: 'q', nat: true }] }) },
 };
 
@@ -2232,6 +2332,7 @@ function closeDrill(silent) {
   if (DR.off) DR.off(); DR.off = null;
   if (DR.keys) DR.keys.destroy(); DR.keys = null;
   if (DR.q && DR.q._seq) DR.q._seq.stop();
+  if (DR.q && DR.q.destroy) DR.q.destroy();
   $('#drill').hidden = true;
   if (!silent) { document.body.style.overflow = ''; letSleep(); }
   DR.id = null; DR.q = null;
@@ -2241,6 +2342,8 @@ function nextQuestion() {
   const st = DR.st;
   if (st.i >= st.total) return showDrillResult();
   st.tries = 0; st.locked = false; st.collected = new Set(); st.wrongChord = false; st.mIdx = 0;
+  if (DR.q && DR.q.destroy) DR.q.destroy();
+  if (DR.q && DR.q._seq) DR.q._seq.stop();
   const q = (DR.q = DR.d.make(st));
   $('#dr-n').textContent = String(st.i + 1);
   $('#dr-prog').style.width = (st.i / st.total) * 100 + '%';
@@ -2258,6 +2361,15 @@ function nextQuestion() {
   if (q.choices) {
     main.append(h('div', { class: 'drill-choices', id: 'dr-choices' }, q.choices.map((c) => h('button', { class: 'btn', type: 'button', html: c.label, onclick: (e) => onChoice(c, e.currentTarget) }))));
   }
+  if (q.render) q.render(main, {
+    right: (msg) => { if (!st.locked) answered(true, msg); },
+    wrong: (msg) => {
+      if (st.locked) return;
+      st.tries++; feedback(msg, 'bad');
+      const nx = $('#dr-next');
+      if (nx && !nx.firstChild) nx.append(h('button', { class: 'btn', type: 'button', onclick: () => { st.i++; nextQuestion(); } }, 'Skip this one', iconEl('next')));
+    },
+  });
   main.append(h('div', { class: 'feedback', id: 'dr-fb', 'aria-live': 'polite' }));
   main.append(h('div', { id: 'dr-next' }));
   if (DR.keys) {
@@ -2302,7 +2414,7 @@ function onChoice(c, btn) {
     if (q.audio) later(() => playQ(q), 500);
   }
 }
-function onDrillInput(type, p) {
+function onDrillInput(type, p, vel) {
   const st = DR.st, q = DR.q;
   if (!q || st.locked) return;
   if (type === 'up') {
@@ -2314,7 +2426,7 @@ function onDrillInput(type, p) {
   }
   if (type !== 'down') return;
   if (q.target) {
-    const r = q.target.accept ? q.target.accept(p) : q.target.pcs ? q.target.pcs.includes(pcOf(p)) : p === q.target.midi;
+    const r = q.target.accept ? q.target.accept(p, vel) : q.target.pcs ? q.target.pcs.includes(pcOf(p)) : p === q.target.midi;
     const ok = r === true || (r && r.ok);
     if (ok) {
       DR.keys && DR.keys.flash(p, 'good', 700);
@@ -2336,6 +2448,7 @@ function onDrillInput(type, p) {
   if (q.melody) {
     const m = q.melody, want = m[st.mIdx];
     const dots = (n) => m.map((_, i) => (i < n ? '●' : '○')).join(' ');
+    if (q.onMelody) q.onMelody(st.mIdx, pcOf(p) === pcOf(want));
     if (pcOf(p) === pcOf(want)) {
       DR.keys && DR.keys.flash(p, 'good', 400);
       st.mIdx++;
@@ -2412,11 +2525,11 @@ function earSpeedSeg() {
 function parseVoice(str, hand) {
   const ev = [], bars = [], rests = [];
   let t = 0, dur = 'q';
-  const tokens = (str || '').match(/\[[^\]]*\](?:\/[whqes]\.?)?|\S+/g) || [];
+  const tokens = (str || '').match(/\[[^\]]*\](?:\/[whqest]\.?)?|\S+/g) || [];
   for (const tok of tokens) {
     if (tok === '|') { bars.push(t); continue; }
     let body = tok;
-    const m = /^(.*)\/([whqes]\.?)$/.exec(tok);
+    const m = /^(.*)\/([whqest]\.?)$/.exec(tok);
     if (m) { body = m[1]; dur = m[2]; }
     const beats = DUR_BEATS[dur];
     if (body === 'r') { rests.push({ t, d: beats, dur, hand }); t += beats; continue; }
@@ -2570,7 +2683,7 @@ function startBlocks() {
   $('#bk-over').hidden = true;
   BK.running = true; BK.started = true;
   BK.stats.start = performance.now();
-  BK.nextClick = Math.ceil(BK.beat);
+  BK.nextClick = Math.ceil(BK.beat / clickUnit(BK.ex)) * clickUnit(BK.ex);
 }
 function startDemo() {
   Piano.ensure();
@@ -2769,7 +2882,8 @@ function advance(dt) {
   } else {
     BK.beat += db;
     if (bkPrefs.metro && Piano.ctx) {
-      while (BK.nextClick <= BK.beat + 0.05) { const delay = (BK.nextClick - BK.beat) * sp; Piano.click(Piano.ctx.currentTime + Math.max(0, delay), mod(BK.nextClick, (ex.time || [4])[0]) === 0); BK.nextClick++; }
+      const cu = clickUnit(ex), bl = barLen(ex), pk = ex.pickup ? bl - ex.pickup : 0;
+      while (BK.nextClick <= BK.beat + 0.05) { const delay = (BK.nextClick - BK.beat) * sp; Piano.click(Piano.ctx.currentTime + Math.max(0, delay), Math.abs(mod(BK.nextClick + pk, bl)) < 1e-6); BK.nextClick += cu; }
     }
     for (const n of ex.notes) if (!n.hit && !n.missed && (BK.beat - n.t) * sp > 0.28) { n.missed = true; BK.stats.miss++; updateHud(); }
     const first = ex.steps.findIndex((s0) => s0.notes.some((n) => !n.hit && !n.missed));
@@ -2820,12 +2934,12 @@ function drawBlocks(now, dt) {
   c.fillStyle = col.line;
   for (const k of L.keys) if (!k.black && (pcOf(k.p) === 0 || pcOf(k.p) === 5)) c.fillRect(k.x, 0, 1, L.hitY);
   /* beat lines */
-  const pxb = L.pxb, beats = ex.time ? ex.time[0] : 4;
+  const pxb = L.pxb, beats = barLen(ex), pkOff = ex.pickup ? beats - ex.pickup : 0;
   for (let b = Math.floor(BK.beat); b < BK.beat + L.hitY / pxb + 1; b++) {
     if (b < 0) continue;
     const y = L.hitY - (b - BK.beat) * pxb;
     c.fillStyle = col.line;
-    c.fillRect(0, y, BK.W, mod(b, beats) === 0 ? 2 : 1);
+    c.fillRect(0, y, BK.W, Math.abs(mod(b + pkOff, beats)) < 1e-6 ? 2 : 1);
   }
   /* blocks */
   const step = ex.steps[BK.stepIdx];
@@ -2911,6 +3025,9 @@ function roundRect(c, x, y, w, hh, r, bottomOnly) {
   if (bottomOnly) { c.moveTo(x, y); c.lineTo(x + w, y); c.lineTo(x + w, y + hh - r); c.quadraticCurveTo(x + w, y + hh, x + w - r, y + hh); c.lineTo(x + r, y + hh); c.quadraticCurveTo(x, y + hh, x, y + hh - r); c.closePath(); return; }
   c.moveTo(x + r, y); c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r); c.lineTo(x + w, y + hh - r); c.quadraticCurveTo(x + w, y + hh, x + w - r, y + hh); c.lineTo(x + r, y + hh); c.quadraticCurveTo(x, y + hh, x, y + hh - r); c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y); c.closePath();
 }
+
+function barLen(ex) { const tm = ex.time || [4, 4]; return (tm[0] * 4) / tm[1]; }
+function clickUnit(ex) { const tm = ex.time || [4, 4]; return tm[1] === 8 ? 0.5 : 1; }
 
 /* ===== 12-exercises.js ===== */
 /* ---------- falling-block exercises ---------- */
@@ -3017,6 +3134,82 @@ const EXERCISES = [
   { id: 'song-minuet', group: 'Songs', by: 'Christian Petzold (once credited to J. S. Bach)', level: 3, title: 'Minuet in G', bpm: 72, key: 1, time: [3, 4], keyName: 'G major', desc: 'A famous dance from Anna Magdalena Bach’s notebook, with a simplified left hand. Raise the speed as it gets comfortable.',
     R: 'D5.5/q G4.1/e A4.2 B4.3 C5.4 | D5.5/q G4.1 G4.1 | E5.5/q C5.1/e D5.2 E5.3 F#5.4 | G5.5/q G4.1 G4.1 | C5.4/q D5.5/e C5.4 B4.3 A4.2 | B4.3/q C5.4/e B4.3 A4.2 G4.1 | F#4.2/q G4.1/e A4.2 B4.3 G4.1 | A4.2/h. | D5.5/q G4.1/e A4.2 B4.3 C5.4 | D5.5/q G4.1 G4.1 | E5.5/q C5.1/e D5.2 E5.3 F#5.4 | G5.5/q G4.1 G4.1 | C5.4/q D5.5/e C5.4 B4.3 A4.2 | B4.3/q C5.4/e B4.3 A4.2 G4.1 | A4.3/q B4.4/e A4.3 G4.2 F#4.1 | G4.2/h.',
     L: 'G3.5/h. | B3.3 | C4.2 | B3.3 | A3.4 | G3.5 | D4.1 | D4.1 | G3.5 | B3.3 | C4.2 | B3.3 | A3.4 | G3.5 | D4.1 | G3.5' },
+  /* ---- technique and coordination ---- */
+  { id: 'w-pairs', group: 'Warm-ups', title: 'Finger pairs (independence)', bpm: 60, key: 0, desc: 'Two neighbouring fingers take turns: 1-2, 2-3, 3-4, 4-5. Keep the other fingers resting lightly on their keys.',
+    R: 'C4.1/e D4.2 C4.1 D4.2 D4.2 E4.3 D4.2 E4.3 | E4.3 F4.4 E4.3 F4.4 F4.4 G4.5 F4.4 G4.5 | G4.5 F4.4 G4.5 F4.4 F4.4 E4.3 F4.4 E4.3 | E4.3 D4.2 E4.3 D4.2 D4.2 C4.1 D4.2 C4.1 | C4.1/w' },
+  { id: 'w-pairs-lh', group: 'Warm-ups', title: 'Finger pairs (left hand)', bpm: 60, key: 0, desc: 'The same finger pairs for the left hand: 5-4, 4-3, 3-2, 2-1.',
+    L: 'C3.5/e D3.4 C3.5 D3.4 D3.4 E3.3 D3.4 E3.3 | E3.3 F3.2 E3.3 F3.2 F3.2 G3.1 F3.2 G3.1 | G3.1 F3.2 G3.1 F3.2 F3.2 E3.3 F3.2 E3.3 | E3.3 D3.4 E3.3 D3.4 D3.4 C3.5 D3.4 C3.5 | C3.5/w' },
+  { id: 'w-holdmove', group: 'Warm-ups', title: 'One hand holds, one hand moves', bpm: 66, key: 0, desc: 'While one hand holds a long note, the other plays. Keep the held key down for its whole length.',
+    R: 'C4.1/q D4.2 E4.3 F4.4 | G4.5/w | G4.5/q F4.4 E4.3 D4.2 | C4.1/w',
+    L: 'C3.5/w | C3.5/q D3.4 E3.3 F3.2 | G3.1/w | C3.5/w' },
+  { id: 'w-shift', group: 'Warm-ups', title: 'Moving to a new position', bpm: 66, key: 0, desc: 'Play in C position, use the rest to move the whole hand up to G position, then come back.',
+    R: 'C4.1/q D4.2 E4.3 F4.4 | G4.5/h r/h | G4.1/q A4.2 B4.3 C5.4 | D5.5/h r/h | D5.5/q C5.4 B4.3 A4.2 | G4.1/h r/h | G4.5/q F4.4 E4.3 D4.2 | C4.1/w' },
+  /* ---- rhythm melodies ---- */
+  { id: 'r-eighths', group: 'Warm-ups', title: 'Eighth-note melody', bpm: 72, key: 0, desc: 'Two notes per beat. Count “1 & 2 &” out loud.',
+    R: 'C4.1/e D4.2 E4.3 F4.4 G4.5/q G4.5 | F4.4/e E4.3 D4.2 E4.3 C4.1/h | E4.3/e F4.4 G4.5 E4.3 D4.2/q D4.2 | C4.1/e D4.2 E4.3 D4.2 C4.1/h' },
+  { id: 'r-dotted', group: 'Warm-ups', title: 'Dotted-rhythm melody', bpm: 72, key: 0, desc: 'Long-short: the dotted quarter lasts a beat and a half, the eighth fills the gap.',
+    R: 'C4.1/q. D4.2/e E4.3/q C4.1 | E4.3/q. F4.4/e G4.5/h | G4.5/q. F4.4/e E4.3/q D4.2 | C4.1/w' },
+  { id: 'r-triplet', group: 'Warm-ups', title: 'Triplet warm-up', bpm: 60, key: 0, desc: 'Three even notes in each beat: “1-trip-let 2-trip-let”.',
+    R: 'C4.1/t D4.2 E4.3 F4.4 E4.3 D4.2 C4.1 D4.2 E4.3 F4.4/q | G4.5/t F4.4 E4.3 D4.2 C4.1 D4.2 C4.1/h' },
+  { id: 'r-sixteenth', group: 'Warm-ups', title: 'Sixteenth-note runs', bpm: 52, key: 0, desc: 'Four notes per beat. Keep them light and even, close to the keys.',
+    R: 'C4.1/s D4.2 E4.3 F4.4 G4.5/q G4.5/s F4.4 E4.3 D4.2 C4.1/q | C4.1/s D4.2 E4.3 D4.2 C4.1/e E4.3 G4.5/h' },
+  /* ---- more scales ---- */
+  { id: 's-g-both', group: 'Scales', title: 'G major, hands together', bpm: 56, key: 1, keyName: 'G major', desc: 'One octave, hands together. F♯ falls on finger 4 in the right hand and finger 2 in the left.',
+    R: 'G4.1/q A4.2 B4.3 C5.1 | D5.2 E5.3 F#5.4 G5.5 | F#5.4 E5.3 D5.2 C5.1 | B4.3 A4.2 G4.1/h',
+    L: 'G3.5/q A3.4 B3.3 C4.2 | D4.1 E4.3 F#4.2 G4.1 | F#4.2 E4.3 D4.1 C4.2 | B3.3 A3.4 G3.5/h' },
+  { id: 's-a-rh', group: 'Scales', title: 'A major scale (right hand)', bpm: 63, key: 3, keyName: 'A major', desc: 'Three sharps: F♯, C♯ and G♯. The same 1 2 3, 1 2 3 4 5 fingering.',
+    R: 'A4.1/q B4.2 C#5.3 D5.1 | E5.2 F#5.3 G#5.4 A5.5 | G#5.4 F#5.3 E5.2 D5.1 | C#5.3 B4.2 A4.1/h' },
+  { id: 's-e-rh', group: 'Scales', title: 'E major scale (right hand)', bpm: 63, key: 4, keyName: 'E major', desc: 'Four sharps: F♯, C♯, G♯ and D♯. Fingering 1 2 3, 1 2 3 4 5.',
+    R: 'E4.1/q F#4.2 G#4.3 A4.1 | B4.2 C#5.3 D#5.4 E5.5 | D#5.4 C#5.3 B4.2 A4.1 | G#4.3 F#4.2 E4.1/h' },
+  { id: 's-bb-rh', group: 'Scales', title: 'B♭ major scale (right hand)', bpm: 60, key: -2, keyName: 'B♭ major', desc: 'Two flats. The thumb plays only C and F; the black keys get fingers 2, 3 and 4.',
+    R: 'Bb3.2/q C4.1 D4.2 Eb4.3 | F4.1 G4.2 A4.3 Bb4.4 | A4.3 G4.2 F4.1 Eb4.3 | D4.2 C4.1 Bb3.2/h' },
+  { id: 's-eb-rh', group: 'Scales', title: 'E♭ major scale (right hand)', bpm: 60, key: -3, keyName: 'E♭ major', desc: 'Three flats. Again the thumb lands on the white keys F and C: 3 1 2 3 4 1 2 3.',
+    R: 'Eb4.3/q F4.1 G4.2 Ab4.3 | Bb4.4 C5.1 D5.2 Eb5.3 | D5.2 C5.1 Bb4.4 Ab4.3 | G4.2 F4.1 Eb4.3/h' },
+  { id: 's-c-2oct', group: 'Scales', title: 'C major, two octaves, hands together', bpm: 56, key: 0, keyName: 'C major', desc: 'The right thumb crosses after 3 and after 4; the left hand crosses over after 1. Go slowly.',
+    R: 'C4.1/q D4.2 E4.3 F4.1 | G4.2 A4.3 B4.4 C5.1 | D5.2 E5.3 F5.1 G5.2 | A5.3 B5.4 C6.5 B5.4 | A5.3 G5.2 F5.1 E5.3 | D5.2 C5.1 B4.4 A4.3 | G4.2 F4.1 E4.3 D4.2 | C4.1/w',
+    L: 'C3.5/q D3.4 E3.3 F3.2 | G3.1 A3.3 B3.2 C4.1 | D4.4 E4.3 F4.2 G4.1 | A4.3 B4.2 C5.1 B4.2 | A4.3 G4.1 F4.2 E4.3 | D4.4 C4.1 B3.2 A3.3 | G3.1 F3.2 E3.3 D3.4 | C3.5/w' },
+  { id: 's-contrary', group: 'Scales', title: 'C major in contrary motion', bpm: 60, key: 0, keyName: 'C major', desc: 'Thumbs start together on middle C and the hands move apart. The fingers match in both hands, which makes it easier.',
+    R: 'C4.1/q D4.2 E4.3 F4.1 | G4.2 A4.3 B4.4 C5.5 | B4.4 A4.3 G4.2 F4.1 | E4.3 D4.2 C4.1/h',
+    L: 'C4.1/q B3.2 A3.3 G3.1 | F3.2 E3.3 D3.4 C3.5 | D3.4 E3.3 F3.2 G3.1 | A3.3 B3.2 C4.1/h' },
+  { id: 's-penta', group: 'Scales', title: 'C major pentatonic', bpm: 66, key: 0, desc: 'Five notes, no half steps: C D E G A. Anything you play from these sounds good together.',
+    R: 'C4.1/q D4.2 E4.3 G4.4 | A4.5/h r/h | A4.5/q G4.4 E4.3 D4.2 | C4.1/w' },
+  { id: 's-blues', group: 'Scales', title: 'C blues scale', bpm: 66, key: 0, desc: 'C, E♭, F, F♯, G, B♭, C: the sound of blues and rock.',
+    R: 'C4.1/q Eb4.2 F4.3 F#4.4 | G4.1 Bb4.2 C5.3/h | C5.3/q Bb4.2 G4.1 F#4.4 | F4.3 Eb4.2 C4.1/h' },
+  /* ---- more chords ---- */
+  { id: 'c-arp', group: 'Chords', title: 'C major arpeggio (right hand)', bpm: 60, key: 0, desc: 'A chord played one note at a time across two octaves. Thumb under after finger 3.',
+    R: 'C4.1/q E4.2 G4.3 C5.1 | E5.2 G5.3 C6.5 G5.3 | E5.2 C5.1 G4.3 E4.2 | C4.1/w' },
+  { id: 'c-arp-lh', group: 'Chords', title: 'C major arpeggio (left hand)', bpm: 60, key: 0, desc: 'Fingers 5 4 2 1, then finger 4 crosses over the thumb.',
+    L: 'C2.5/q E2.4 G2.2 C3.1 | E3.4 G3.2 C4.1 G3.2 | E3.4 C3.1 G2.2 E2.4 | C2.5/w' },
+  { id: 'c-waltz', group: 'Chords', title: 'Waltz left hand (oom-pah-pah)', bpm: 96, key: 0, time: [3, 4], desc: 'A low bass note on beat 1, then the chord on beats 2 and 3: C, G, C, F, G, C.',
+    L: 'C3.5/q [E3.3 G3.1] [E3.3 G3.1] | B2.5 [D3.3 G3.1] [D3.3 G3.1] | C3.5 [E3.3 G3.1] [E3.3 G3.1] | A2.5 [C3.3 F3.1] [C3.3 F3.1] | B2.5 [D3.3 G3.1] [D3.3 G3.1] | C3.5/h.' },
+  { id: 'c-ballad', group: 'Chords', title: 'Ballad pattern (1–5–8)', bpm: 72, key: 0, desc: 'The left hand rolls root, fifth and octave while the right hand holds C, Am, F and G.',
+    R: '[E4.1 G4.2 C5.5]/w | [E4.1 A4.3 C5.5] | [F4.1 A4.3 C5.5] | [D4.1 G4.3 B4.5] | [E4.1 G4.2 C5.5]',
+    L: 'C3.5/e G3.2 C4.1 G3.2 C3.5 G3.2 C4.1 G3.2 | A2.5 E3.2 A3.1 E3.2 A2.5 E3.2 A3.1 E3.2 | F2.5 C3.2 F3.1 C3.2 F2.5 C3.2 F3.1 C3.2 | G2.5 D3.2 G3.1 D3.2 G2.5 D3.2 G3.1 D3.2 | C3.5/w' },
+  { id: 'c-blues', group: 'Chords', title: '12-bar blues in C', bpm: 88, key: 0, desc: 'Four bars of C7, two of F7, two of C7, then G7, F7, C7, G7. The left hand walks a boogie pattern.',
+    R: '[C4.1 E4.2 G4.3 Bb4.5]/w | [C4.1 E4.2 G4.3 Bb4.5] | [C4.1 E4.2 G4.3 Bb4.5] | [C4.1 E4.2 G4.3 Bb4.5] | [C4.1 Eb4.2 F4.3 A4.5] | [C4.1 Eb4.2 F4.3 A4.5] | [C4.1 E4.2 G4.3 Bb4.5] | [C4.1 E4.2 G4.3 Bb4.5] | [B3.1 D4.2 F4.3 G4.5] | [C4.1 Eb4.2 F4.3 A4.5] | [C4.1 E4.2 G4.3 Bb4.5] | [B3.1 D4.2 F4.3 G4.5]',
+    L: 'C3.5/q G3.2 A3.1 G3.2 | C3.5 G3.2 A3.1 G3.2 | C3.5 G3.2 A3.1 G3.2 | C3.5 G3.2 A3.1 G3.2 | F2.5 C3.2 D3.1 C3.2 | F2.5 C3.2 D3.1 C3.2 | C3.5 G3.2 A3.1 G3.2 | C3.5 G3.2 A3.1 G3.2 | G2.5 D3.2 E3.1 D3.2 | F2.5 C3.2 D3.1 C3.2 | C3.5 G3.2 A3.1 G3.2 | G2.5 D3.2 E3.1 D3.2' },
+  { id: 'c-251', group: 'Chords', title: 'ii – V – I with seventh chords', bpm: 60, key: 0, desc: 'Dm7, G7, Cmaj7. Each chord moves only one note: F stays, A slides to G, C slides to B, then F slides to E.',
+    R: '[F4.1 A4.2 C5.4]/w | [F4.1 G4.2 B4.4] | [E4.1 G4.2 B4.4] | [E4.1 G4.2 B4.4]',
+    L: 'D3.1/w | G2.4 | C3.1 | C3.1' },
+  { id: 'c-sus', group: 'Chords', title: 'Suspended chords that resolve', bpm: 60, key: 0, desc: 'Csus4 to C, then Gsus4 to G: the 4th leans on the 3rd and falls into it.',
+    R: '[C4.1 F4.3 G4.5]/h [C4.1 E4.2 G4.5] | [D4.1 G4.3 C5.5] [D4.1 G4.3 B4.5] | [C4.1 F4.3 G4.5] [C4.1 E4.2 G4.5] | [C4.1 E4.2 G4.5]/w',
+    L: 'C3.1/w | G2.4 | C3.1 | C3.1' },
+  /* ---- more songs (public domain) ---- */
+  { id: 'song-lightly', group: 'Songs', by: 'German folk song', level: 1, title: 'Lightly Row', bpm: 92, key: 0, desc: 'C position. Every note is a step or a skip.',
+    R: 'G4.5/q E4.3 E4.3/h | F4.4/q D4.2 D4.2/h | C4.1/q D4.2 E4.3 F4.4 | G4.5 G4.5 G4.5/h | G4.5/q E4.3 E4.3/h | F4.4/q D4.2 D4.2/h | C4.1/q E4.3 G4.5 G4.5 | C4.1/w' },
+  { id: 'song-row', group: 'Songs', by: 'Traditional', level: 2, title: 'Row, Row, Row Your Boat', bpm: 72, key: 0, time: [6, 8], desc: 'In 6/8: two big beats per bar, each split in three. “Merrily” stretches the hand to an octave.',
+    R: 'C4.1/q. C4.1 | C4.1/q D4.2/e E4.3/q. | E4.3/q D4.2/e E4.3/q F4.4/e | G4.5/h. | C5.5/e C5.5 C5.5 G4.3 G4.3 G4.3 | E4.2 E4.2 E4.2 C4.1 C4.1 C4.1 | G4.5/q F4.4/e E4.3/q D4.2/e | C4.1/h.' },
+  { id: 'song-ode-g', group: 'Songs', by: 'Ludwig van Beethoven', level: 2, title: 'Ode to Joy in G (transposed)', bpm: 96, key: 1, keyName: 'G major', desc: 'The same tune moved up to G position. Same fingers, same shape, new notes.',
+    R: 'B4.3/q B4.3 C5.4 D5.5 | D5.5 C5.4 B4.3 A4.2 | G4.1 G4.1 A4.2 B4.3 | B4.3/q. A4.2/e A4.2/h | B4.3/q B4.3 C5.4 D5.5 | D5.5 C5.4 B4.3 A4.2 | G4.1 G4.1 A4.2 B4.3 | A4.2/q. G4.1/e G4.1/h' },
+  { id: 'song-canon', group: 'Songs', by: 'Johann Pachelbel', level: 3, title: 'Canon in D (chords)', bpm: 60, key: 2, keyName: 'D major', desc: 'The famous chord pattern: D, A, Bm, F♯m, G, D, G, A. The right hand barely moves between chords.',
+    R: '[F#4.1 A4.2 D5.5]/h [E4.1 A4.3 C#5.5] | [F#4.1 B4.3 D5.5] [F#4.1 A4.3 C#5.5] | [G4.1 B4.3 D5.5] [F#4.1 A4.3 D5.5] | [G4.1 B4.3 D5.5] [E4.1 A4.3 C#5.5] | [F#4.1 A4.2 D5.5]/w',
+    L: 'D3.1/h A2.4 | B2.3 F#2.5 | G2.4 D2.5 | G2.4 A2.3 | D3.1/w' },
+  { id: 'song-elise', group: 'Songs', by: 'Ludwig van Beethoven', level: 3, title: 'Für Elise (opening)', bpm: 52, key: 0, keyName: 'A minor', time: [3, 8], pickup: 0.5, desc: 'In 3/8 with sixteenth notes. The hands take turns: the left hand’s broken chord flows straight into the right hand.',
+    R: 'E5.5/s D#5.4 | E5.5 D#5.4 E5.5 B4.2 D5.4 C5.3 | A4.1/e r/s C4.1 E4.2 A4.3 | B4.4/e r/s E4.1 G#4.3 B4.4 | C5.5/e r/s E4.1 E5.5 D#5.4 | E5.5 D#5.4 E5.5 B4.2 D5.4 C5.3 | A4.1/e r/s C4.1 E4.2 A4.3 | B4.4/e r/s E4.1 C5.3 B4.2 | A4.1/q.',
+    L: 'r/s r/s | r/e. r/e. | A2.5/s E3.2 A3.1 r/s r/e | E2.5/s E3.2 G#3.1 r/s r/e | A2.5/s E3.2 A3.1 r/s r/e | r/e. r/e. | A2.5/s E3.2 A3.1 r/s r/e | E2.5/s E3.2 G#3.1 r/s r/e | A2.5/q.' },
+  { id: 'song-prelude', group: 'Songs', by: 'Johann Sebastian Bach', level: 3, title: 'Prelude in C (opening)', bpm: 66, key: 0, desc: 'The first four bars of the Prelude in C major, BWV 846: each half-bar is one chord, broken into sixteenth notes.',
+    R: 'r/s E4.1 G4.2 C5.3 E5.5 G4.2 C5.3 E5.5 r/s E4.1 G4.2 C5.3 E5.5 G4.2 C5.3 E5.5 | r/s D4.1 A4.2 D5.3 F5.5 A4.2 D5.3 F5.5 r/s D4.1 A4.2 D5.3 F5.5 A4.2 D5.3 F5.5 | r/s D4.1 G4.2 D5.3 F5.5 G4.2 D5.3 F5.5 r/s D4.1 G4.2 D5.3 F5.5 G4.2 D5.3 F5.5 | r/s E4.1 G4.2 C5.3 E5.5 G4.2 C5.3 E5.5 r/s E4.1 G4.2 C5.3 E5.5 G4.2 C5.3 E5.5',
+    L: 'C3.5/h C3.5 | C3.5 C3.5 | B2.5 B2.5 | C3.5 C3.5' },
 ];
 
 /* ===== 13-lessons.js ===== */
@@ -3347,7 +3540,7 @@ const LESSONS = [
     ],
     act: { drill: 'chord-7', text: 'Play major 7th, dominant 7th and minor 7th chords.' } },
 ];
-LESSONS.forEach((l) => { l.unitObj = UNITS[l.unit - 1]; l.num = l.unit + '.' + (LESSONS.filter((x) => x.unit === l.unit).indexOf(l) + 1); });
+LESSONS.forEach((l) => { l.unitObj = UNITS[l.unit - 1] || UNITS[0]; l.num = l.unit + '.' + (LESSONS.filter((x) => x.unit === l.unit).indexOf(l) + 1); });
 
 /* ===== 14-views.js ===== */
 /* ---------- views ---------- */
@@ -3389,7 +3582,7 @@ function renderLearn() {
   if (VIEW.heroKeys) { VIEW.heroKeys.destroy(); VIEW.heroOff(); }
   v.textContent = '';
   const done = LESSONS.filter((l) => progress.lessons[l.id]).length;
-  const next = LESSONS.find((l) => !progress.lessons[l.id]);
+  const next = LESSONS.find((l) => l.lvl === 'B' && !progress.lessons[l.id]) || LESSONS.find((l) => !progress.lessons[l.id]);
   const nextL = next || LESSONS[0];
   const overall = h('div', { class: 'overall', 'aria-hidden': 'true' }, UNITS.map((u) => {
     const ls = LESSONS.filter((l) => l.unit === u.n), d = ls.filter((l) => progress.lessons[l.id]).length;
@@ -3431,7 +3624,7 @@ function renderLearn() {
     h('div', null,
       h('p', { class: 'eyebrow', text: 'Piano fundamentals' }),
       h('h1', { text: 'Learn the keyboard from the ground up.' }),
-      h('p', { class: 'lede', html: 'Six short units: <b>the keys</b>, <b>your hands</b>, <b>your ears</b>, <b>reading music</b>, <b>scales and keys</b>, and <b>chords</b>. Every lesson ends with something to play, with falling blocks, drills and a real grand piano.' }),
+      h('p', { class: 'lede', html: 'A complete course in ' + UNITS.length + ' units and ' + LESSONS.length + ' lessons, from your first black-key group to sixteenth notes, two-octave scales, seventh chords and the blues. <b>Beginner</b> lessons come first; <b>Intermediate</b> lessons go further. Every lesson ends with something to play.' }),
       h('div', { class: 'next-card', style: { '--uc': nextL.unitObj.color } },
         h('div', { class: 'nc-text' }, h('div', { class: 'nc-k', text: (done === 0 ? 'Start here' : next ? 'Up next' : 'All lessons finished · review') + ' · ' + nextL.num }), h('div', { class: 'nc-t', text: nextL.title })),
         h('button', { class: 'btn primary', type: 'button', onclick: () => openLesson(nextL.id) }, done === 0 ? 'Start' : 'Continue', iconEl('next'))),
@@ -3442,9 +3635,13 @@ function renderLearn() {
   VIEW.heroKeys = new Keys(kd, { lo: 48, hi: 72 });
   drawRead();
   /* units */
-  const units = h('div', { class: 'units' });
+  const lvlF = store.get('lvlFilter', 'all');
+  const fseg = h('div', { class: 'seg', 'aria-label': 'Show lessons' }, [['all', 'All lessons'], ['B', 'Beginner'], ['I', 'Intermediate']].map(([k, lab]) => h('button', { type: 'button', 'aria-pressed': String(k === lvlF), text: lab + ' (' + (k === 'all' ? LESSONS.length : LESSONS.filter((l) => l.lvl === k).length) + ')', onclick: () => { store.set('lvlFilter', k); renderLearn(); const u = $('#units-top'); if (u) u.scrollIntoView(); } })));
+  v.append(h('div', { class: 'filter-row', id: 'units-top' }, h('p', { text: 'New to piano? Go through the Beginner lessons in order; “Up next” always points to the next one. Come back for Intermediate lessons when the basics feel easy.' }), fseg));
+  const units = h('div', { class: 'units', style: { marginTop: '18px' } });
   for (const u of UNITS) {
-    const ls = LESSONS.filter((l) => l.unit === u.n);
+    const ls = LESSONS.filter((l) => l.unit === u.n && (lvlF === 'all' || l.lvl === lvlF));
+    if (!ls.length) continue;
     const d = ls.filter((l) => progress.lessons[l.id]).length;
     units.append(h('section', { class: 'unit', style: { '--uc': u.color }, id: 'unit-' + u.id },
       h('div', { class: 'unit-head' },
@@ -3457,7 +3654,7 @@ function renderLearn() {
         h('span', { class: 'lc-t', text: l.title }),
         h('span', { class: 'lc-done', html: progress.lessons[l.id] ? ICON.check : '', 'aria-label': progress.lessons[l.id] ? 'Finished' : 'Not finished yet' }),
         h('span', { class: 'lc-s', text: l.sum }),
-        h('span', { class: 'lc-tag' }, (l.act.blocks ? ['Falling blocks'] : []).concat(l.tags.filter((t) => t !== 'Blocks')).map((t) => h('span', { class: 'tag', text: t }))))))));
+        h('span', { class: 'lc-tag' }, h('span', { class: 'tag lvl-' + l.lvl, text: l.lvl === 'I' ? 'Intermediate' : 'Beginner' }), (l.act.blocks ? ['Falling blocks'] : []).concat(l.tags.filter((t) => t !== 'Blocks')).slice(0, 1).map((t) => h('span', { class: 'tag', text: t }))))))));
   }
   v.append(units);
   v.append(h('footer', { class: 'credits' },
@@ -3489,7 +3686,7 @@ function renderPractice() {
   }
   v.append(h('div', { class: 'sec-head', style: { marginTop: '44px' } }, h('h2', { text: 'Skill drills' }), h('p', { text: 'Ten quick questions each. Earn up to three stars, then go again to keep the skill sharp.' })));
   const EAR_ORDER = ['ear-hl', 'ear-same', 'ear-name-5', 'ear-name-8', 'ear-echo-3', 'ear-echo-5', 'ear-echo', 'ear-echo-black', 'ear-echo-wide', 'ear-step', 'ear-melody-3', 'ear-melody-4', 'ear-int-basic', 'ear-int-all', 'ear-mm', 'ear-4'];
-  for (const g of ['Ear', 'Keyboard', 'Reading', 'Chords']) {
+  for (const g of ['Ear', 'Rhythm', 'Reading', 'Keyboard', 'Chords', 'Scales', 'Expression']) {
     let ids = Object.keys(DRILLS).filter((k) => DRILLS[k].group === g);
     if (g === 'Ear') ids = EAR_ORDER.filter((k) => DRILLS[k]).concat(ids.filter((k) => !EAR_ORDER.includes(k)));
     v.append(h('div', { class: 'group-title', text: g === 'Ear' ? 'Ear training (slow listening)' : g }));
@@ -3640,33 +3837,28 @@ function renderStep() {
     page.append(h('div', { class: 'kicker', text: 'Lesson ' + l.num + ' · your turn' }), h('h2', { text: progress.lessons[l.id] ? 'Lesson complete' : 'Now play it' }));
     const card = h('div', { class: 'activity-card' });
     const act = l.act;
-    if (act.drill) {
-      const d = DRILLS[act.drill];
-      card.append(h('h3', { text: d.title }), h('p', { text: act.text }),
-        h('div', { class: 'row', style: { display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' } },
-          h('button', { class: 'btn primary', type: 'button', onclick: () => openDrill(act.drill, { context: 'Lesson ' + l.num + ' · ' + l.title, onDone: (stars) => { markLesson(l.id, stars); renderStep(); } }) }, iconEl('play'), progress.drills[act.drill] ? 'Go again' : 'Start'),
-          progress.drills[act.drill] ? starsEl(progress.drills[act.drill]) : null));
-    } else if (act.drills) {
-      card.append(h('h3', { text: 'Listening drills' }), h('p', { text: act.text }));
-      act.drills.forEach((id, i) => {
-        const d = DRILLS[id];
-        card.append(h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', borderTop: '1px solid var(--rule)', paddingTop: '10px' } },
-          act.drills.length > 2 ? h('span', { class: 'tag', text: 'Level ' + (i + 1) }) : null,
-          h('span', { style: { flex: '1 1 180px', display: 'flex', flexDirection: 'column' } }, h('b', { text: d.title }), h('span', { class: 'cap', style: { fontSize: '13px', color: 'var(--muted)' }, text: d.sub })),
-          progress.drills[id] ? starsEl(progress.drills[id]) : null,
-          h('button', { class: 'btn small primary', type: 'button', onclick: () => openDrill(id, { context: 'Lesson ' + l.num + ' · ' + l.title, onDone: (stars) => { markLesson(l.id, stars); renderStep(); } }) }, iconEl('play'), progress.drills[id] ? 'Again' : 'Start')));
-      });
-    } else if (act.blocks) {
-      card.append(h('h3', { text: act.blocks.length > 1 ? 'Falling-block exercises' : 'Falling-block exercise' }), h('p', { text: act.text }));
-      act.blocks.forEach((id) => {
-        const ex = prepareExercise(EXERCISES.find((e) => e.id === id));
-        card.append(h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', borderTop: '1px solid var(--rule)', paddingTop: '10px' } },
-          h('span', { class: 'hand-chip ' + ex.hands, text: ex.hands === 'B' ? 'Both' : ex.hands === 'R' ? 'Right' : 'Left' }),
-          h('b', { text: ex.title, style: { flex: '1 1 180px' } }),
-          progress.ex[id] ? starsEl(progress.ex[id]) : null,
-          h('button', { class: 'btn small primary', type: 'button', onclick: () => openBlocks(id, { queue: act.blocks, onDone: (stars) => { markLesson(l.id, stars); renderStep(); } }) }, iconEl('play'), progress.ex[id] ? 'Again' : 'Play')));
-      });
-    }
+    const drills = (act.drill ? [act.drill] : act.drills || []).filter((id) => DRILLS[id]);
+    const blocks = (act.blocks || []).filter((id) => EXERCISES.find((x) => x.id === id));
+    const onDone = (stars) => { markLesson(l.id, stars); renderStep(); };
+    card.append(h('h3', { text: drills.length && blocks.length ? 'Drills and exercises' : drills.length ? (drills.length > 1 ? 'Drills' : 'Drill') : (blocks.length > 1 ? 'Falling-block exercises' : 'Falling-block exercise') }),
+      h('p', { text: act.text || (drills.length ? 'Finish any of these to complete the lesson. Each one earns up to three stars.' : 'Play any of these to complete the lesson. Try “Wait for me” first, then “Keep the beat”.') }));
+    const rowStyle = { display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', borderTop: '1px solid var(--rule)', paddingTop: '10px' };
+    drills.forEach((id, i) => {
+      const d = DRILLS[id];
+      card.append(h('div', { style: rowStyle },
+        drills.length > 2 ? h('span', { class: 'tag', text: 'Step ' + (i + 1) }) : null,
+        h('span', { style: { flex: '1 1 180px', display: 'flex', flexDirection: 'column' } }, h('b', { text: d.title }), h('span', { class: 'cap', style: { fontSize: '13px', color: 'var(--muted)' }, text: d.sub })),
+        progress.drills[id] ? starsEl(progress.drills[id]) : null,
+        h('button', { class: 'btn small primary', type: 'button', onclick: () => openDrill(id, { context: 'Lesson ' + l.num + ' · ' + l.title, onDone }) }, iconEl('play'), progress.drills[id] ? 'Again' : 'Start')));
+    });
+    blocks.forEach((id) => {
+      const ex = prepareExercise(EXERCISES.find((x) => x.id === id));
+      card.append(h('div', { style: rowStyle },
+        h('span', { class: 'hand-chip ' + ex.hands, text: ex.hands === 'B' ? 'Both' : ex.hands === 'R' ? 'Right' : 'Left' }),
+        h('span', { style: { flex: '1 1 180px', display: 'flex', flexDirection: 'column' } }, h('b', { text: ex.title }), h('span', { class: 'cap', style: { fontSize: '13px', color: 'var(--muted)' }, text: 'Falling blocks · ' + ex.bpm + ' bpm' })),
+        progress.ex[id] ? starsEl(progress.ex[id]) : null,
+        h('button', { class: 'btn small primary', type: 'button', onclick: () => openBlocks(id, { queue: blocks, onDone }) }, iconEl('play'), progress.ex[id] ? 'Again' : 'Play')));
+    });
     page.append(card);
     if (progress.lessons[l.id]) {
       const idx = LESSONS.indexOf(l), nx = LESSONS[idx + 1];
@@ -3925,7 +4117,7 @@ W.notegallery = (o = {}) => {
 const SHEET = { ex: null, width: 0, lines: [], cur: -1, sp: 9, fingers: null };
 function sheetModel(ex) {
   if (ex._sheet) return ex._sheet;
-  const time = ex.time || [4, 4], bpb = time[0];
+  const time = ex.time || [4, 4], bpb = (time[0] * 4) / time[1], off = ex.pickup ? bpb - ex.pickup : 0;
   const two = ex.hands === 'B';
   const clef = two ? 'grand' : ex.hands === 'L' ? 'bass' : 'treble';
   const staffFor = (hand) => (two ? (hand === 'L' ? 'b' : 't') : clef === 'bass' ? 'b' : 't');
@@ -3938,12 +4130,12 @@ function sheetModel(ex) {
   }
   for (const r of ex.rests || []) slotAt(r.t).restBy[staffFor(r.hand)] = r.dur;
   const list = Array.from(map.values()).sort((a, b) => a.t - b.t);
-  const measures = Math.max(1, Math.ceil(ex.end / bpb - 1e-6));
+  const measures = Math.max(1, Math.ceil((ex.end + off) / bpb - 1e-6));
   let mem = new Map(), lastM = -1;
   list.forEach((sl, i) => {
-    sl.measure = Math.floor(sl.t / bpb + 1e-6);
+    sl.measure = Math.floor((sl.t + off) / bpb + 1e-6);
     const next = i + 1 < list.length ? list[i + 1].t : ex.end;
-    sl.dt = Math.max(0.25, Math.min(next, (sl.measure + 1) * bpb) - sl.t);
+    sl.dt = Math.max(0.25, Math.min(next, (sl.measure + 1) * bpb - off) - sl.t);
     sl.step = ex.steps.findIndex((s0) => Math.abs(s0.t - sl.t) < 1e-6);
     if (sl.measure !== lastM) { mem = new Map(); lastM = sl.measure; }
     /* accidentals last until the bar line, as in printed music */
@@ -3971,6 +4163,7 @@ function drawSheetLine(line, curIdx) {
       const notes = sl.notes.map((n) => Object.assign({}, n, { f: bkPrefs.fingers ? n.f : null }));
       items.push({
         notes, durBy: sl.durBy, restBy: sl.restBy, w: 0.72 + 0.55 * Math.sqrt(sl.dt), hl: idx === curIdx,
+        dur: m.clef === 'grand' ? null : (sl.durBy.t || sl.durBy.b), bpos: sl.t + (BK.ex.pickup ? m.bpb - BK.ex.pickup : 0) - sl.measure * m.bpb,
         color: played ? 'var(--muted)' : null,
         colors: played ? notes.map(() => 'var(--muted)') : idx === curIdx ? notes.map(() => 'var(--accent)') : null,
       });
@@ -3980,7 +4173,7 @@ function drawSheetLine(line, curIdx) {
   const count = line.to - line.from + 1;
   const width = line.to === m.measures - 1 && count < SHEET.mpl ? Math.max(260, SHEET.width * (count + 0.35) / SHEET.mpl) : SHEET.width;
   line.el.textContent = '';
-  line.el.append(Staff({ clef: m.clef, sp: SHEET.sp, key: BK.ex.key || 0, time: line.from === 0 ? m.time : null, items, width, gap: 3.2 }));
+  line.el.append(Staff({ clef: m.clef, sp: SHEET.sp, key: BK.ex.key || 0, time: line.from === 0 ? m.time : null, items, width, gap: 3.2, beam: m.clef !== 'grand', beamTime: m.time }));
 }
 function renderSheet(force) {
   const el = $('#bk-sheet');
@@ -4162,6 +4355,930 @@ function bindSave() {
   $('#copy-code').addEventListener('click', copySaveCode);
   $('#load-code').addEventListener('click', () => { try { loadSaveText($('#code-io').value); } catch (e) { toast('That code didn’t work. Copy the whole code and try again.'); } });
 }
+
+/* ===== 20-rhythm.js ===== */
+/* ---------- rhythm engine: notation, counting, listening and tap-along ---------- */
+/* Pattern tokens: w h q e s t (triplet eighth), dotted with "." (q.), rests "r" + value (rq), "_" ties to the previous note (_q), "|" bar line.
+   A pitch may follow ":" (q:E5). All times are in quarter-note beats. */
+function countLabel(barPos, time) {
+  const near = (a, b) => Math.abs(a - b) < 0.02;
+  if (time && time[1] === 8) {
+    const k = barPos / 0.5, r = Math.round(k);
+    if (near(k, r)) return String(r + 1);
+    return near(k - Math.floor(k), 0.5) ? '&' : '';
+  }
+  const b = Math.floor(barPos + 1e-6), f = barPos - b;
+  if (near(f, 0)) return String(b + 1);
+  if (near(f, 0.5)) return '&';
+  if (near(f, 0.25)) return 'e';
+  if (near(f, 0.75)) return 'a';
+  if (near(f, 1 / 3)) return 'trip';
+  if (near(f, 2 / 3)) return 'let';
+  return '';
+}
+function parseRhythm(src, time = [4, 4]) {
+  const str = Array.isArray(src) ? src.join(' ') : src;
+  const items = [], onsets = [], curves = [];
+  let pos = 0, barPos = 0, lastNote = -1;
+  const barLenQ = (time[0] * 4) / time[1];
+  for (let tok of str.trim().split(/\s+/)) {
+    if (!tok) continue;
+    if (tok === '|' || tok === '||') { items.push({ bar: tok === '||' ? 'end' : true }); barPos = 0; continue; }
+    if (barPos >= barLenQ - 1e-6) { items.push({ bar: true }); barPos = 0; }
+    let pitch = 'C5';
+    if (tok.includes(':')) { const [a, b] = tok.split(':'); tok = a; pitch = b; }
+    const tie = tok.startsWith('_'); if (tie) tok = tok.slice(1);
+    const rest = tok.startsWith('r'); if (rest) tok = tok.slice(1);
+    const len = DUR_BEATS[tok];
+    if (len == null) throw new Error('bad rhythm token ' + tok);
+    const lab = countLabel(barPos, time);
+    const idx = items.length;
+    if (rest) items.push({ rest: tok, label: lab ? '(' + lab + ')' : '', t: pos, len });
+    else {
+      items.push({ notes: [pitch], dur: tok, label: tie ? '' : lab, t: pos, len });
+      if (tie && lastNote >= 0) { curves.push([lastNote, idx]); const on = onsets[onsets.length - 1]; if (on) { on.d += len; on.idxs.push(idx); } }
+      else onsets.push({ t: pos, d: len, idx, idxs: [idx], midi: midiOf(pitch) });
+      lastNote = idx;
+    }
+    if (rest) lastNote = -1;
+    pos += len; barPos += len;
+  }
+  return { items, onsets, curves, total: pos, time };
+}
+const secPerQuarter = (bpm, time) => (time && time[1] === 8 ? 120 / bpm : 60 / bpm);
+
+/* Play a parsed rhythm (listen) or count in and judge taps (tap). Any key, the tap pad or the space bar counts as a tap. */
+function RhythmRun(R, o) {
+  Piano.ensure();
+  const ctx = Piano.ctx; if (!ctx) return { stop() {} };
+  const time = R.time || [4, 4], bar = (time[0] * 4) / time[1];
+  const spq = secPerQuarter(o.bpm || 80, time);
+  const unit = time[1] === 8 ? 0.5 : 1;
+  const countIn = o.countIn === false ? 0 : bar;
+  const lead = 0.18;
+  const t0 = ctx.currentTime + lead + countIn * spq;
+  const perfRef = performance.now(), ctxRef = ctx.currentTime;
+  const lat = (ctx.outputLatency || ctx.baseLatency || 0);
+  const perfAt = (beats) => perfRef + (t0 + beats * spq - ctxRef + lat) * 1000;
+  const timers = [], voices = [];
+  let done = false;
+  /* clicks: count-in plus the whole pattern */
+  const endBeats = Math.ceil(R.total / unit - 1e-6) * unit;
+  for (let b = -countIn; b < endBeats - 1e-6; b += unit) {
+    const inBar = ((b % bar) + bar) % bar;
+    const accent = Math.abs(inBar) < 1e-6;
+    if (o.clicks !== false) Piano.click(t0 + b * spq, accent);
+    if (b < 0 && o.onCount) timers.push(setTimeout(() => o.onCount(Math.round((b + countIn) / unit) + 1), (perfAt(b) - performance.now())));
+  }
+  if (o.mode === 'listen') for (const on of R.onsets) voices.push(Piano.play(on.midi || 72, 0.64, t0 + on.t * spq, Math.max(0.12, on.d * spq * 0.9)));
+  R.items.forEach((it, i) => { if (!it.bar && o.onItem) timers.push(setTimeout(() => o.onItem(i), perfAt(it.t) - performance.now())); });
+  /* tap judging */
+  const hits = [];
+  let off = null, padKey = null;
+  if (o.mode === 'tap') {
+    off = Input.on((type, p) => { if (type === 'down') hits.push(performance.now()); });
+    padKey = (e) => { if (e.code === 'Space' && !e.repeat) { e.preventDefault(); Input.down(72, 0.6, 'pad'); setTimeout(() => Input.up(72, 'pad'), 90); } };
+    window.addEventListener('keydown', padKey);
+  }
+  const gaps = R.onsets.slice(1).map((on, i) => (on.t - R.onsets[i].t) * spq);
+  const win = clamp(0.42 * Math.min(0.6, ...gaps, 0.6), 0.085, 0.2);
+  const finish = () => {
+    if (done) return; done = true;
+    if (off) off(); if (padKey) window.removeEventListener('keydown', padKey);
+    if (o.mode !== 'tap') { if (o.onEnd) o.onEnd(null); return; }
+    const used = new Set();
+    const per = R.onsets.map((on) => {
+      const want = perfAt(on.t);
+      let best = -1, bd = 1e9;
+      hits.forEach((ht, i) => { if (used.has(i)) return; const d = Math.abs(ht - want); if (d < bd) { bd = d; best = i; } });
+      if (best >= 0 && bd <= win * 1000) { used.add(best); return { ok: true, off: (hits[best] - want) / 1000 }; }
+      return { ok: false };
+    });
+    const startP = perfAt(0) - win * 1000, endP = perfAt(R.total) + win * 1000;
+    const extras = hits.filter((ht, i) => !used.has(i) && ht >= startP && ht <= endP).length;
+    const okOffs = per.filter((x) => x.ok).map((x) => x.off);
+    const avg = okOffs.length ? okOffs.reduce((a, b) => a + b, 0) / okOffs.length : 0;
+    if (o.onEnd) o.onEnd({ per, extras, ok: per.filter((x) => x.ok).length, total: per.length, avg, perfect: per.every((x) => x.ok) && extras === 0 });
+  };
+  timers.push(setTimeout(finish, perfAt(R.total) - performance.now() + win * 1000 + 120));
+  return { stop() { timers.forEach(clearTimeout); voices.forEach((v) => Piano.release(v)); if (!done) { done = true; if (off) off(); if (padKey) window.removeEventListener('keydown', padKey); } } };
+}
+function rhythmVerdict(r) {
+  if (!r) return '';
+  if (r.perfect) return 'All ' + r.total + ' notes right on time!';
+  let msg = r.ok + ' of ' + r.total + ' notes on time';
+  if (r.extras) msg += ', ' + r.extras + ' extra tap' + (r.extras > 1 ? 's' : '') + (r.extras && r.total ? ' (stay still during rests and long notes)' : '');
+  msg += '.';
+  if (r.ok >= 2 && Math.abs(r.avg) > 0.045) msg += r.avg > 0 ? ' You were a little late; listen for the click and tap with it.' : ' You were a little early; wait for each beat.';
+  return msg;
+}
+function rhythmStaff(R, o = {}) {
+  return Staff({ clef: 'treble', sp: o.sp || 10, time: o.noTime ? null : R.time, beam: true, labels: o.counts !== false, gap: 3.1, minWidth: o.minWidth || 0,
+    items: R.items.map((it, i) => Object.assign({}, it, { hl: i === o.hl, colors: o.colors && o.colors[i] ? [o.colors[i]] : null, color: o.colors && o.colors[i] ? o.colors[i] : null, label: o.counts === false ? '' : it.label }))
+      .concat(o.noEnd ? [] : [{ bar: 'end' }]),
+    curves: R.curves });
+}
+function resultColors(R, res) {
+  const c = {};
+  if (!res) return c;
+  R.onsets.forEach((on, k) => on.idxs.forEach((i) => { c[i] = res.per[k].ok ? 'var(--good)' : 'var(--bad)'; }));
+  return c;
+}
+function tapPad() {
+  const pad = h('button', { type: 'button', class: 'tap-pad', 'aria-label': 'Tap pad' }, h('span', { text: 'Tap here' }), h('small', { text: 'or any piano key, or the space bar' }));
+  pad.addEventListener('pointerdown', (e) => { e.preventDefault(); Piano.ensure(); pad.classList.add('hit'); Input.down(72, 0.6, 'pad'); setTimeout(() => { pad.classList.remove('hit'); Input.up(72, 'pad'); }, 90); });
+  return pad;
+}
+
+/* lesson widget: listen, read the counting, then tap it */
+W.rhythm = (o) => {
+  let run = null;
+  const el = h('div', { class: 'widget' });
+  const countsChk = h('input', { type: 'checkbox', id: 'rw-c-' + Math.random().toString(36).slice(2, 7) }); countsChk.checked = o.counts !== false;
+  const rows = [];
+  const stopAll = () => { if (run) run.stop(); run = null; rows.forEach((r) => r.draw()); };
+  (o.patterns || []).forEach((pat) => {
+    const time = pat.time || o.time || [4, 4];
+    const R = parseRhythm(pat.pat || pat.durs, time);
+    const bpm = pat.bpm || o.bpm || 80;
+    const wrap = h('div', { class: 'stf-wrap', style: { justifyContent: 'flex-start' } });
+    const line = h('div', { class: 'cap', style: { minHeight: '1.4em' } });
+    const row = { R, res: null, hl: -1 };
+    row.draw = () => { wrap.textContent = ''; wrap.append(rhythmStaff(R, { hl: row.hl, counts: countsChk.checked, colors: resultColors(R, row.res), sp: 10 })); };
+    const go = (mode) => {
+      stopAll();
+      row.res = null; row.draw();
+      line.textContent = mode === 'tap' ? 'Get ready: listen to the count-in…' : '';
+      run = RhythmRun(R, { bpm, mode, countIn: mode === 'tap' || o.countIn,
+        onCount: (n) => { line.textContent = 'Count-in: ' + n; },
+        onItem: (i) => { row.hl = i; row.draw(); if (mode === 'tap') line.textContent = 'Tap!'; },
+        onEnd: (res) => { row.hl = -1; row.res = res; row.draw(); line.textContent = res ? rhythmVerdict(res) : ''; line.style.color = res ? (res.perfect ? 'var(--good)' : 'var(--bad)') : ''; run = null; } });
+    };
+    row.draw();
+    rows.push(row);
+    el.append(h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px', paddingBottom: '8px', borderBottom: '1px solid var(--rule)' } },
+      h('div', { class: 'row' },
+        h('b', { text: pat.label, style: { fontSize: '15px', marginRight: '4px' } }),
+        h('button', { class: 'btn small', type: 'button', onclick: () => go('listen') }, iconEl('play'), 'Listen'),
+        h('button', { class: 'btn small primary', type: 'button', onclick: () => go('tap') }, 'Tap it'),
+        pat.note ? h('span', { class: 'cap', text: pat.note }) : null),
+      wrap, line));
+  });
+  countsChk.addEventListener('change', () => rows.forEach((r) => r.draw()));
+  el.append(h('div', { class: 'row', style: { justifyContent: 'space-between' } },
+    h('label', { class: 'cap', style: { display: 'inline-flex', gap: '6px', alignItems: 'center' } }, countsChk, 'Show the counting under the notes'),
+    h('span', { class: 'cap', text: (o.bpm || o.patterns[0].bpm || 80) + ' bpm' })), tapPad());
+  return { el, destroy() { if (run) run.stop(); } };
+};
+
+/* drill: tap the rhythm you read */
+function rhythmDrill(title, sub, pats, opts = {}) {
+  return {
+    title, sub, group: 'Rhythm', answer: 'choice', count: opts.count || 8, level: opts.level,
+    make(st) {
+      const pat = noRepeat(st, 'r', () => pick(pats));
+      const time = opts.time || [4, 4];
+      const R = parseRhythm(pat, time);
+      const bpm = opts.bpm || 76;
+      let run = null;
+      return {
+        prompt: 'Tap this rhythm', sub: opts.hint || 'Listen to one bar of clicks, then tap each note. Hold still on rests.',
+        destroy() { if (run) run.stop(); },
+        render(main, api) {
+          const wrap = h('div', { class: 'drill-staff' });
+          let res = null, hl = -1;
+          const showCounts = opts.counts !== false && st.i < (opts.countsFor || 99);
+          const draw = () => { wrap.textContent = ''; wrap.append(rhythmStaff(R, { hl, counts: showCounts, colors: resultColors(R, res), sp: 11, minWidth: 260 })); };
+          draw();
+          const status = h('div', { class: 'drill-sub', style: { minHeight: '1.5em' } });
+          const go = (mode) => {
+            if (run) run.stop();
+            res = null; hl = -1; draw();
+            status.textContent = mode === 'tap' ? 'Listen to the count-in…' : 'Listening…';
+            run = RhythmRun(R, { bpm, mode, countIn: true,
+              onCount: (n) => { status.textContent = 'Count-in: ' + n + (mode === 'tap' ? '' : ''); },
+              onItem: (i) => { hl = i; draw(); status.textContent = mode === 'tap' ? 'Tap!' : 'Listening…'; },
+              onEnd: (r) => {
+                run = null; hl = -1; res = r; draw(); status.textContent = '';
+                if (!r) return;
+                if (r.perfect) api.right(rhythmVerdict(r));
+                else api.wrong(rhythmVerdict(r) + ' Try again, or tap Listen to hear it.');
+              } });
+          };
+          main.append(wrap,
+            h('div', { class: 'drill-choices' },
+              h('button', { class: 'btn', type: 'button', onclick: () => go('listen') }, iconEl('ear'), 'Listen'),
+              h('button', { class: 'btn primary', type: 'button', onclick: () => go('tap') }, iconEl('play'), 'Start tapping')),
+            status, tapPad());
+        },
+      };
+    },
+  };
+}
+/* ear drill: hear a rhythm, pick the matching notation */
+function hearRhythmDrill(title, sub, pats, opts = {}) {
+  return {
+    title, sub, group: 'Rhythm', answer: 'choice', ear: true, count: 8,
+    make(st) {
+      const time = opts.time || [4, 4];
+      const pat = noRepeat(st, 'h', () => pick(pats));
+      const others = shuffle(pats.filter((x) => x !== pat)).slice(0, 2);
+      const R = parseRhythm(pat, time);
+      const label = (p) => { const svg = rhythmStaff(parseRhythm(p, time), { counts: false, sp: 8, noTime: true }); svg.style.pointerEvents = 'none'; return svg.outerHTML; };
+      let run = null;
+      return {
+        prompt: 'Which rhythm do you hear?', sub: 'It plays twice: with clicks counting the beat.',
+        audio: () => { if (run) run.stop(); run = RhythmRun(R, { bpm: opts.bpm || 80, mode: 'listen', countIn: true }); return { stop: () => run && run.stop() }; },
+        destroy() { if (run) run.stop(); },
+        choices: shuffle([pat, ...others]).map((p) => ({ label: label(p), ok: p === pat })),
+        explain: 'Count it: ' + R.items.filter((it) => !it.bar).map((it) => it.label || '–').join(' '),
+      };
+    },
+  };
+}
+
+/* ===== 21-more.js ===== */
+/* ---------- metronome, pedal diagram and the larger drill library ---------- */
+const TEMPO_TERMS = [[0, 'Grave', 'very slow and serious'], [45, 'Largo', 'broad and slow'], [60, 'Adagio', 'slow, at ease'], [76, 'Andante', 'at a walking pace'], [108, 'Moderato', 'moderate'], [120, 'Allegro', 'fast and bright'], [168, 'Presto', 'very fast']];
+const tempoTerm = (bpm) => TEMPO_TERMS.filter((x) => bpm >= x[0]).pop();
+W.metro = (o = {}) => {
+  let bpm = o.bpm || 80, beats = o.beats || 4, on = false, timer = 0, next = 0, n = 0;
+  const big = h('div', { class: 'bpm mono' });
+  const term = h('div', { class: 'term' });
+  const dots = h('div', { class: 'dots' });
+  const slider = h('input', { type: 'range', min: '40', max: '208', step: '1', value: String(bpm), 'aria-label': 'Tempo' });
+  const btn = h('button', { class: 'btn primary', type: 'button' }, iconEl('play'), 'Start');
+  const draw = () => {
+    big.textContent = bpm + ' bpm';
+    const tt = tempoTerm(bpm); term.textContent = tt[1] + ' · ' + tt[2];
+    dots.textContent = ''; for (let i = 0; i < beats; i++) dots.append(h('i', { class: i === 0 ? 'first' : '' }));
+  };
+  const tick = () => {
+    const c = Piano.ctx; if (!c) return;
+    while (next < c.currentTime + 0.12) {
+      const b = n % beats, at = next;
+      Piano.click(at, b === 0);
+      setTimeout(() => { $$('i', dots).forEach((d, i) => d.classList.toggle('on', i === b)); }, Math.max(0, (at - c.currentTime) * 1000));
+      next += 60 / bpm; n++;
+    }
+  };
+  const stop = () => { on = false; clearInterval(timer); btn.textContent = ''; btn.append(iconEl('play'), 'Start'); $$('i', dots).forEach((d) => d.classList.remove('on')); };
+  btn.addEventListener('click', () => {
+    Piano.ensure();
+    if (on) return stop();
+    on = true; n = 0; next = Piano.ctx.currentTime + 0.1; timer = setInterval(tick, 25); tick();
+    btn.textContent = ''; btn.append(h('span', { text: '❚❚' }), 'Stop');
+  });
+  slider.addEventListener('input', () => { bpm = +slider.value; draw(); });
+  const step = (d) => h('button', { class: 'btn small', type: 'button', text: (d > 0 ? '+' : '−') + Math.abs(d), onclick: () => { bpm = clamp(bpm + d, 40, 208); slider.value = String(bpm); draw(); } });
+  const seg = h('div', { class: 'seg' }, [2, 3, 4, 6].map((b) => h('button', { type: 'button', 'aria-pressed': String(b === beats), text: b + ' beats', onclick: (e) => { beats = b; n = 0; $$('button', seg).forEach((x) => x.setAttribute('aria-pressed', String(x === e.currentTarget))); draw(); } })));
+  draw();
+  return { el: h('div', { class: 'widget' }, h('div', { class: 'metro' }, big, term, dots, slider, h('div', { class: 'row', style: { justifyContent: 'center' } }, step(-5), step(-1), btn, step(1), step(5)), seg)), destroy: stop };
+};
+
+FIGS.pedal = () => {
+  const svg = s('svg', { class: 'fig', viewBox: '0 0 640 230', role: 'img', 'aria-label': 'Legato pedalling timeline: play the new chord, then lift and press the pedal again' });
+  const x0 = 110, w = 160;
+  svg.append(figText(20, 66, 'Hands'), figText(20, 156, 'Pedal'));
+  ['C', 'F', 'G'].forEach((c, i) => {
+    const x = x0 + i * w;
+    svg.append(s('rect', { x: x + 4, y: 44, width: w - 12, height: 36, rx: 8, style: 'fill:var(--u2);opacity:.85' }),
+      s('text', { x: x + w / 2, y: 68, 'text-anchor': 'middle', style: 'font-family:var(--font-display);font-size:20px;fill:#fff' }, c));
+  });
+  /* pedal line: down shortly after each chord starts, up just before the next */
+  let d = `M${x0} 176`;
+  for (let i = 0; i < 3; i++) { const x = x0 + i * w; d += ` L${x + 18} 176 L${x + 24} 132 L${x + w - 2} 132 L${x + w + 4} 176`; }
+  svg.append(s('path', { d, style: stroke(3, 'var(--u8)') }));
+  for (let i = 1; i < 3; i++) {
+    const x = x0 + i * w;
+    svg.append(s('path', { d: `M${x + 6} 110 L${x + 6} 190`, style: 'stroke:var(--muted);stroke-width:1;stroke-dasharray:4 4' }));
+  }
+  svg.append(figText(x0 + w + 24, 208, '↑ lift as the new chord sounds, then press again'), figText(x0 + 24, 122, 'down'));
+  return svg;
+};
+
+/* ----- reading drills ----- */
+function readDrill(title, sub, pool, clef, opts = {}) {
+  return {
+    title, sub, group: 'Reading', answer: 'both', range: opts.range || (clef === 'bass' ? ['C2', 'C4'] : clef === 'grand' ? ['C3', 'C5'] : ['C4', 'C6']), count: opts.count || 10, level: opts.level,
+    make(st) {
+      const name = noRepeat(st, 'last', () => pick(pool));
+      const n = N(name);
+      const staff = clef === 'grand' ? (n.midi === 60 ? pick(['t', 'b']) : n.midi > 60 ? 't' : 'b') : null;
+      return {
+        prompt: 'Name this note', sub: 'Tap its letter or play it on the keyboard.',
+        staff: { clef, sp: 13, items: [{ notes: [n], dur: 'w', staff }], gap: 6, minWidth: 180 },
+        choices: letterChoices(n.letter), target: { accept: readAccept(n) }, reveal: [n.midi], answerNote: null,
+        explain: (opts.explain || '') + ' It’s ' + nameOf(n.midi) + '.',
+      };
+    },
+  };
+}
+const LETTER_POOL = (lo, hi) => { const out = []; for (let p = midiOf(lo); p <= midiOf(hi); p++) if (!isBlack(p)) out.push(nameOf(p).replace(SHARP, '#')); return out; };
+function sightDrill(title, sub, notes, clef, len, opts = {}) {
+  const pool = notes.map(midiOf);
+  return {
+    title, sub, group: 'Reading', answer: 'keys', range: opts.range || (clef === 'bass' ? ['C3', 'C4'] : ['C4', 'C5']), count: 6, level: opts.level,
+    make(st) {
+      const mel = noRepeat(st, 'm', () => {
+        let i = randInt(0, pool.length - 1); const m = [pool[i]];
+        while (m.length < len) { i = clamp(i + pick([-2, -1, 1, 1, 2, -1, 0, 3, -3].slice(0, opts.leaps ? 9 : 6)), 0, pool.length - 1); m.push(pool[i]); }
+        return m;
+      });
+      const marks = mel.map(() => null);
+      let wrap = null;
+      const draw = (cur) => { if (!wrap) return; wrap.textContent = ''; wrap.append(Staff({ clef, sp: 12, time: null, items: mel.map((p, i) => ({ notes: [spell(p)], dur: 'q', color: marks[i], hl: i === cur })), gap: 4, minWidth: 260 })); };
+      return {
+        prompt: 'Play these notes in order', sub: 'Read ahead: find the first note, then follow the steps and skips.',
+        melody: mel, reveal: mel,
+        render(main) { wrap = h('div', { class: 'drill-staff' }); main.append(wrap); draw(0); },
+        onMelody(i, ok) { if (ok) { marks[i] = 'var(--good)'; draw(i + 1); } else { marks.fill(null); draw(0); } },
+      };
+    },
+  };
+}
+const INT_NAMES = ['', 'Unison', '2nd', '3rd', '4th', '5th', '6th', '7th', 'Octave'];
+const CHORD_READ = [['C4', 'maj'], ['D4', 'min'], ['E4', 'min'], ['F4', 'maj'], ['G4', 'maj'], ['A4', 'min']];
+
+/* ----- quiz banks ----- */
+const QUIZ = {
+  pedal: [['The right pedal on a piano is called the…', ['sustain (damper) pedal', 'soft pedal', 'volume pedal']], ['What does the sustain pedal do?', ['lets the strings keep ringing after you let go', 'makes every note louder', 'plays the notes again']], ['For clean legato pedalling you lift the pedal…', ['just as you play the new chord, then press it again', 'before you play the first note', 'only at the end of the piece']], ['If you hold the pedal through different chords, the sound gets…', ['blurry and muddy', 'quieter', 'shorter']], ['Which foot works the sustain pedal?', ['right', 'left']], ['Where should your heel be?', ['resting on the floor', 'up in the air', 'on the pedal']], ['The marking “Ped.” followed by * means…', ['press the pedal, then lift it at the star', 'play softly', 'repeat the line']], ['The left pedal on a grand piano (una corda) makes the sound…', ['softer and gentler', 'louder', 'last longer']]],
+  dyn: [['Order these from softest: pp, p, mp, mf, f, ff. Which is softest?', ['pp', 'p', 'mf']], ['“mf” stands for…', ['mezzo forte: medium loud', 'more forte: very loud', 'medium fast']], ['“ff” means…', ['fortissimo: very loud', 'fast forward', 'forte twice as fast']], ['A hairpin that opens wider (<) means…', ['crescendo: get louder', 'diminuendo: get softer', 'slow down']], ['“dim.” or “decresc.” means…', ['get gradually softer', 'play detached', 'get faster']], ['“sfz” (sforzando) means…', ['a sudden strong accent', 'very soft', 'slow and smooth']], ['On a piano, loudness comes from…', ['how fast the key goes down', 'how long you hold the key', 'which finger you use']], ['A melody usually sounds best when it’s…', ['a little louder than the accompaniment', 'exactly as loud as everything else', 'softer than the accompaniment']]],
+  artic: [['A dot over or under a note means…', ['staccato: short and detached', 'hold it longer', 'louder']], ['A curved line over different notes is a…', ['slur: play them legato', 'tie: hold one note', 'repeat sign']], ['A “>” over a note means…', ['accent: play it stronger', 'get louder', 'play it shorter']], ['A short line over a note (tenuto) means…', ['hold it for its full value, slightly leaned on', 'play it staccato', 'skip it']], ['“Legato” means…', ['smooth and connected', 'short and bouncy', 'loud']], ['At the end of a slur you usually…', ['lift the hand gently, like breathing', 'play louder', 'hold the pedal']], ['A phrase in music is like…', ['a sentence: it has a shape and a breath at the end', 'a single note', 'the time signature']]],
+  tempo: [['“Allegro” means…', ['fast and bright', 'slow', 'very soft']], ['“Andante” means…', ['at a walking pace', 'very fast', 'detached']], ['“Adagio” means…', ['slow, at ease', 'fast', 'loud']], ['Which is the fastest?', ['Presto', 'Moderato', 'Largo']], ['“rit.” (ritardando) means…', ['gradually slow down', 'gradually speed up', 'repeat']], ['“accel.” (accelerando) means…', ['gradually speed up', 'slow down', 'get louder']], ['“a tempo” means…', ['go back to the original speed', 'play twice as fast', 'stop']], ['A metronome marking “♩ = 60” means…', ['60 quarter-note beats per minute', '60 measures', '60 seconds of music']], ['“Moderato” means…', ['at a moderate speed', 'very slow', 'with the pedal']]],
+  form: [['When you see a repeat sign :‖ you…', ['go back to the start, or to the matching ‖: sign, and play again', 'stop', 'skip ahead']], ['First and second endings tell you…', ['play ending 1 the first time, skip to ending 2 after the repeat', 'play both endings together', 'choose one you like']], ['“D.C.” (Da Capo) means…', ['go back to the very beginning', 'go to the sign', 'play softly']], ['“D.S.” (Dal Segno) means…', ['go back to the sign 𝄋', 'go to the beginning', 'repeat one bar']], ['“Fine” marks…', ['where the piece ends after a D.C. or D.S.', 'a fast section', 'a pause']], ['“To Coda” tells you to…', ['jump to the ending section marked with the coda sign', 'repeat the coda twice', 'stop']], ['A piece in “AB form” has…', ['two different sections', 'one repeated section', 'only chords']], ['“ABA” form means…', ['a section, a contrasting section, then the first again', 'three different songs', 'play A twice']]],
+  orn: [['A trill (tr) means…', ['alternate quickly between the note and the note above', 'hold the note', 'play an octave']], ['A grace note (small note with a slash) is played…', ['very quickly, just before the main note', 'after the main note', 'very slowly']], ['A mordent means…', ['note, neighbour, note: one quick flick', 'a long trill', 'a chord']], ['A turn (∽) goes…', ['above, main, below, main', 'up an octave', 'only the main note']], ['An arpeggiated chord (wavy line) is played…', ['rolled from bottom to top', 'all at exactly once', 'backwards']], ['Ornaments should sound…', ['light and decorative', 'loud and heavy', 'slow']]],
+  octsign: [['“8va” above notes means…', ['play an octave higher than written', 'play 8 times', 'play an octave lower']], ['“8vb” below notes means…', ['play an octave lower than written', 'play 8 notes', 'play louder']], ['“loco” means…', ['go back to playing where written', 'play faster', 'play the next octave']], ['Why do composers use 8va?', ['to avoid lots of ledger lines', 'to make it louder', 'to change the key']], ['“15ma” means…', ['two octaves higher', 'fifteen times', 'one octave lower']]],
+  symbols: [['The chord symbol “Am” means…', ['A minor', 'A major', 'A with the left hand']], ['The chord symbol “G7” means…', ['G dominant 7th: G B D F', 'G major 7th: G B D F♯', 'G played 7 times']], ['“Cmaj7” contains…', ['C E G B', 'C E G B♭', 'C E♭ G B♭']], ['“F/A” means…', ['an F chord with A as the lowest note', 'F or A', 'F minor']], ['“Bdim” or “B°” is…', ['B diminished: B D F', 'B major', 'B augmented']], ['“Csus4” replaces the 3rd with…', ['the 4th: C F G', 'the 2nd: C D G', 'the 7th']], ['In a lead sheet, the chord symbol lasts…', ['until the next chord symbol appears', 'one beat', 'one note']], ['“Dm7” contains…', ['D F A C', 'D F♯ A C', 'D F A C♯']]],
+  modes: [['Dorian sounds like…', ['natural minor with a raised 6th', 'major with a lowered 2nd', 'major']], ['Mixolydian sounds like…', ['major with a lowered 7th', 'minor with a raised 7th', 'all black keys']], ['Playing all white keys from D to D gives…', ['D Dorian', 'D major', 'D Lydian']], ['Playing all white keys from G to G gives…', ['G Mixolydian', 'G major', 'G minor']], ['Lydian is major with a…', ['raised 4th', 'lowered 3rd', 'lowered 6th']], ['Playing all white keys from E to E gives…', ['E Phrygian', 'E minor', 'E major']]],
+  practice: [['The best tempo to start a new piece is…', ['slow enough to play it right every time', 'the final speed', 'as fast as possible']], ['When one bar keeps going wrong, you should…', ['practise just that bar, slowly, a few times', 'start from the beginning every time', 'skip it']], ['Practising hands separately first helps because…', ['each hand learns its job before they combine', 'it sounds better', 'it’s faster to finish']], ['A good way to speed up is…', ['raise the metronome a few clicks once it feels easy', 'double the speed at once', 'never use a metronome']], ['Short daily practice is usually…', ['better than one long session a week', 'worse than one long session', 'not useful']], ['If your hand or wrist hurts, you should…', ['stop, rest and check your posture', 'play through it', 'press harder']]],
+  registers: [['How many keys does a full piano have?', ['88', '61', '76']], ['The lowest key on a full piano is…', ['A0', 'C1', 'C0']], ['The highest key on a full piano is…', ['C8', 'A7', 'C7']], ['On an 88-key piano, middle C is the…', ['4th C from the left (C4)', '3rd C', '5th C']], ['Notes in the treble clef are usually played by the…', ['right hand', 'left hand', 'feet']], ['If your keyboard has 61 keys, it usually runs from…', ['C2 to C7', 'A0 to C8', 'C4 to C5']]],
+};
+const quiz = (title, sub, group, key, level) => Object.assign(quizDrill(title, sub, group, QUIZ[key]), { level });
+
+Object.assign(DRILLS, {
+  /* reading, note by note */
+  'read-cde': readDrill('Middle C, D and E', 'Treble clef · around middle C', ['C4', 'D4', 'E4'], 'treble', { range: ['C4', 'C5'], level: 1, explain: 'Middle C sits on its own ledger line; D hangs below the staff; E is on the bottom line.' }),
+  'read-cg': readDrill('C to G', 'Treble clef · five-finger position', ['C4', 'D4', 'E4', 'F4', 'G4'], 'treble', { range: ['C4', 'C5'], level: 2, explain: 'G sits on the second line, where the treble clef curls.' }),
+  'read-cc': readDrill('Middle C to treble C', 'Treble clef · one octave', LETTER_POOL('C4', 'C5'), 'treble', { range: ['C4', 'C5'], level: 3 }),
+  'read-high': readDrill('High notes', 'Treble clef · C5 to C6', LETTER_POOL('C5', 'C6'), 'treble', { range: ['C5', 'C6'], level: 4, explain: 'Above the top line (F5): G5 in the space, A5 on the first ledger line, then B5 and C6 on the second.' }),
+  'read-bass-near': readDrill('Middle C down to F', 'Bass clef · near middle C', ['C4', 'B3', 'A3', 'G3', 'F3'], 'bass', { range: ['C3', 'C4'], level: 1, explain: 'Bass F is the line between the clef’s dots; middle C is the ledger line above the bass staff.' }),
+  'read-bass-c': readDrill('Bass C to middle C', 'Bass clef · one octave', LETTER_POOL('C3', 'C4'), 'bass', { range: ['C3', 'C4'], level: 2 }),
+  'read-low': readDrill('Low notes', 'Bass clef · C2 to C3', LETTER_POOL('C2', 'C3'), 'bass', { range: ['C2', 'C3'], level: 3, explain: 'Below the bottom line (G2): F2 in the space under it, E2 on the first ledger line, then D2 and C2 on the second.' }),
+  'read-all': readDrill('The whole grand staff', 'C2 to C6 · both clefs', LETTER_POOL('C2', 'C6'), 'grand', { range: ['C2', 'C6'], level: 5, count: 12 }),
+  'read-acc': {
+    title: 'Sharps, flats and naturals', sub: 'Play the note with its accidental', group: 'Reading', answer: 'keys', range: ['C4', 'C5'],
+    make(st) {
+      const [L, a] = noRepeat(st, 'a', () => { let v; do { v = [pick(LETTERS), pick([1, -1, 1, -1, 0])]; } while (['E1', 'F-1', 'B1', 'C-1'].includes(v[0] + v[1])); return v; });
+      const n = { letter: L, acc: a, oct: 4, midi: 60 + LETTER_PC[L] + a, showAcc: true };
+      const nm = L + accStr(a);
+      return {
+        prompt: 'Play this note', sub: a === 0 ? 'The natural sign means the plain white key.' : a > 0 ? 'A sharp: one key to the right.' : 'A flat: one key to the left.',
+        staff: { clef: 'treble', sp: 13, items: [{ notes: [n], dur: 'w', nat: a === 0 }], gap: 6, minWidth: 180 },
+        target: { accept: (p) => (pcOf(p) === pcOf(n.midi) ? { ok: true, msg: 'Yes, ' + nm + '.' } : { ok: false, msg: 'That was ' + nameOf(p, false) + '. This note is ' + nm + '.' }) },
+        reveal: [n.midi],
+      };
+    },
+  },
+  'read-keysig': {
+    title: 'Reading in a key signature', sub: 'The key signature changes notes for you', group: 'Reading', answer: 'keys', range: ['C4', 'C5'],
+    make(st) {
+      const f = noRepeat(st, 'k', () => pick([1, 2, 3, -1, -2, -3]));
+      const changed = f > 0 ? SHARP_ORDER.slice(0, f) : FLAT_ORDER.slice(0, -f);
+      const L = Math.random() < 0.7 ? pick(changed.split('')) : pick(LETTERS);
+      const acc = keyAccFor(L, f);
+      const n = { letter: L, acc, oct: 4, midi: 60 + LETTER_PC[L] + acc };
+      const mk = MAJOR_KEYS.find((x) => x.f === f);
+      return {
+        prompt: 'Play this note', sub: 'Check the key signature first: it’s ' + mk.name + ' major.',
+        staff: { clef: 'treble', sp: 13, key: f, items: [{ notes: [n], dur: 'w' }], gap: 6, minWidth: 220 },
+        target: { accept: (p) => (pcOf(p) === pcOf(n.midi) ? { ok: true, msg: acc ? 'Yes! The key signature makes it ' + L + accStr(acc) + '.' : 'Yes, ' + L + ' isn’t changed in this key.' } : { ok: false, msg: 'That was ' + nameOf(p, false) + '. ' + (acc ? 'The key signature turns every ' + L + ' into ' + L + accStr(acc) + '.' : L + ' isn’t in the key signature, so it stays natural.') }) },
+        reveal: [n.midi],
+      };
+    },
+  },
+  'read-int': {
+    title: 'Intervals on the staff', sub: 'Count lines and spaces', group: 'Reading', answer: 'choice',
+    make(st) {
+      const pool = LETTER_POOL('C4', 'A5').map(midiOf);
+      const [a, k] = noRepeat(st, 'i', () => [pick(pool.slice(0, 9)), randInt(1, 7)]);
+      const ia = pool.indexOf(a), b = pool[Math.min(pool.length - 1, ia + k)], num = pool.indexOf(b) - ia + 1;
+      const harm = Math.random() < 0.4;
+      return {
+        prompt: 'What interval is this?', sub: 'Count every line and space from the lower note to the upper one, including both.',
+        staff: { clef: 'treble', sp: 12, items: harm ? [{ notes: [spell(a), spell(b)], dur: 'w' }] : [{ notes: [spell(a)], dur: 'h' }, { notes: [spell(b)], dur: 'h' }], gap: 5, minWidth: 200 },
+        choices: [2, 3, 4, 5, 6, 7, 8].map((x) => ({ label: INT_NAMES[x], ok: x === num })),
+        explain: nameOf(a, false) + ' up to ' + nameOf(b, false) + ' is a ' + INT_NAMES[num].toLowerCase() + '.' + (num % 2 === 1 ? ' Odd numbers go line to line or space to space.' : ' Even numbers go line to space.'),
+      };
+    },
+  },
+  'read-chord': {
+    title: 'Reading chords', sub: 'Name the triad on the staff', group: 'Reading', answer: 'choice',
+    make(st) {
+      const [root, type] = noRepeat(st, 'c', () => pick(CHORD_READ));
+      const inv = st.i > 4 ? randInt(0, 2) : 0;
+      const ps = chordNotes(midiOf(root), type, inv);
+      const name = chordLabel(pcOf(midiOf(root)), type);
+      const wrong = shuffle(CHORD_READ.filter((c) => c[0] !== root)).slice(0, 3).map((c) => chordLabel(pcOf(midiOf(c[0])), c[1]));
+      return {
+        prompt: 'Which chord is this?', sub: inv ? 'It may be an inversion: find the root by stacking the notes in 3rds.' : 'Root position: the bottom note is the root.',
+        staff: { clef: 'treble', sp: 12, items: [{ notes: ps.map((p) => spell(p)), dur: 'w' }], gap: 6, minWidth: 180 },
+        choices: choiceSet(name, wrong), explain: 'The notes are ' + ps.map((p) => nameOf(p, false)).join(' ') + ': that’s ' + chordLong(pcOf(midiOf(root)), type) + (inv ? ', ' + ['', '1st', '2nd'][inv] + ' inversion' : '') + '.',
+      };
+    },
+  },
+  'sight-c': sightDrill('Sight-reading: C position', 'Four notes, steps only', ['C4', 'D4', 'E4', 'F4', 'G4'], 'treble', 4, { level: 1 }),
+  'sight-c2': sightDrill('Sight-reading: steps and skips', 'Six notes, C to G', ['C4', 'D4', 'E4', 'F4', 'G4'], 'treble', 6, { leaps: true, level: 2 }),
+  'sight-oct': sightDrill('Sight-reading: the octave', 'Six notes, C to C', ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'], 'treble', 6, { leaps: true, level: 3 }),
+  'sight-bass': sightDrill('Sight-reading: bass clef', 'Five notes, left hand', ['C3', 'D3', 'E3', 'F3', 'G3'], 'bass', 5, { level: 4 }),
+  'quiz-8va': quiz('Octave signs', '8va, 8vb and loco', 'Reading', 'octsign'),
+  'quiz-reg': quiz('The whole keyboard', 'Registers, ranges and middle C', 'Keyboard', 'registers'),
+  'keysig-minor': {
+    title: 'Minor key signatures', sub: 'Name the minor key', group: 'Reading', answer: 'choice',
+    make(st) {
+      const f = noRepeat(st, 'k', () => randInt(-4, 4));
+      const wrong = shuffle([-4, -3, -2, -1, 0, 1, 2, 3, 4].filter((x) => x !== f)).slice(0, 3).map((x) => MINOR_OF[x] + ' minor');
+      return { prompt: 'Which minor key has this key signature?', sub: 'Find the major key, then go down three half steps.', staff: { clef: 'treble', sp: 13, key: f, items: [], minWidth: 200 }, choices: choiceSet(MINOR_OF[f] + ' minor', wrong), explain: 'This is ' + MAJOR_KEYS.find((x) => x.f === f).name + ' major’s signature; its relative minor is ' + MINOR_OF[f] + ' minor.' };
+    },
+  },
+  'count-quiz': {
+    title: 'Which count?', sub: 'Find where a note starts', group: 'Rhythm', answer: 'choice',
+    make(st) {
+      const pats = ['q e e q q', 'e e q e e q', 'q q e e e e', 'h e e q', 'q. e q q', 'e e e e h', 'q e e h', 'q re e q q', 'e q e q q'];
+      const R = parseRhythm(noRepeat(st, 'p', () => pick(pats)));
+      const k = randInt(0, R.onsets.length - 1), on = R.onsets[k];
+      const full = (t) => { const b = Math.floor(t + 1e-6) + 1, f = t - Math.floor(t + 1e-6); return b + (Math.abs(f - 0.5) < 0.02 ? ' &' : ''); };
+      const opts = ['1', '1 &', '2', '2 &', '3', '3 &', '4', '4 &'];
+      return {
+        prompt: 'On which count does the blue note start?', sub: 'Count “1 & 2 & 3 & 4 &”.',
+        staff: { clef: 'treble', sp: 12, time: [4, 4], beam: true, items: R.items.map((it, i) => Object.assign({}, it, { color: i === on.idx ? 'var(--accent)' : null, colors: i === on.idx ? ['var(--accent)'] : null })), curves: R.curves, gap: 3.4, minWidth: 260 },
+        choices: opts.map((x) => ({ label: x, ok: x === full(on.t) })),
+        explain: 'It starts on ' + full(on.t) + '.',
+      };
+    },
+  },
+  /* ear training, intermediate */
+  'ear-degree': {
+    title: 'Scale degrees', sub: 'Hear the key, then name the note', group: 'Ear', answer: 'choice', ear: true,
+    make(st) {
+      const deg = noRepeat(st, 'd', () => randInt(0, 6));
+      const p = 60 + SCALES.major.iv[deg];
+      const names = ['1 · do', '2 · re', '3 · mi', '4 · fa', '5 · sol', '6 · la', '7 · ti'];
+      return {
+        prompt: 'Which scale degree is it?', sub: 'First a short C major cadence to set the key, then the note.',
+        audio: () => { const T = earT(), d = T.d * 0.9; return Piano.sequence([{ p: [48, 64, 67, 72], t: 0, d }, { p: [53, 65, 69, 72], t: d + 0.1, d }, { p: [55, 62, 67, 71], t: 2 * (d + 0.1), d }, { p: [48, 64, 67, 72], t: 3 * (d + 0.1), d: d * 1.4 }, { p, t: 4 * (d + 0.1) + T.gap + 0.8, d: T.d * 1.2 }]); },
+        buttons: [{ label: 'Hear only the note', fn: () => earPlay([p]) }, { label: 'Hear do', fn: () => earPlay([60]) }],
+        choices: names.map((nm, i) => ({ label: nm, ok: i === deg })), explain: 'It was ' + names[deg] + ' (' + nameOf(p, false) + ').', answerNote: p,
+      };
+    },
+  },
+  'ear-prog': {
+    title: 'Which chord?', sub: 'I, IV, V or vi', group: 'Ear', answer: 'choice', ear: true,
+    make(st) {
+      const opts = [['IV', [53, 65, 69, 72]], ['V', [55, 62, 67, 71]], ['vi', [57, 64, 69, 72]], ['I', [48, 64, 67, 72]]];
+      const [rn, ch] = noRepeat(st, 'c', () => pick(opts.slice(0, st.i < 4 ? 2 : 4)));
+      const names = { I: 'I (C)', IV: 'IV (F)', V: 'V (G)', vi: 'vi (Am)' };
+      return {
+        prompt: 'The first chord is I (C). What is the second chord?', sub: 'IV feels like a lift, V wants to go home, vi sounds sad.',
+        audio: () => { const T = earT(); return Piano.sequence([{ p: [48, 64, 67, 72], t: 0, d: T.d * 1.2 }, { p: ch, t: T.d * 1.2 + T.gap, d: T.d * 1.4 }]); },
+        choices: (st.i < 4 ? ['IV', 'V'] : ['I', 'IV', 'V', 'vi']).map((x) => ({ label: names[x], ok: x === rn })), explain: 'It was ' + names[rn] + '.',
+      };
+    },
+  },
+  'ear-cadence': {
+    title: 'Cadences', sub: 'How does the phrase end?', group: 'Ear', answer: 'choice', ear: true,
+    make(st) {
+      const C = [48, 64, 67, 72], F = [53, 65, 69, 72], G = [43, 62, 67, 71], Am = [45, 64, 69, 72], Dm = [50, 65, 69, 74];
+      const kinds = [['perfect', [Dm, G, C], 'Finished (perfect: V → I)'], ['plagal', [C, F, C], 'Amen (plagal: IV → I)'], ['half', [C, F, G], 'Unfinished (half: ends on V)'], ['deceptive', [Dm, G, Am], 'Surprise (deceptive: V → vi)']];
+      const [id, chs, label] = noRepeat(st, 'k', () => pick(kinds));
+      return {
+        prompt: 'How does this phrase end?', sub: 'Listen to the last two chords.',
+        audio: () => { const T = earT(), d = T.d * 1.1; return Piano.sequence(chs.map((c, i) => ({ p: c, t: i * (d + 0.15), d: i === chs.length - 1 ? d * 1.8 : d }))); },
+        choices: kinds.map((k) => ({ label: k[2], ok: k[0] === id })), explain: 'That was a ' + id + ' cadence.',
+      };
+    },
+  },
+  'ear-rhythm': hearRhythmDrill('Hear the rhythm', 'Quarters and eighths', ['q q q q', 'q q h', 'e e q q q', 'q e e q q', 'h h', 'q q e e q', 'e e e e q q']),
+  'ear-rhythm2': hearRhythmDrill('Hear the rhythm 2', 'Dotted notes and rests', ['q. e q q', 'q rq q q', 'h. q', 'q q. e q', 'e e q rq q', 'q. e h']),
+  /* touch */
+  'dyn-touch': {
+    title: 'Soft and loud', sub: 'Control your touch', group: 'Keyboard', answer: 'keys', range: ['C4', 'C5'], count: 8,
+    make(st) {
+      const want = noRepeat(st, 'v', () => pick(['soft', 'loud', 'soft', 'loud', 'medium']));
+      const ok = (v) => (want === 'soft' ? v < 0.45 : want === 'loud' ? v > 0.7 : v >= 0.45 && v <= 0.7);
+      const word = (v) => (v < 0.45 ? 'soft' : v > 0.7 ? 'loud' : 'medium');
+      return {
+        prompt: 'Play any key <b>' + (want === 'soft' ? 'softly (p)' : want === 'loud' ? 'loudly (f)' : 'medium (mf)') + '</b>',
+        sub: Midi.inputs.size ? 'Use your MIDI keyboard: play slower for soft, faster for loud.' : 'On screen, tap near the top of a key for soft and near the bottom for loud. With a MIDI keyboard, just play softer or harder.',
+        target: { accept: (p, v) => (ok(v ?? 0.7) ? { ok: true, msg: 'That was ' + word(v ?? 0.7) + '. Nicely controlled.' } : { ok: false, msg: 'That was ' + word(v ?? 0.7) + '. Try ' + (want === 'soft' ? 'gentler' : want === 'loud' ? 'firmer' : 'in between') + '.' }) },
+        reveal: null,
+      };
+    },
+  },
+  /* rhythm tapping, one note value at a time */
+  'rhy-beat': rhythmDrill('Tap the beat', 'Quarter notes with the click', ['q q q q', 'q q q q | q q q q'], { bpm: 72, level: 1 }),
+  'rhy-whole': rhythmDrill('Whole and half notes', 'Hold for 4 or 2 beats', ['w | w', 'h h | w', 'w | h h', 'h h | h h'], { bpm: 80, level: 2, hint: 'One tap per note. Count all four beats through each whole note.' }),
+  'rhy-half': rhythmDrill('Half notes and rests', '2-beat notes and silences', ['h h', 'h rh', 'rh h', 'h rh | h h', 'rh h | h rh'], { bpm: 80, level: 3 }),
+  'rhy-quarter': rhythmDrill('Quarter notes and rests', '1-beat notes and silences', ['q q h', 'h q q', 'q h q', 'q rq q rq', 'q q q rq', 'rq q q q', 'q rq h'], { bpm: 80, level: 4 }),
+  'rhy-eighth': rhythmDrill('Eighth notes', 'Two to a beat: 1 & 2 &', ['e e e e q q', 'q q e e q', 'e e q e e q', 'q e e q e e', 'e e e e e e q', 'q re e q q', 'e e q q q'], { bpm: 72, level: 5 }),
+  'rhy-dotted': rhythmDrill('Dotted notes', 'Dotted half and dotted quarter', ['h. q', 'q h.', 'q. e q q', 'q q. e q', 'q. e q. e', 'h q. e', 'q. e h'], { bpm: 72, level: 6 }),
+  'rhy-tie': rhythmDrill('Ties', 'Hold through the tied note', ['h _q q', 'q h _q', 'q q q _q | q h q', 'h _h | w', 'q q _q q'], { bpm: 72, level: 7, hint: 'Tap once for tied notes: the second note is held, not played.' }),
+  'rhy-rests': rhythmDrill('Rests everywhere', 'Silences of every size', ['q rq q rq', 'rq q rq q', 'h rh', 'e re e re q q', 'q rh q', 're e re e h', 'rq q q rq'], { bpm: 76, level: 8 }),
+  'rhy-sixteenth': rhythmDrill('Sixteenth notes', 'Four to a beat: 1 e & a', ['s s s s q q q', 'q s s s s q q', 's s s s s s s s h', 'e s s q e s s q', 'q q s s s s q', 's s e q s s e q'], { bpm: 60, level: 9 }),
+  'rhy-triplet': rhythmDrill('Triplets', 'Three in the space of two', ['t t t q q q', 'q t t t q q', 'q t t t q t t t', 't t t t t t h', 'h t t t q'], { bpm: 66, level: 10, hint: 'Say “trip-let” or “1-trip-let” to keep the three even.' }),
+  'rhy-68': rhythmDrill('6/8 time', 'Two big beats, each split in three', ['q. q.', 'e e e q.', 'q e q e', 'q. e e e', 'h.', 'q e e e e', 'e e e e e e'], { bpm: 132, time: [6, 8], level: 11, hint: 'Count six eighths: 1 2 3 4 5 6, leaning on 1 and 4.' }),
+  'rhy-sync': rhythmDrill('Syncopation', 'Accents off the beat', ['e q e q q', 'q e q e q', 'e q q q e', 're e re e q q', 'q e q e h', 'e q e h'], { bpm: 66, level: 12, hint: 'Keep counting “1 & 2 &” and tap on the &s where they fall.' }),
+  /* quizzes */
+  'quiz-pedal': quiz('The sustain pedal', 'When and how to use it', 'Expression', 'pedal'),
+  'quiz-dyn': quiz('Dynamics', 'pp to ff', 'Expression', 'dyn'),
+  'quiz-artic': quiz('Articulation and phrasing', 'Legato, staccato, accents', 'Expression', 'artic'),
+  'quiz-tempo': quiz('Tempo words', 'Largo to Presto', 'Expression', 'tempo'),
+  'quiz-form': quiz('Repeats and road maps', 'D.C., D.S., codas and endings', 'Expression', 'form'),
+  'quiz-orn': quiz('Ornaments', 'Trills, grace notes and turns', 'Expression', 'orn'),
+  'quiz-symbols': quiz('Chord symbols', 'Lead-sheet shorthand', 'Chords', 'symbols'),
+  'quiz-modes': quiz('Modes', 'Dorian, Mixolydian and friends', 'Scales', 'modes'),
+  'quiz-practice': quiz('Smart practice', 'How to practise well', 'Expression', 'practice'),
+  'chord-dimaug': chordDrill('Diminished, augmented, suspended', 'The colour chords', () => ({ root: pick([0, 2, 5, 7, 9]), type: pick(['dim', 'aug', 'sus2', 'sus4']) })),
+  'chord-all': chordDrill('Chords in every key', 'Major and minor, all roots', () => ({ root: randInt(0, 11), type: pick(['maj', 'min']) })),
+});
+
+/* ===== 22-course-a.js ===== */
+/* ---------- the full course: new lessons (part 1: keyboard, hands, reading notes) ---------- */
+const NEW_LESSONS = [];
+const lesson = (id, title, sum, tags, steps, act) => NEW_LESSONS.push({ id, title, sum, tags, steps: steps.map(([h0, p, w]) => ({ h: h0, p, w })), act });
+const tip = (title, text) => '<div class="tip"><b>' + title + '</b>' + text + '</div>';
+const wn = (n, o = {}) => Object.assign({ notes: [n], dur: 'w' }, o);
+
+/* ===== Unit 1 · The keyboard ===== */
+lesson('everynote', 'Every note, one by one', 'Each white and black key and how to find it fast.', ['Keyboard'], [
+  ['The two-black-key family: C, D, E', '<p>Around every group of <b>two</b> black keys live three white keys:</p><ul><li><b>C</b> sits just left of the pair. It’s the “door” of the group.</li><li><b>D</b> is in the middle, between the two black keys.</li><li><b>E</b> sits just right of the pair.</li></ul>' + tip('Picture it', 'D is a dog sitting in its doghouse between the two black keys.'),
+    { type: 'keys', lo: 'C3', hi: 'B4', labels: 'none', marks: [{ pcs: [0], kind: 'u1', text: 'C' }, { pcs: [2], kind: 'u1', text: 'D' }, { pcs: [4], kind: 'u1', text: 'E' }] }],
+  ['The three-black-key family: F, G, A, B', '<p>Around every group of <b>three</b> black keys live four white keys:</p><ul><li><b>F</b> sits just left of the three.</li><li><b>G</b> and <b>A</b> sit between the black keys: G first, then A.</li><li><b>B</b> sits just right of the three.</li></ul>',
+    { type: 'keys', lo: 'C3', hi: 'B4', labels: 'none', marks: [{ pcs: [5], kind: 'u3', text: 'F' }, { pcs: [7], kind: 'u3', text: 'G' }, { pcs: [9], kind: 'u3', text: 'A' }, { pcs: [11], kind: 'u3', text: 'B' }] }],
+  ['Find each one', '<p>Find every copy of each note. Say its name out loud each time you press it.</p>', { type: 'find', pcs: [4], lo: 'C3', hi: 'C6', prompt: 'Press every <b>E</b>.' }],
+  ['Now the black keys', '<p>Each black key is named after a white neighbour. In the group of two: <b>C♯/D♭</b> and <b>D♯/E♭</b>. In the group of three: <b>F♯/G♭</b>, <b>G♯/A♭</b> and <b>A♯/B♭</b>.</p>', { type: 'keys', lo: 'C4', hi: 'C5', labels: 'allsharp', read: 'names2', marks: [{ pcs: [1, 3, 6, 8, 10], kind: 'faint' }] }],
+], { drills: ['letters', 'groups'] });
+
+lesson('registers', 'The whole keyboard', 'Low, middle and high, and what size your keyboard is.', ['Keyboard'], [
+  ['88 keys, about seven octaves', '<p>A full piano runs from <b>A0</b>, the lowest key, to <b>C8</b>, the highest. That’s 88 keys. Digital keyboards often have 61 keys (usually C2 to C7) or 49 keys.</p><p>Whatever size you have, the pattern of two and three black keys never changes, so you can always find middle C by counting the Cs.</p>',
+    { type: 'listen', keys: ['A0', 'C8'], labels: 'c', buttons: [{ label: 'Low register', bpm: 80, seq: [[['A0', 'E1'], 2, 'Rumbling bass'], [['C2', 'G2'], 2, 'Deep']] }, { label: 'Middle register', bpm: 80, seq: [[['C4', 'E4', 'G4'], 2, 'Around middle C: warm']] }, { label: 'High register', bpm: 80, seq: [[['C6', 'E6', 'G6'], 2, 'Bright'], [['C7', 'E7'], 2, 'Sparkling']] }] }],
+  ['Which hand plays where', '<p>The right hand usually plays above middle C and reads the treble clef. The left hand usually plays below middle C and reads the bass clef. In the middle, the hands share the space.</p>' + tip('Seat check', 'Sit centred on middle C so both hands can reach their side without leaning.') ],
+], { drills: ['quiz-reg', 'octaves'] });
+
+/* ===== Unit 2 · Hands and technique ===== */
+lesson('warmup', 'Warm up and stay healthy', 'A two-minute warm-up and habits that protect your hands.', ['Technique'], [
+  ['Before you play', '<p>Cold hands are stiff hands. Before practising:</p><ul><li>Shake your hands loosely by your sides for ten seconds.</li><li>Roll your shoulders back a few times.</li><li>Open and close your hands slowly, five times.</li><li>Gently play a few five-finger patterns, slowly and quietly.</li></ul>' + tip('Never force a stretch', 'Warm-ups should feel easy. Nothing should ever hurt.'),
+    { type: 'checklist', items: ['Shook out my hands', 'Rolled my shoulders', 'Opened and closed my hands five times', 'Played a slow five-finger pattern'] }],
+  ['While you play', '<ul><li>Take a short break every 20–30 minutes.</li><li>If a passage feels tense, slow it down rather than pushing harder.</li><li>Use the weight of your arm, not finger squeezing, for loud notes.</li><li>Pain, tingling or numbness means stop and rest. If it keeps happening, ask a teacher or doctor.</li></ul>' ],
+], { blocks: ['w-rh5', 'w-lh5'] });
+
+lesson('independence', 'Finger independence', 'Teach each finger to move on its own.', ['Technique', 'Blocks'], [
+  ['Why fingers stick together', '<p>Fingers 3, 4 and 5 share tendons, so at first they like to move together. Ring finger (4) is the hardest to lift on its own. That’s normal anatomy, not a lack of talent.</p><p>Independence comes from slow, light repetitions: one finger moves while its neighbours stay relaxed on their keys.</p>' ],
+  ['Finger pairs', '<p>Play pairs of neighbouring fingers, back and forth: 1-2, 2-3, 3-4, 4-5. The other fingers rest on the keys without pressing.</p>' + tip('Watch for', 'Fingers flying up high, a stiff wrist, or the thumb clenching. Stay close to the keys.'),
+    { type: 'keys', lo: 'C4', hi: 'G4', labels: 'all', marks: [{ n: ['C4', 'D4', 'E4', 'F4', 'G4'], kind: 'rh', text: ['1', '2', '3', '4', '5'] }] }],
+], { blocks: ['w-pairs', 'w-pairs-lh', 'w-hanon'] });
+
+lesson('coordination', 'Two hands together', 'Parallel, mirror, and one hand holding while the other moves.', ['Technique', 'Blocks'], [
+  ['Three ways hands move', '<ul><li><b>Parallel motion</b>: both hands go the same direction, like a scale in octaves.</li><li><b>Contrary motion</b>: the hands move away from or toward each other, like a mirror.</li><li><b>Oblique motion</b>: one hand holds still while the other moves.</li></ul><p>Contrary motion is often the easiest at first, because both hands use the same finger numbers at the same time.</p>' ],
+  ['How to put hands together', '<ol><li>Learn each hand alone until it’s easy.</li><li>Play hands together very slowly, even slower than each hand alone.</li><li>Look for the moments where the hands play at the same time and practise those spots.</li><li>Speed up only when it’s comfortable.</li></ol>' ],
+], { blocks: ['w-both5', 'w-mirror', 'w-holdmove'] });
+
+lesson('shifts', 'Changing hand position', 'Moving the hand smoothly to reach new notes.', ['Technique', 'Blocks'], [
+  ['Five fingers, many notes', '<p>Music rarely stays in one five-finger position. When you need to move, the <b>whole hand</b> travels together, keeping its shape, instead of stretching one finger far away.</p><ul><li>Use a rest or a long note to move.</li><li>Look ahead: know where you’re going before you get there.</li><li>Move early, then play. A late move makes a bump.</li></ul>' ],
+  ['Finger substitution', '<p>Sometimes you can change fingers on a held key: press with 3, then swap to 1 without letting go. This quietly moves the hand into a new position.</p>' + tip('Try it', 'Hold middle C with finger 3, then slide finger 1 onto the same key and let 3 go.'),
+    { type: 'keys', lo: 'C4', hi: 'C5', labels: 'c' }],
+], { blocks: ['w-shift', 'w-g5', 'song-twinkle'] });
+
+lesson('touch', 'Touch and tone', 'Soft, loud, and everything in between.', ['Technique'], [
+  ['Speed makes loudness', '<p>A piano key throws a hammer at the strings. The <b>faster</b> the key goes down, the louder and brighter the note. Pressing harder after the key is down changes nothing.</p><p>So for loud notes, let more arm weight drop into the key. For soft notes, press slowly from close to the key.</p>',
+    { type: 'keys', lo: 'C4', hi: 'C5', labels: 'c', read: 'velocity', cap: 'On screen, the spot you tap sets the loudness: near the top of a key is soft, near the bottom is loud.' }],
+  ['Hear the difference', '<p>The same chord at four levels. The sampled piano changes tone, not just volume, just like a real one.</p>',
+    { type: 'listen', buttons: [{ label: 'pp (very soft)', chord: ['C4', 'E4', 'G4', 'C5'], vel: 0.15 }, { label: 'p (soft)', chord: ['C4', 'E4', 'G4', 'C5'], vel: 0.32 }, { label: 'f (loud)', chord: ['C4', 'E4', 'G4', 'C5'], vel: 0.8 }, { label: 'ff (very loud)', chord: ['C4', 'E4', 'G4', 'C5'], vel: 1 }] }],
+], { drills: ['dyn-touch'] });
+
+lesson('pedal', 'The sustain pedal', 'Making notes ring, and keeping them clean.', ['Technique'], [
+  ['What the pedal does', '<p>The right pedal lifts every damper off the strings, so notes keep ringing after you let go of the keys. Keep your <b>heel on the floor</b> and press with the ball of your <b>right foot</b>.</p>',
+    { type: 'keys', lo: 'C3', hi: 'C5', labels: 'c', pedal: true, cap: 'Play a chord, let go, then try again while holding the pedal.' }],
+  ['Legato pedalling', '<p>If you hold the pedal through different chords, they blur together. The fix is <b>legato (syncopated) pedalling</b>: play the new chord, and <i>just as it sounds</i>, lift the pedal and press it again.</p><p>Hands first, then the foot changes. The new chord catches the pedal.</p>',
+    { type: 'figure', name: 'pedal' }],
+  ['Hear it', '<p>Compare the three versions.</p>',
+    { type: 'listen', buttons: [{ label: 'No pedal', bpm: 60, seq: [[['C3', 'C4', 'E4', 'G4'], 2], [['F2', 'C4', 'F4', 'A4'], 2], [['G2', 'B3', 'D4', 'G4'], 2], [['C3', 'C4', 'E4', 'G4'], 2]], hold: 0.45 }, { label: 'Clean pedal', bpm: 60, seq: [[['C3', 'C4', 'E4', 'G4'], 2], [['F2', 'C4', 'F4', 'A4'], 2], [['G2', 'B3', 'D4', 'G4'], 2], [['C3', 'C4', 'E4', 'G4'], 2]], hold: 1.04 }, { label: 'Blurry (pedal never lifted)', bpm: 60, seq: [[['C3', 'C4', 'E4', 'G4'], 2], [['F2', 'C4', 'F4', 'A4'], 2], [['G2', 'B3', 'D4', 'G4'], 2], [['C3', 'C4', 'E4', 'G4'], 2]], hold: 3.6 }] }],
+  ['Pedal markings', '<p>Music marks pedalling with <b>Ped.</b> and a star <b>*</b> (press, then lift at the star), or with a bracket line underneath the staff. Without markings, pedal by ear: clean changes whenever the harmony changes.</p>' ],
+], { drills: ['quiz-pedal'] });
+
+/* ===== Unit 3 · Reading notes ===== */
+lesson('readcde', 'Middle C, D and E on the staff', 'Your first three notes in the treble clef.', ['Reading'], [
+  ['Middle C', '<p>In the treble clef, middle C sits on a short <b>ledger line</b> below the staff. It’s the same key as middle C on your keyboard, right in the middle.</p>', { type: 'staff', clef: 'treble', items: [wn('C4', { label: 'C' })], gap: 6 }],
+  ['D and E', '<p><b>D</b> hangs just under the bottom line, in the space below the staff. <b>E</b> sits on the bottom line.</p><p>Each step up the staff is the next letter and the next white key.</p>', { type: 'staff', clef: 'treble', items: ['C4', 'D4', 'E4', 'D4', 'C4'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.8, bpm: 72 }],
+  ['Read and play', '<p>Play each note as it appears: C D E D C, with fingers 1 2 3 2 1.</p>', { type: 'keys', lo: 'C4', hi: 'G4', labels: 'none', marks: [{ n: ['C4', 'D4', 'E4'], kind: 'rh', text: ['1', '2', '3'] }] }],
+], { drills: ['read-cde'], blocks: ['song-buns'] });
+
+lesson('readfg', 'F and G: the five-finger position', 'Reading C to G in the treble clef.', ['Reading'], [
+  ['F and G', '<p><b>F</b> sits in the first space. <b>G</b> sits on the second line, the line the treble clef curls around. Now you can read all five notes of C position.</p>', { type: 'staff', clef: 'treble', items: ['C4', 'D4', 'E4', 'F4', 'G4'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.6, bpm: 72 }],
+  ['Lines and spaces alternate', '<p>Going up: line (E), space (F), line (G). C and D sit below the staff. If a note moves line to space, it moved one step.</p>', { type: 'staff', clef: 'treble', items: ['E4', 'F4', 'G4', 'F4', 'E4', 'D4', 'C4'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.4, bpm: 80 }],
+], { drills: ['read-cg', 'sight-c'], blocks: ['song-mary'] });
+
+lesson('highnotes', 'High notes and ledger lines', 'Reading above the treble staff.', ['Reading'], [
+  ['Past the top line', '<p>The top line of the treble staff is <b>F5</b>. Above it, <b>G5</b> sits on top of the staff. Then ledger lines take over: <b>A5</b> on the first ledger line, <b>B5</b> above it, <b>C6</b> on the second ledger line.</p>', { type: 'staff', clef: 'treble', items: ['C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5', 'C6'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.4 }],
+  ['Count the ledger lines', '<p>Ledger lines work exactly like staff lines: line, space, line. Count up from the top line, F, one letter per line or space.</p>' + tip('Landmark', 'Treble C (C5) sits in the third space. High C (C6) has two ledger lines.') ],
+], { drills: ['read-high'] });
+
+lesson('bassnear', 'Bass clef near middle C', 'Middle C down to F for the left hand.', ['Reading'], [
+  ['Middle C in the bass clef', '<p>In the bass clef, middle C sits on a ledger line <b>above</b> the staff. Below it: <b>B3</b> just above the top line, <b>A3</b> on the top line, <b>G3</b> in the top space, and <b>F3</b> on the fourth line, between the dots of the bass clef.</p>', { type: 'staff', clef: 'bass', items: ['C4', 'B3', 'A3', 'G3', 'F3'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.6, bpm: 72 }],
+  ['Left-hand C position', '<p>Place your left thumb on middle C, then fingers 2 3 4 5 on B A G F. Read and play downward.</p>', { type: 'keys', lo: 'F3', hi: 'C4', labels: 'none', marks: [{ n: ['C4', 'B3', 'A3', 'G3', 'F3'], kind: 'lh', text: ['1', '2', '3', '4', '5'] }] }],
+], { drills: ['read-bass-near'] });
+
+lesson('lownotes', 'Low notes and bass ledger lines', 'Reading below the bass staff.', ['Reading'], [
+  ['Below the bottom line', '<p>The bottom line of the bass staff is <b>G2</b>. Below it, <b>F2</b> hangs under the staff, <b>E2</b> sits on the first ledger line, <b>D2</b> below that, and <b>C2</b> on the second ledger line.</p>', { type: 'staff', clef: 'bass', items: ['C3', 'B2', 'A2', 'G2', 'F2', 'E2', 'D2', 'C2'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.4 }],
+  ['Bass C landmark', '<p><b>Bass C</b> (C3) sits in the second space of the bass staff. It’s the C your left pinky plays in C position. Low C (C2) has two ledger lines below.</p>' ],
+], { drills: ['read-low', 'read-bass-c'] });
+
+lesson('wholestaff', 'The whole grand staff', 'Four octaves of notes, C2 to C6.', ['Reading'], [
+  ['Five Cs to anchor you', '<p>Learn these five Cs and every other note is a few steps away:</p><ul><li><b>C2</b>: two ledger lines below the bass staff.</li><li><b>C3</b>: second space of the bass staff.</li><li><b>C4</b> (middle C): one ledger line between the staves.</li><li><b>C5</b>: third space of the treble staff.</li><li><b>C6</b>: two ledger lines above the treble staff.</li></ul>',
+    { type: 'staff', clef: 'grand', sp: 8, items: [wn('C2', { label: 'C2' }), wn('C3', { label: 'C3' }), wn('C4', { staff: 't', label: 'C4' }), wn('C5', { label: 'C5' }), wn('C6', { label: 'C6' })], gap: 6 }],
+  ['The mirror trick', '<p>The two clefs mirror each other around middle C. Treble G (second line from the bottom) and bass F (second line from the top) are each one ledger line plus a step away from middle C.</p>' ],
+], { drills: ['read-all'] });
+
+lesson('readint', 'Reading by intervals', 'Read the distance, not just the letters.', ['Reading'], [
+  ['Lines and spaces tell you the distance', '<p>Fluent readers don’t name every note; they read the <b>distance</b> between notes:</p><ul><li><b>2nd</b> (step): line to space, or space to line.</li><li><b>3rd</b> (skip): line to the next line, or space to the next space.</li><li><b>4th</b>: line to space, skipping two.</li><li><b>5th</b>: line to line, skipping a line, or space to space.</li></ul>',
+    { type: 'staff', clef: 'treble', labels: true, items: [{ notes: ['C4', 'D4'], dur: 'w', label: '2nd' }, { notes: ['C4', 'E4'], dur: 'w', label: '3rd' }, { notes: ['C4', 'F4'], dur: 'w', label: '4th' }, { notes: ['C4', 'G4'], dur: 'w', label: '5th' }, { notes: ['C4', 'C5'], dur: 'w', label: 'octave' }], gap: 5 }],
+  ['From the page to your hand', '<p>Intervals match finger distances in a five-finger position: a 2nd moves to the next finger, a 3rd skips one finger, a 5th spans thumb to pinky.</p>' ],
+], { drills: ['read-int', 'sight-c2'] });
+
+lesson('readacc', 'Reading sharps, flats and naturals', 'Accidentals on the staff.', ['Reading'], [
+  ['Accidentals sit in front', '<p>A sharp, flat or natural is written just <b>before</b> the note, on the same line or space. It lasts until the end of the measure.</p>',
+    { type: 'staff', clef: 'treble', items: [{ notes: ['F4'], dur: 'q', label: 'F' }, { notes: ['F#4'], dur: 'q', label: 'F♯' }, { notes: ['Bb4'], dur: 'q', label: 'B♭' }, { notes: ['B4'], dur: 'q', nat: true, label: 'B♮' }, { notes: ['C#5'], dur: 'q', label: 'C♯' }, { notes: ['Eb4'], dur: 'q', label: 'E♭' }], gap: 3.8 }],
+  ['Find the key', '<p>Read the letter first, then move one key right for a sharp or one key left for a flat.</p>', { type: 'keys', lo: 'C4', hi: 'C5', labels: 'c', read: 'names2' }],
+], { drills: ['read-acc'] });
+
+lesson('readkey', 'Reading in a key signature', 'Remembering the sharps and flats at the start of each line.', ['Reading'], [
+  ['The key signature applies everywhere', '<p>A sharp or flat in the key signature changes that note on <b>every line and space</b> with that letter, all the way through the piece. In G major, every F is played as F♯, even with no sharp written next to it.</p>',
+    { type: 'staff', clef: 'treble', key: 1, items: ['G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F#5', 'G5'].map((n) => ({ notes: [n], dur: 'q' })), gap: 3.4 }],
+  ['A quick habit', '<p>Before you play a piece, say its key signature out loud: “One sharp, F♯.” Then circle every F in your head as you read.</p>' + tip('A natural overrides it', 'A ♮ in the music cancels the key signature for that note until the bar line.') ],
+], { drills: ['read-keysig'] });
+
+lesson('readchords', 'Reading chords on the staff', 'Stacks of notes and their shapes.', ['Reading'], [
+  ['Snowmen and inversions', '<p>A root-position triad looks like a snowman: three notes all on lines or all in spaces. An inversion has a gap: two notes stacked close (a 2nd apart on the staff looks squashed) and one a 4th away.</p>',
+    { type: 'staff', clef: 'treble', labels: true, items: [{ notes: ['C4', 'E4', 'G4'], dur: 'w', label: 'C' }, { notes: ['E4', 'G4', 'C5'], dur: 'w', label: 'C/E' }, { notes: ['G4', 'C5', 'E5'], dur: 'w', label: 'C/G' }, { notes: ['F4', 'A4', 'C5'], dur: 'w', label: 'F' }, { notes: ['G4', 'B4', 'D5'], dur: 'w', label: 'G' }], gap: 5 }],
+  ['Read the bottom note first', '<p>Find the lowest note, then read the intervals above it. Snowman shape: the bottom note is the root. Otherwise, rearrange the notes into a snowman in your head to find the root.</p>' ],
+], { drills: ['read-chord'] });
+
+lesson('octsigns', 'Octave signs', '8va, 8vb and reading very high or low notes.', ['Reading'], [
+  ['Fewer ledger lines', '<p>Very high or low notes need lots of ledger lines. To keep music readable, composers write <b>8va</b> over notes to mean “play an octave higher than written,” and <b>8vb</b> under notes for “an octave lower.” A dashed line shows how long it lasts; <b>loco</b> means back to normal.</p><p><b>15ma</b> means two octaves higher.</p>' ],
+], { drills: ['quiz-8va'] });
+
+lesson('sightread', 'Sight-reading', 'Playing music you’ve never seen before.', ['Reading'], [
+  ['Before you play: scan', '<ol><li>Look at the <b>clef</b> and <b>key signature</b>.</li><li>Check the <b>time signature</b> and count one bar in your head.</li><li>Find the <b>first note</b> and the hand position.</li><li>Notice the <b>shape</b>: steps, skips, repeated notes.</li></ol>' ],
+  ['While you play', '<ul><li>Keep going. Don’t stop to fix mistakes. A steady beat matters more than every note.</li><li>Look one note ahead of the one you’re playing.</li><li>Don’t look down at your hands. Feel the black-key groups instead.</li><li>Choose a slow tempo you can keep.</li></ul>' + tip('Little and often', 'Two minutes of sight-reading every day builds this skill faster than anything else.') ],
+], { drills: ['sight-c', 'sight-c2', 'sight-oct', 'sight-bass'] });
+
+/* ===== 23-course-b.js ===== */
+/* ---------- the full course: new lessons (part 2: rhythm, ear, scales, chords, expression, practice) ---------- */
+/* ===== Unit 4 · Rhythm and counting: one lesson per note value ===== */
+lesson('beat', 'The steady beat', 'The pulse underneath all music.', ['Rhythm'], [
+  ['Feel the pulse', '<p>Tap your foot to any song and you’re tapping the <b>beat</b>: a steady pulse, evenly spaced, like a clock. Every rhythm is measured against it.</p><p>The speed of the beat is the <b>tempo</b>, counted in beats per minute (bpm). 60 bpm is one beat per second.</p>', { type: 'metro', bpm: 72, beats: 4 }],
+  ['Tap along', '<p>Tap the quarter notes exactly with the click. Listen first, then press <b>Tap it</b>: you’ll hear one bar of clicks to count you in.</p>', { type: 'rhythm', bpm: 72, patterns: [{ label: 'Four beats', pat: 'q q q q' }, { label: 'Two bars', pat: 'q q q q | q q q q' }] }],
+], { drills: ['rhy-beat'] });
+
+lesson('wholenote', 'The whole note', 'Four beats: the longest common note.', ['Rhythm'], [
+  ['Open and stemless', '<p>A <b>whole note</b> is an open oval with no stem. In 4/4 time it lasts <b>four beats</b>: play it on 1, then hold it through 2, 3 and 4.</p>' + tip('Count it', '“ONE, two, three, four.” Press on ONE, keep holding until the next ONE.'),
+    { type: 'rhythm', bpm: 76, patterns: [{ label: 'Whole notes', pat: 'w | w' }] }],
+  ['The whole rest', '<p>The <b>whole rest</b> is a small block hanging <i>under</i> the fourth line. It means a whole measure of silence. (Think: a whole rest is heavy, so it hangs down.)</p>', { type: 'rhythm', bpm: 76, patterns: [{ label: 'Note, rest, note', pat: 'w | rw | w' }] }],
+], { drills: ['rhy-whole'] });
+
+lesson('halfnote', 'The half note', 'Two beats.', ['Rhythm'], [
+  ['Open with a stem', '<p>A <b>half note</b> is an open oval with a stem. It lasts <b>two beats</b>, half of a whole note. Two half notes fill a 4/4 measure.</p>', { type: 'rhythm', bpm: 80, patterns: [{ label: 'Half notes', pat: 'h h | w' }, { label: 'Mixed', pat: 'w | h h' }] }],
+  ['The half rest', '<p>The <b>half rest</b> is a small block sitting <i>on top</i> of the middle line: two beats of silence. (It’s lighter, so it sits up like a hat.)</p>', { type: 'rhythm', bpm: 80, patterns: [{ label: 'With half rests', pat: 'h rh | rh h' }] }],
+], { drills: ['rhy-half'] });
+
+lesson('quarternote', 'The quarter note', 'One beat: the heartbeat of 4/4.', ['Rhythm'], [
+  ['Filled with a stem', '<p>A <b>quarter note</b> has a filled-in head and a stem. It lasts <b>one beat</b>, so four of them fill a 4/4 measure. Most music you’ll read counts in quarter notes.</p>', { type: 'rhythm', bpm: 80, patterns: [{ label: 'Quarters', pat: 'q q q q' }, { label: 'Quarters and a half', pat: 'q q h' }, { label: 'Half in the middle', pat: 'q h q' }] }],
+  ['The quarter rest', '<p>The <b>quarter rest</b> is a squiggle, like a lightning bolt. One beat of silence: lift your hand and keep counting.</p>', { type: 'rhythm', bpm: 80, patterns: [{ label: 'Quarter rests', pat: 'q rq q rq' }, { label: 'Rest first', pat: 'rq q q q' }] }],
+  ['Note values add up', '<p>1 whole = 2 halves = 4 quarters. That family tree is the basis of every rhythm.</p>', { type: 'staff', clef: 'treble', labels: true, time: [4, 4], items: [wn('C5', { label: '4 beats' }), { bar: true }, { notes: ['C5'], dur: 'h', label: '2' }, { notes: ['C5'], dur: 'h', label: '2' }, { bar: true }, { notes: ['C5'], dur: 'q', label: '1' }, { notes: ['C5'], dur: 'q', label: '1' }, { notes: ['C5'], dur: 'q', label: '1' }, { notes: ['C5'], dur: 'q', label: '1' }, { bar: 'end' }], gap: 3.4 }],
+], { drills: ['rhy-quarter'] });
+
+lesson('eighthnote', 'Eighth notes', 'Two per beat: counting “1 & 2 &”.', ['Rhythm'], [
+  ['A flag, or a beam', '<p>An <b>eighth note</b> lasts half a beat. On its own it has a <b>flag</b>; in groups, eighth notes are joined by a <b>beam</b>. Two eighths take the same time as one quarter.</p><p>Count the beats as numbers and the halfway points as “and”: <b>1 & 2 & 3 & 4 &</b>.</p>',
+    { type: 'rhythm', bpm: 70, patterns: [{ label: 'Pairs', pat: 'e e e e q q' }, { label: 'Quarter, eighths', pat: 'q q e e q' }, { label: 'Eighths everywhere', pat: 'e e e e e e e e' }] }],
+  ['The eighth rest', '<p>The <b>eighth rest</b> looks like a 7 with a dot on top: half a beat of silence. A rest on the beat followed by an eighth on “&” is a classic off-beat sound.</p>', { type: 'rhythm', bpm: 70, patterns: [{ label: 'Off-beat', pat: 'q re e q q' }, { label: 'All off-beats', pat: 're e re e re e re e' }] }],
+], { drills: ['rhy-eighth', 'count-quiz'], blocks: ['r-eighths'] });
+
+lesson('dottednotes', 'Dotted notes', 'A dot adds half the note’s value.', ['Rhythm'], [
+  ['The dotted half note', '<p>A <b>dot</b> after a note makes it longer by half its value. A half note (2) plus half of 2 (1) = <b>3 beats</b>. Dotted halves are everywhere in 3/4 time.</p>', { type: 'rhythm', bpm: 80, patterns: [{ label: 'Dotted half + quarter', pat: 'h. q' }, { label: 'In 3/4', pat: 'h. | q q q | h.', time: [3, 4] }] }],
+  ['The dotted quarter', '<p>A dotted quarter lasts <b>1½ beats</b>. It’s usually followed by an eighth note that fills the other half beat: <b>long – short</b>. Count “1 – & 2”: press on 1, hold through &, play the eighth on the & of 2.</p>', { type: 'rhythm', bpm: 70, patterns: [{ label: 'Dotted quarter, eighth', pat: 'q. e q q' }, { label: 'Twice', pat: 'q. e q. e' }, { label: 'In the middle', pat: 'q q. e q' }] }],
+], { drills: ['rhy-dotted', 'ear-rhythm2'], blocks: ['r-dotted'] });
+
+lesson('ties', 'Ties', 'Joining two notes into one long sound.', ['Rhythm'], [
+  ['Same pitch, curved line', '<p>A <b>tie</b> is a curved line joining two notes of the <b>same pitch</b>. Play the first one and hold it for both values added together. Ties let notes last across bar lines or make lengths that no single note can show.</p>' + tip('Tie or slur?', 'A tie joins the same note. A slur joins different notes and means “smooth”.'),
+    { type: 'rhythm', bpm: 76, patterns: [{ label: 'Half tied to quarter', pat: 'h _q q' }, { label: 'Across the bar', pat: 'q q q _q | q h q' }, { label: 'Half tied to half', pat: 'h _h | w' }] }],
+], { drills: ['rhy-tie'] });
+
+lesson('pickup', 'Pickup notes and rests in time', 'Music that starts before beat 1.', ['Rhythm'], [
+  ['The pickup measure', '<p>Many tunes start with a few notes before the first strong beat. This short first bar is a <b>pickup</b> (or anacrusis). Count the missing beats silently, then come in. The last bar is often short too, so the two add up to one full bar.</p><p>“Happy Birthday” starts with a pickup: the “Hap-py” comes before beat 1.</p>' ],
+  ['Rests as rhythm', '<p>Silences are part of rhythm. Count rests just as carefully as notes, and lift your hand during them.</p>', { type: 'rhythm', bpm: 76, patterns: [{ label: 'Rests on beats', pat: 'q rq q rq' }, { label: 'Off-beat rests', pat: 'e re e re q q' }, { label: 'Half rest in the middle', pat: 'q rh q' }] }],
+], { drills: ['rhy-rests'], blocks: ['song-birthday'] });
+
+lesson('sixteenth', 'Sixteenth notes', 'Four per beat: “1 e & a”.', ['Rhythm'], [
+  ['Double flags and beams', '<p>A <b>sixteenth note</b> has two flags, or a double beam in groups. Four sixteenths fill one beat. Count each beat as <b>“1 e & a, 2 e & a…”</b> (say “one-ee-and-uh”).</p>', { type: 'rhythm', bpm: 56, patterns: [{ label: 'Four sixteenths', pat: 's s s s q q q' }, { label: 'Two beats of sixteenths', pat: 's s s s s s s s h' }] }],
+  ['Mixing eighths and sixteenths', '<p>An eighth and two sixteenths make one beat (“1 & a” or “1 e &”). These patterns are the backbone of faster music.</p>', { type: 'rhythm', bpm: 56, patterns: [{ label: 'Eighth + two sixteenths', pat: 'e s s q e s s q' }, { label: 'Two sixteenths + eighth', pat: 's s e q s s e q' }] }],
+], { drills: ['rhy-sixteenth'], blocks: ['r-sixteenth'] });
+
+lesson('triplets', 'Triplets', 'Three notes in the time of two.', ['Rhythm'], [
+  ['A little 3 over the beam', '<p>A <b>triplet</b> squeezes three equal notes into the time of two. Eighth-note triplets fit three notes in one beat, with a small “3” over the group. Count “<b>1-trip-let, 2-trip-let</b>”.</p>', { type: 'rhythm', bpm: 64, patterns: [{ label: 'Triplets then quarters', pat: 't t t q q q' }, { label: 'Alternate', pat: 'q t t t q t t t' }] }],
+  ['Feel the difference', '<p>Compare two even eighths with three even triplets in one beat. Triplets roll; eighths march.</p>', { type: 'rhythm', bpm: 64, patterns: [{ label: 'Eighths', pat: 'e e e e e e e e' }, { label: 'Triplets', pat: 't t t t t t t t t t t t' }] }],
+], { drills: ['rhy-triplet'], blocks: ['r-triplet'] });
+
+lesson('compound', 'Compound time: 6/8', 'Beats that split into three.', ['Rhythm'], [
+  ['Two big beats', '<p>In <b>6/8</b>, there are six eighth notes per bar, grouped in two sets of three. It feels like <b>two big beats</b>, each split into three: “<b>1</b> 2 3 <b>4</b> 5 6”. A dotted quarter fills one big beat.</p>', { type: 'rhythm', time: [6, 8], bpm: 132, patterns: [{ label: 'Two big beats', pat: 'q. q.' }, { label: 'All six', pat: 'e e e e e e' }, { label: 'Long-short', pat: 'q e q e' }] }],
+  ['Simple vs compound', '<p>In <b>simple</b> time (2/4, 3/4, 4/4), each beat splits in two. In <b>compound</b> time (6/8, 9/8, 12/8), each beat splits in three. “Row, Row, Row Your Boat” is in 6/8.</p>' ],
+], { drills: ['rhy-68'], blocks: ['song-row'] });
+
+lesson('syncopation', 'Syncopation', 'Accents between the beats.', ['Rhythm'], [
+  ['Off the beat', '<p><b>Syncopation</b> puts emphasis on weak beats or between beats, often by holding a note across a beat. It gives music bounce and surprise, and it’s everywhere in jazz, pop and Latin music.</p><p>The secret: keep counting the steady “1 & 2 &” underneath, and land on the “&”s.</p>', { type: 'rhythm', bpm: 64, patterns: [{ label: 'Short-long-short', pat: 'e q e q q' }, { label: 'Charleston', pat: 'q. e _h' }, { label: 'Off-beat pushes', pat: 'q e q e q' }] }],
+], { drills: ['rhy-sync'] });
+
+/* ===== Unit 5 · Ear training ===== */
+lesson('rhythmear', 'Hearing rhythms', 'Matching what you hear to what you read.', ['Ear', 'Rhythm'], [
+  ['Listen, then match', '<p>Rhythm dictation trains you to hear a rhythm and recognise it on paper. Listen for long and short notes against the steady click, then picture the notation.</p>', { type: 'rhythm', bpm: 80, patterns: [{ label: 'A', pat: 'q q h' }, { label: 'B', pat: 'q e e q q' }, { label: 'C', pat: 'h q q' }] }],
+], { drills: ['ear-rhythm', 'ear-rhythm2'] });
+
+lesson('qualities', 'All the intervals and chord colours', 'Minor 2nds to major 7ths, diminished and augmented.', ['Ear'], [
+  ['Every interval', '<p>Learn the remaining intervals with their reference tunes, then test yourself on all twelve.</p>', { type: 'intervals', set: ['m2', 'M2', 'm3', 'M3', 'P4', 'TT', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8'] }],
+  ['Four triad colours', '<p>Major sounds bright, minor darker, <b>diminished</b> tense and squeezed, <b>augmented</b> floating and strange.</p>', { type: 'listen', buttons: [{ label: 'Major', chord: ['C4', 'E4', 'G4'], roll: 0.25 }, { label: 'Minor', chord: ['C4', 'Eb4', 'G4'], roll: 0.25 }, { label: 'Diminished', chord: ['C4', 'Eb4', 'Gb4'], roll: 0.25 }, { label: 'Augmented', chord: ['C4', 'E4', 'G#4'], roll: 0.25 }] }],
+], { drills: ['ear-int-all', 'ear-4'] });
+
+lesson('degrees', 'Hearing scale degrees', 'Name any note in the key by its feeling.', ['Ear'], [
+  ['Every degree has a feeling', '<p>In a key, each note has its own personality. <b>Do</b> is home. <b>Sol</b> is stable but open. <b>Mi</b> is sweet. <b>Ti</b> leans hard up to do. <b>Fa</b> wants to fall to mi. <b>Re</b> and <b>la</b> feel in-between.</p><p>Hearing notes this way, relative to the key, is called <b>relative pitch</b>. It’s how most musicians play by ear.</p>', { type: 'listen', keys: ['C4', 'C5'], buttons: [{ label: 'ti → do', bpm: 50, seq: [[['C3', 'E4', 'G4'], 2, 'the key: C'], ['B4', 1, 'ti… (wants to rise)'], ['C5', 2, '…do']] }, { label: 'fa → mi', bpm: 50, seq: [[['C3', 'E4', 'G4'], 2, 'the key: C'], ['F4', 1, 'fa… (wants to fall)'], ['E4', 2, '…mi']] }, { label: 're → do', bpm: 50, seq: [[['C3', 'E4', 'G4'], 2, 'the key: C'], ['D4', 1, 're…'], ['C4', 2, '…do']] }] }],
+], { drills: ['ear-degree'] });
+
+lesson('chordear', 'Hearing chord changes', 'I, IV, V and vi by ear.', ['Ear', 'Chords'], [
+  ['Feel each chord', '<p>After the home chord (I), each chord has a pull. <b>IV</b> feels like stepping out the door. <b>V</b> feels tense and wants to go home. <b>vi</b> is the sad cousin of I.</p>', { type: 'listen', buttons: [{ label: 'I → IV', bpm: 52, seq: [[['C3', 'E4', 'G4', 'C5'], 2, 'I'], [['F2', 'F4', 'A4', 'C5'], 2, 'IV']] }, { label: 'I → V', bpm: 52, seq: [[['C3', 'E4', 'G4', 'C5'], 2, 'I'], [['G2', 'D4', 'G4', 'B4'], 2, 'V']] }, { label: 'I → vi', bpm: 52, seq: [[['C3', 'E4', 'G4', 'C5'], 2, 'I'], [['A2', 'E4', 'A4', 'C5'], 2, 'vi']] }] }],
+  ['Listen to the bass', '<p>The lowest note usually tells you the chord. Hum the bass line: C to F is IV, C to G is V, C down to A is vi.</p>' ],
+], { drills: ['ear-prog', 'ear-cadence'] });
+
+/* ===== Unit 6 · Scales and keys ===== */
+lesson('sharpkeys', 'Scales with sharps', 'G, D, A and E major.', ['Scales', 'Blocks'], [
+  ['Each key adds one sharp', '<p>Moving up by fifths from C, each new major key adds one sharp: G (F♯), D (F♯ C♯), A (F♯ C♯ G♯), E (F♯ C♯ G♯ D♯). All four use the same right-hand fingering as C: <b>1 2 3, 1 2 3 4 5</b>.</p>', { type: 'scalebuilder', tonics: ['G4', 'D4', 'A4', 'E4'] }],
+], { blocks: ['s-g-rh', 's-d-rh', 's-a-rh', 's-e-rh', 's-g-both'] });
+
+lesson('flatkeys', 'Scales with flats', 'F, B♭ and E♭ major.', ['Scales', 'Blocks'], [
+  ['Each key adds one flat', '<p>Moving down by fifths from C, each new key adds one flat: F (B♭), B♭ (B♭ E♭), E♭ (B♭ E♭ A♭).</p><p>Flat keys need new fingerings. The rule that helps: in the right hand, the thumb plays the white keys <b>C and F</b>; the black keys get the longer fingers.</p>', { type: 'scalebuilder', tonics: ['F4', 'Bb3', 'Eb4'] }],
+  ['B♭ major fingering', '<p>Right hand: 2 1 2 3, 1 2 3 4. The thumb lands on C and F.</p>', { type: 'scale', tonic: 'Bb3', fingers: '2 1 2 3 1 2 3 4', hand: 'R' }],
+], { blocks: ['s-f-rh', 's-bb-rh', 's-eb-rh'] });
+
+lesson('twooctaves', 'Two octaves and contrary motion', 'Longer scales, both hands.', ['Scales', 'Blocks'], [
+  ['Two-octave fingering', '<p>For two octaves of C major, the right hand crosses twice: <b>1 2 3, 1 2 3 4, 1 2 3, 1 2 3 4 5</b>. The left hand crosses over twice: <b>5 4 3 2 1, 3 2 1, 4 3 2 1, 3 2 1</b>.</p>' + tip('The 4s line up', 'Each octave, the right hand’s 4 lands on B and the left hand’s 4 lands on D. Use them as checkpoints.') ],
+  ['Contrary motion', '<p>Start with both thumbs on middle C and move outward. The fingers mirror each other, so both hands cross at the same moment. Many pianists learn hands-together scales this way first.</p>' ],
+], { blocks: ['s-contrary', 's-c-both', 's-c-2oct'] });
+
+lesson('minorkeys', 'Minor keys in depth', 'Three minor scales and minor key signatures.', ['Scales'], [
+  ['Three kinds of minor', '<ul><li><b>Natural minor</b>: the notes of the relative major. A B C D E F G A.</li><li><b>Harmonic minor</b>: raise the 7th. A B C D E F G♯ A. Gives a strong pull home.</li><li><b>Melodic minor</b>: raise the 6th and 7th going up (A B C D E F♯ G♯ A), and play natural minor coming down.</li></ul>', { type: 'scale', tonic: 'A4', scale: 'melodic' }],
+  ['Minor key signatures', '<p>A minor key shares its key signature with its relative major, three half steps up. One sharp is G major <i>or</i> E minor. Look at the first and last notes and chords: a piece in E minor usually begins and ends on E.</p>', { type: 'keysig' }],
+], { drills: ['keysig-minor'], blocks: ['s-em-rh', 's-am-harm'] });
+
+lesson('pentablues', 'Pentatonic and blues scales', 'Five-note scales for improvising.', ['Scales', 'Blocks'], [
+  ['The pentatonic scale', '<p>Leave out the 4th and 7th of a major scale and you get the <b>major pentatonic</b>: C D E G A. With no half steps, every note sounds good with every other. Try it on the black keys: they form a pentatonic scale on their own.</p>', { type: 'keys', lo: 'C4', hi: 'C6', labels: 'c', marks: [{ pcs: [0, 2, 4, 7, 9], kind: 'u5' }], cap: 'Make up a tune using only the highlighted keys. Nothing will sound wrong.' }],
+  ['The blues scale', '<p>The <b>blues scale</b> on C is C, E♭, F, F♯, G, B♭, C: minor pentatonic plus the “blue note” F♯.</p>', { type: 'keys', lo: 'C4', hi: 'C6', labels: 'c', marks: [{ pcs: [0, 3, 5, 6, 7, 10], kind: 'u8' }], cap: 'Improvise over the 12-bar blues using these keys.' }],
+], { blocks: ['s-penta', 's-blues', 's-chrom'] });
+
+lesson('modes', 'Modes', 'The same white keys, different homes.', ['Scales'], [
+  ['Seven scales from one set of keys', '<p>Play only white keys but start on a different note, and you get a different <b>mode</b>, each with its own colour:</p><ul><li><b>Ionian</b> (C to C): the major scale.</li><li><b>Dorian</b> (D to D): minor with a bright 6th. Folk, jazz, funk.</li><li><b>Phrygian</b> (E to E): dark, Spanish-flavoured.</li><li><b>Lydian</b> (F to F): major with a dreamy raised 4th. Film music.</li><li><b>Mixolydian</b> (G to G): major with a flat 7th. Rock and blues.</li><li><b>Aeolian</b> (A to A): natural minor.</li></ul>',
+    { type: 'listen', keys: ['C4', 'G5'], buttons: [{ label: 'D Dorian', bpm: 140, seq: sq(['D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5']) }, { label: 'E Phrygian', bpm: 140, seq: sq(['E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5']) }, { label: 'F Lydian', bpm: 140, seq: sq(['F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5']) }, { label: 'G Mixolydian', bpm: 140, seq: sq(['G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5']) }] }],
+], { drills: ['quiz-modes'] });
+
+lesson('transpose', 'Transposing', 'Playing the same tune in a new key.', ['Scales', 'Blocks'], [
+  ['Same shape, new start', '<p>To <b>transpose</b> is to move a whole piece up or down by the same distance. The melody keeps its shape: every step stays a step, every skip a skip. In a five-finger position you simply move your hand and play the same fingers.</p><p>Ode to Joy in C starts on E (finger 3). In G position, finger 3 is B, so it starts on B.</p>', { type: 'staff', clef: 'treble', items: ['E4', 'E4', 'F4', 'G4'].map((n) => ({ notes: [n], dur: 'q' })).concat([{ bar: true }], ['B4', 'B4', 'C5', 'D5'].map((n) => ({ notes: [n], dur: 'q' }))), gap: 3.6 }],
+  ['Why transpose?', '<p>To fit a singer’s voice, to play along with another instrument, or simply to understand music better. Transposing also builds your sense of every key.</p>' ],
+], { blocks: ['song-ode', 'song-ode-g'] });
+
+/* ===== Unit 7 · Chords and harmony ===== */
+lesson('accomp', 'Left-hand accompaniment patterns', 'Block, broken, waltz and ballad styles.', ['Chords', 'Blocks'], [
+  ['From blocks to patterns', '<p>The same chords can be played many ways:</p><ul><li><b>Block chords</b>: all notes together.</li><li><b>Broken chords</b>: one note at a time.</li><li><b>Alberti bass</b>: low-high-middle-high, a classical favourite.</li><li><b>Waltz</b> (3/4): bass note, then chord, chord: “oom-pah-pah”.</li><li><b>Ballad</b>: root, fifth, octave, rolling under held chords.</li></ul>',
+    { type: 'listen', keys: ['C2', 'C5'], buttons: [{ label: 'Block', bpm: 72, seq: [[['C3', 'E3', 'G3'], 2], [['C3', 'E3', 'G3'], 2]] }, { label: 'Alberti', bpm: 72, seq: sq(['C3', 'G3', 'E3', 'G3', 'C3', 'G3', 'E3', 'G3'], 0.5) }, { label: 'Waltz', bpm: 100, seq: [['C3', 1], [['E3', 'G3'], 1], [['E3', 'G3'], 1], ['G2', 1], [['D3', 'G3'], 1], [['D3', 'G3'], 1]] }, { label: 'Ballad', bpm: 72, seq: sq(['C3', 'G3', 'C4', 'G3', 'C3', 'G3', 'C4', 'G3'], 0.5) }] }],
+], { blocks: ['c-alberti', 'c-waltz', 'c-ballad'] });
+
+lesson('arpeggios', 'Arpeggios', 'Chords spread across the keyboard.', ['Chords', 'Blocks'], [
+  ['Broken chords that travel', '<p>An <b>arpeggio</b> plays a chord’s notes one after another across several octaves. The thumb passes under (right hand going up) just like in scales, but over a wider gap.</p><p>C major, right hand: <b>1 2 3, 1 2 3, 5</b>. Left hand: <b>5 4 2 1, 4 2 1</b>.</p>' + tip('Keep it level', 'Let the wrist and arm glide sideways. Don’t twist the hand to reach the thumb.') ],
+], { blocks: ['c-arp', 'c-arp-lh', 'c-broken'] });
+
+lesson('dimaug', 'Diminished, augmented and suspended chords', 'Chords with special colours.', ['Chords'], [
+  ['Four more triads', '<ul><li><b>Diminished</b> (3 + 3 half steps): tense. B D F is the diminished chord in C major.</li><li><b>Augmented</b> (4 + 4): floating, dreamy.</li><li><b>sus2</b> and <b>sus4</b>: replace the 3rd with the 2nd or 4th. Open and unresolved; a sus4 loves to fall back into the major chord.</li></ul>', { type: 'chordlab', types: ['dim', 'aug', 'sus2', 'sus4'], roots: 'all' }],
+], { drills: ['chord-dimaug'], blocks: ['c-sus'] });
+
+lesson('leadsheet', 'Playing from a lead sheet', 'Melody plus chord symbols.', ['Chords'], [
+  ['What a lead sheet is', '<p>Pop, jazz and folk songs are often written as a <b>lead sheet</b>: just the melody on one staff, with chord symbols above it. You make up the accompaniment yourself.</p><ol><li>Right hand plays the melody.</li><li>Left hand plays the chord written above, starting where the symbol appears.</li><li>Keep each chord until the next symbol.</li></ol>',
+    { type: 'staff', clef: 'treble', labels: true, items: [{ notes: ['E4'], dur: 'q', label: 'C' }, { notes: ['E4'], dur: 'q', label: '' }, { notes: ['F4'], dur: 'q', label: '' }, { notes: ['G4'], dur: 'q', label: '' }, { bar: true }, { notes: ['G4'], dur: 'q', label: 'G' }, { notes: ['F4'], dur: 'q', label: '' }, { notes: ['E4'], dur: 'q', label: '' }, { notes: ['D4'], dur: 'q', label: '' }], gap: 3.5, cap: 'Chord symbols (here under the notes) tell the left hand what to play.' }],
+  ['Start simple', '<p>First play just the root of each chord in the left hand. Then block chords. Then try a pattern from the accompaniment lesson.</p>' ],
+], { drills: ['quiz-symbols', 'chord-all'], blocks: ['song-ode-both'] });
+
+lesson('cadences', 'Cadences', 'How phrases come to rest.', ['Chords'], [
+  ['Musical punctuation', '<p>A <b>cadence</b> is the chord pair that ends a phrase, like punctuation:</p><ul><li><b>Perfect (authentic)</b> V → I: a full stop.</li><li><b>Plagal</b> IV → I: the “Amen” ending.</li><li><b>Half</b> ending on V: a comma, or a question.</li><li><b>Deceptive</b> V → vi: a surprise twist.</li></ul>',
+    { type: 'listen', buttons: [{ label: 'Perfect', bpm: 56, seq: [[['G2', 'D4', 'G4', 'B4'], 2, 'V'], [['C3', 'C4', 'E4', 'G4'], 3, 'I']] }, { label: 'Plagal', bpm: 56, seq: [[['F2', 'C4', 'F4', 'A4'], 2, 'IV'], [['C3', 'C4', 'E4', 'G4'], 3, 'I']] }, { label: 'Half', bpm: 56, seq: [[['C3', 'C4', 'E4', 'G4'], 2, 'I'], [['G2', 'B3', 'D4', 'G4'], 3, 'V']] }, { label: 'Deceptive', bpm: 56, seq: [[['G2', 'D4', 'G4', 'B4'], 2, 'V'], [['A2', 'C4', 'E4', 'A4'], 3, 'vi']] }] }],
+], { drills: ['ear-cadence'], blocks: ['c-145'] });
+
+lesson('blues', 'The 12-bar blues', 'The form behind blues, rock and roll.', ['Chords', 'Blocks'], [
+  ['Twelve bars, three chords', '<p>The <b>12-bar blues</b> uses I, IV and V, usually as dominant 7th chords. In C:</p><p class="mono">C7 C7 C7 C7 | F7 F7 C7 C7 | G7 F7 C7 G7</p><p>Then it repeats. Once you know it, you can play along with thousands of songs, and improvise over it with the blues scale.</p>' ],
+], { blocks: ['c-blues', 's-blues'] });
+
+lesson('twofive', 'ii – V – I and voice leading', 'The core progression of jazz.', ['Chords', 'Blocks'], [
+  ['Smooth voice leading', '<p><b>Voice leading</b> means moving each note of a chord as little as possible to the next chord. In ii–V–I with seventh chords (Dm7, G7, Cmaj7), each chord changes by just one or two half steps.</p><p>This progression is everywhere in jazz standards.</p>', { type: 'listen', keys: ['C2', 'C5'], buttons: [{ label: 'Dm7 – G7 – Cmaj7', bpm: 56, seq: [[['D3', 'F4', 'A4', 'C5'], 2, 'Dm7'], [['G2', 'F4', 'G4', 'B4'], 2, 'G7'], [['C3', 'E4', 'G4', 'B4'], 3, 'Cmaj7']] }] }],
+], { blocks: ['c-251', 'song-canon'] });
+
+/* ===== Unit 8 · Expression and style ===== */
+lesson('dynamics', 'Dynamics', 'How loud: from pp to ff.', ['Expression'], [
+  ['The dynamic ladder', '<p>Dynamics are Italian words, shortened to letters:</p><ul><li><b>pp</b> pianissimo: very soft</li><li><b>p</b> piano: soft</li><li><b>mp</b> mezzo piano: medium soft</li><li><b>mf</b> mezzo forte: medium loud</li><li><b>f</b> forte: loud</li><li><b>ff</b> fortissimo: very loud</li></ul>', { type: 'symbols', list: ['p', 'mp', 'mf', 'f', 'cresc', 'dim'] }],
+  ['Gradual changes', '<p>A <b>crescendo</b> (cresc. or &lt;) grows louder; a <b>diminuendo</b> (dim. or &gt;) grows softer. Shape them evenly over the whole length.</p>', { type: 'listen', keys: ['C4', 'C5'], buttons: [{ label: 'Crescendo', bpm: 96, seq: [['C4', 1, null, 0.15], ['D4', 1, null, 0.25], ['E4', 1, null, 0.35], ['F4', 1, null, 0.45], ['G4', 1, null, 0.6], ['A4', 1, null, 0.72], ['B4', 1, null, 0.85], ['C5', 2, null, 1]] }, { label: 'Diminuendo', bpm: 96, seq: [['C5', 1, null, 1], ['B4', 1, null, 0.85], ['A4', 1, null, 0.72], ['G4', 1, null, 0.6], ['F4', 1, null, 0.45], ['E4', 1, null, 0.35], ['D4', 1, null, 0.25], ['C4', 2, null, 0.15]] }] }],
+], { drills: ['quiz-dyn', 'dyn-touch'] });
+
+lesson('articulation', 'Articulation', 'How each note starts and ends.', ['Expression'], [
+  ['The marks', '<ul><li><b>Legato</b> (often a slur): smooth, connected.</li><li><b>Staccato</b> (dot): short, detached.</li><li><b>Accent</b> (&gt;): play this note stronger.</li><li><b>Tenuto</b> (short line): hold the full length, gently leaned on.</li></ul>', { type: 'symbols', list: ['slur', 'staccato', 'accent', 'tenuto'] }],
+  ['Hear them', '<p>The same five notes, four ways.</p>', { type: 'listen', keys: ['C4', 'G4'], buttons: [{ label: 'Legato', bpm: 90, seq: sq(['C4', 'D4', 'E4', 'F4', 'G4']), hold: 1.08 }, { label: 'Staccato', bpm: 90, staccato: true, seq: sq(['C4', 'D4', 'E4', 'F4', 'G4']) }, { label: 'Accents on 1', bpm: 90, seq: [['C4', 1, null, 0.95], ['D4', 1, null, 0.45], ['E4', 1, null, 0.45], ['F4', 1, null, 0.45], ['G4', 1, null, 0.95]] }] }],
+], { drills: ['quiz-artic'], blocks: ['w-stacc'] });
+
+lesson('tempo', 'Tempo words', 'Largo to Presto, and changing speed.', ['Expression'], [
+  ['Italian speed words', '<ul><li><b>Largo</b>: broad, very slow</li><li><b>Adagio</b>: slow</li><li><b>Andante</b>: walking pace</li><li><b>Moderato</b>: moderate</li><li><b>Allegro</b>: fast and lively</li><li><b>Presto</b>: very fast</li></ul><p>Changes: <b>rit.</b> (gradually slower), <b>accel.</b> (gradually faster), <b>a tempo</b> (back to the original speed).</p>', { type: 'metro', bpm: 88 }],
+  ['One tune, three tempos', '<p>The same melody changes character completely with speed.</p>', { type: 'listen', keys: ['C4', 'G4'], buttons: [{ label: 'Adagio (66)', bpm: 66, seq: sq(['E4', 'E4', 'F4', 'G4', 'G4', 'F4', 'E4', 'D4', 'C4', 'C4', 'D4', 'E4']).concat([['E4', 1.5], ['D4', 0.5], ['D4', 2]]) }, { label: 'Andante (96)', bpm: 96, seq: sq(['E4', 'E4', 'F4', 'G4', 'G4', 'F4', 'E4', 'D4', 'C4', 'C4', 'D4', 'E4']).concat([['E4', 1.5], ['D4', 0.5], ['D4', 2]]) }, { label: 'Allegro (140)', bpm: 140, seq: sq(['E4', 'E4', 'F4', 'G4', 'G4', 'F4', 'E4', 'D4', 'C4', 'C4', 'D4', 'E4']).concat([['E4', 1.5], ['D4', 0.5], ['D4', 2]]) }] }],
+], { drills: ['quiz-tempo'] });
+
+lesson('phrasing', 'Phrasing and voicing', 'Making the melody sing.', ['Expression'], [
+  ['Phrases are sentences', '<p>A <b>phrase</b> is a musical sentence, often 2 or 4 bars long and often marked by a slur. Shape it like speech: grow toward the most important note, then relax at the end. Breathe between phrases by lifting the hand gently.</p>' ],
+  ['Melody over accompaniment', '<p><b>Voicing</b> means making some notes louder than others. The melody should sing above the accompaniment: play the melody hand a little firmer and the accompaniment lighter.</p>', { type: 'listen', buttons: [{ label: 'Equal (flat)', bpm: 80, seq: [[['C3', 'G3', 'E4'], 1, null, 0.6], [['E4'], 1, null, 0.6], [['C3', 'G3', 'F4'], 1, null, 0.6], [['G4'], 1, null, 0.6]] }, { label: 'Melody sings', bpm: 80, seq: [[['E4'], 1, null, 0.82], [['E4'], 1, null, 0.8], [['F4'], 1, null, 0.82], [['G4'], 1, null, 0.86]] }] }],
+], { drills: ['quiz-artic'], blocks: ['song-ode-both'] });
+
+lesson('form', 'Repeats and road maps', 'D.C., D.S., codas and endings.', ['Expression', 'Reading'], [
+  ['Repeat signs', '<p>A repeat sign <b>:‖</b> sends you back to the matching <b>‖:</b> sign, or to the start. <b>1st and 2nd endings</b>: play ending 1 the first time, then on the repeat skip it and play ending 2.</p>', { type: 'symbols', list: ['repeat', 'fermata'] }],
+  ['Jumping around', '<ul><li><b>D.C.</b> (Da Capo): go back to the beginning.</li><li><b>D.S.</b> (Dal Segno): go back to the sign 𝄋.</li><li><b>Fine</b>: the end, after a D.C. or D.S.</li><li><b>To Coda</b>: jump to the separate ending marked Coda.</li></ul><p>Pieces have <b>forms</b>, too: AB (two sections), ABA (return to the start), and verse–chorus in songs.</p>' ],
+], { drills: ['quiz-form'] });
+
+lesson('ornaments', 'Ornaments', 'Trills, grace notes, mordents and turns.', ['Expression'], [
+  ['Decorations', '<p>Ornaments decorate a note quickly and lightly:</p><ul><li><b>Trill</b> (tr): alternate rapidly with the note above.</li><li><b>Grace note</b> (tiny note with a slash): flick it just before the main note.</li><li><b>Mordent</b>: main note, neighbour, main note, one quick flick.</li><li><b>Turn</b> (∽): above, main, below, main.</li></ul>',
+    { type: 'listen', keys: ['C4', 'G4'], buttons: [{ label: 'Trill on E', bpm: 120, seq: sq(['E4', 'F4', 'E4', 'F4', 'E4', 'F4', 'E4', 'F4'], 0.25).concat([['E4', 2]]) }, { label: 'Grace note', bpm: 80, seq: [['D4', 0.12], ['E4', 1.88]] }, { label: 'Mordent', bpm: 80, seq: [['E4', 0.15], ['D4', 0.15], ['E4', 1.7]] }, { label: 'Turn', bpm: 80, seq: [['F4', 0.25], ['E4', 0.25], ['D4', 0.25], ['E4', 1.25]] }] }],
+], { drills: ['quiz-orn'] });
+
+/* ===== Unit 9 · Practising and performing ===== */
+lesson('practice', 'How to practise', 'Get better faster with less time.', ['Practice'], [
+  ['The practice loop', '<ol><li><b>Choose a small chunk</b>: one or two bars.</li><li><b>Go slowly</b>: slow enough to play it right.</li><li><b>Repeat correctly</b> three to five times.</li><li><b>Connect</b> it to the chunk before.</li><li><b>Speed up a little</b> only when it feels easy.</li></ol>' + tip('Fix it where it breaks', 'Starting from the top every time practises the easy part most. Go straight to the hard bar.') ],
+  ['Hands separately, then together', '<p>Learn each hand alone first: notes, fingering and rhythm. Put them together slowly. Even advanced pianists do this with new music.</p>' ],
+], { drills: ['quiz-practice'] });
+
+lesson('metronome', 'Using a metronome', 'Steady time and a plan for speeding up.', ['Practice'], [
+  ['The speed ladder', '<p>Start at a tempo where you play perfectly, maybe half the final speed. When it’s easy three times in a row, raise it 4–8 bpm. If it falls apart, step back down. In the falling-blocks player, use <b>Keep the beat</b> and the speed slider the same way.</p>', { type: 'metro', bpm: 60 }],
+  ['Subdivide', '<p>For slow pieces, count the eighths (“1 & 2 &”) in your head so long notes don’t rush. For tricky rhythms, set the metronome to click every eighth.</p>' ],
+], { blocks: ['w-hanon', 's-c-2oct'] });
+
+lesson('routine', 'A daily routine', 'What to do in 15 or 30 minutes.', ['Practice'], [
+  ['15 minutes', '<ul><li>2 min: warm-up (five-finger patterns).</li><li>3 min: one scale and its arpeggio.</li><li>2 min: a reading or ear drill.</li><li>8 min: your current song, in small chunks.</li></ul>' ],
+  ['30 minutes', '<ul><li>3 min: warm-up.</li><li>5 min: scales and arpeggios, hands together.</li><li>5 min: sight-reading and a rhythm drill.</li><li>3 min: ear training.</li><li>12 min: repertoire: work on hard spots, then play through.</li><li>2 min: play something just for fun.</li></ul>', { type: 'checklist', items: ['Warm-up', 'Scale', 'Reading or rhythm drill', 'Ear training', 'Song practice', 'Something for fun'] }],
+] , { drills: ['sight-c2', 'rhy-eighth'] });
+
+lesson('memorize', 'Memorising music', 'Four kinds of memory working together.', ['Practice'], [
+  ['Don’t rely on finger memory alone', '<p>Fingers remember patterns automatically, but that memory breaks under nerves. Strong memorisation layers four kinds of memory:</p><ul><li><b>Muscle</b>: the feel of the movements.</li><li><b>Ear</b>: sing the melody and the bass.</li><li><b>Visual</b>: picture the page and the hand shapes.</li><li><b>Analytical</b>: know the chords, the form and where sections repeat.</li></ul>' + tip('Test yourself', 'Start from several places in the middle of the piece. If you can only start from the beginning, it isn’t memorised yet.') ],
+], { blocks: ['song-minuet'] });
+
+lesson('perform', 'Playing for others', 'Handling nerves and recording yourself.', ['Practice'], [
+  ['Practise performing', '<ul><li>Play the piece through without stopping, even with mistakes. That’s its own skill.</li><li>Record yourself and listen back. You’ll hear things you miss while playing.</li><li>Play for one friend before playing for many.</li><li>Before you start: breathe out slowly, feel the tempo, then begin.</li></ul>' + tip('Mistakes happen', 'Keep the beat going. Most listeners never notice a wrong note; everyone notices a stop.') ],
+], { blocks: ['song-elise', 'song-prelude'] });
+
+lesson('nextsteps', 'Where to go next', 'Repertoire and skills beyond this course.', ['Practice'], [
+  ['Pieces to explore', '<p>All of these are long out of copyright and easy to find:</p><ul><li><b>Anna Magdalena Bach Notebook</b>: minuets, polonaises, musettes.</li><li><b>Burgmüller, 25 Easy Studies, Op. 100</b>.</li><li><b>Schumann, Album for the Young, Op. 68</b>.</li><li><b>Clementi, Sonatinas, Op. 36</b>.</li><li><b>Bach, Little Preludes</b> and the full <b>Prelude in C</b>.</li><li><b>Satie, Gymnopédie No. 1</b> and <b>Beethoven, Für Elise</b> (complete).</li></ul>' ],
+  ['Keep building', '<ul><li>Learn all 12 major and minor scales, hands together.</li><li>Read a little new music every day.</li><li>Play from lead sheets and try improvising over the blues.</li><li>A teacher, even occasionally, will catch habits an app can’t.</li></ul>' ],
+], { blocks: ['song-prelude', 'song-canon'] });
+
+/* ---------- course order: units, levels (B beginner, I intermediate) ---------- */
+const COURSE = [
+  { id: 'keyboard', title: 'The keyboard', color: 'var(--u1)', desc: 'Find your way around: black-key groups, every note name, middle C, octaves, the whole range, sharps and flats.',
+    lessons: [['groups', 'B'], ['alphabet', 'B'], ['everynote', 'B'], ['middlec', 'B'], ['sharps', 'B'], ['registers', 'B']] },
+  { id: 'hands', title: 'Hands and technique', color: 'var(--u2)', desc: 'Posture, hand shape, finger independence, both hands together, shifting, touch and the pedal.',
+    lessons: [['posture', 'B'], ['handshape', 'B'], ['fingers', 'B'], ['warmup', 'B'], ['legato', 'B'], ['independence', 'B'], ['coordination', 'B'], ['thumbunder', 'B'], ['shifts', 'I'], ['touch', 'I'], ['pedal', 'I']] },
+  { id: 'reading', title: 'Reading notes', color: 'var(--u4)', desc: 'The staff and clefs, note by note from middle C outward, ledger lines, intervals, accidentals, key signatures, chords and sight-reading.',
+    lessons: [['staff', 'B'], ['readcde', 'B'], ['readfg', 'B'], ['treble', 'B'], ['highnotes', 'B'], ['bassnear', 'B'], ['bass', 'B'], ['landmarks', 'B'], ['readint', 'B'], ['readacc', 'B'], ['signs', 'B'], ['sightread', 'B'], ['lownotes', 'I'], ['wholestaff', 'I'], ['readkey', 'I'], ['readchords', 'I'], ['octsigns', 'I']] },
+  { id: 'rhythm', title: 'Rhythm and counting', color: 'var(--u7)', desc: 'Every note value one at a time, rests, dots and ties, time signatures, then sixteenths, triplets, 6/8 and syncopation. Tap along to check yourself.',
+    lessons: [['beat', 'B'], ['wholenote', 'B'], ['halfnote', 'B'], ['quarternote', 'B'], ['rhythm', 'B'], ['meter', 'B'], ['eighthnote', 'B'], ['dottednotes', 'B'], ['ties', 'B'], ['pickup', 'B'], ['sixteenth', 'I'], ['triplets', 'I'], ['compound', 'I'], ['syncopation', 'I']] },
+  { id: 'ear', title: 'Ear training', color: 'var(--u3)', desc: 'High and low, notes by ear at your own speed, melodies, rhythms, intervals, chord colours, scale degrees and chord changes.',
+    lessons: [['pitch', 'B'], ['meetnotes', 'B'], ['echo', 'B'], ['earsteps', 'B'], ['melodies', 'B'], ['rhythmear', 'B'], ['intervals', 'B'], ['majmin', 'B'], ['qualities', 'I'], ['degrees', 'I'], ['chordear', 'I']] },
+  { id: 'scales', title: 'Scales and keys', color: 'var(--u5)', desc: 'Major and minor scales, keys and key signatures, sharp and flat keys, two octaves, the circle of fifths, pentatonic, blues, modes and transposing.',
+    lessons: [['scale', 'B'], ['build', 'B'], ['keysig', 'B'], ['minor', 'B'], ['circle', 'I'], ['sharpkeys', 'I'], ['flatkeys', 'I'], ['twooctaves', 'I'], ['minorkeys', 'I'], ['pentablues', 'I'], ['modes', 'I'], ['transpose', 'I']] },
+  { id: 'chords', title: 'Chords and harmony', color: 'var(--u6)', desc: 'Triads, inversions, chord symbols, progressions, accompaniment patterns, arpeggios, sevenths, lead sheets, cadences, the blues and ii–V–I.',
+    lessons: [['triads', 'B'], ['majorminor', 'B'], ['symbols', 'B'], ['progressions', 'B'], ['accomp', 'B'], ['arpeggios', 'I'], ['dimaug', 'I'], ['sevenths', 'I'], ['leadsheet', 'I'], ['cadences', 'I'], ['blues', 'I'], ['twofive', 'I']] },
+  { id: 'expression', title: 'Expression and style', color: 'var(--u8)', desc: 'Dynamics, articulation, tempo words, phrasing, voicing, repeats and road maps, and ornaments.',
+    lessons: [['dynamics', 'B'], ['articulation', 'B'], ['tempo', 'B'], ['phrasing', 'I'], ['form', 'I'], ['ornaments', 'I']] },
+  { id: 'practice', title: 'Practising and performing', color: 'var(--u9)', desc: 'How to practise, the metronome, a daily routine, memorising, playing for others and what to learn next.',
+    lessons: [['practice', 'B'], ['metronome', 'B'], ['routine', 'B'], ['memorize', 'I'], ['perform', 'I'], ['nextsteps', 'I']] },
+];
+(function buildCourse() {
+  const all = new Map(LESSONS.concat(NEW_LESSONS).map((l) => [l.id, l]));
+  UNITS.length = 0; LESSONS.length = 0;
+  COURSE.forEach((u, ui) => {
+    const unit = { n: ui + 1, id: u.id, title: u.title, color: u.color, desc: u.desc };
+    UNITS.push(unit);
+    u.lessons.forEach(([id, lvl], li) => {
+      const l = all.get(id);
+      if (!l) { console.warn('missing lesson', id); return; }
+      l.unit = unit.n; l.unitObj = unit; l.lvl = lvl; l.num = unit.n + '.' + (li + 1);
+      LESSONS.push(l);
+    });
+  });
+})();
 
 /* ===== 99-main.js ===== */
 /* ---------- boot ---------- */
