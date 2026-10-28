@@ -135,7 +135,7 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .sound-pill .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
 @media (max-width: 700px) {
   .nav { order: 5; width: 100%; }
-  .nav button { flex: 1 1 0; padding: 0 6px; font-size: 14px; }
+  .nav button { flex: 1 1 auto; padding: 0 4px; font-size: 13.5px; white-space: nowrap; }
   .sound-pill .txt { display: none; }
   .midi-btn .lbl { display: none; }
 }
@@ -367,6 +367,63 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .filter-row p { margin: 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
 .tag.lvl-I { background: color-mix(in srgb, var(--u3) 16%, var(--card)); color: var(--u3); }
 .tag.lvl-B { background: color-mix(in srgb, var(--u5) 14%, var(--card)); color: var(--u5); }
+.cf-detect { margin: 6px 0 14px; padding: 10px 14px; border-radius: 12px; background: var(--accent-soft); display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; font-size: 15px; min-height: 46px; }
+.cf-detect b { font-weight: 750; }
+.cf-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .cf-grid { grid-template-columns: minmax(0, 1fr); } }
+.cf-circle { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 72px); }
+@media (max-width: 900px) { .cf-circle { position: static; } }
+.cf-svg { width: 100%; height: auto; max-width: 640px; display: block; margin: 0 auto; user-select: none; -webkit-user-select: none; }
+.cf-rim { fill: none; stroke: var(--ink); stroke-width: 6; }
+.cf-out { fill: color-mix(in srgb, var(--u6) 10%, var(--card)); stroke: color-mix(in srgb, var(--u6) 30%, var(--rule)); stroke-width: 1.5; stroke-dasharray: 5 5; cursor: pointer; transition: fill .15s; }
+.cf-in { fill: color-mix(in srgb, var(--u6) 18%, var(--card)); stroke: color-mix(in srgb, var(--u6) 30%, var(--rule)); stroke-width: 1.5; stroke-dasharray: 5 5; cursor: pointer; transition: fill .15s; }
+.cf-out:hover, .cf-in:hover { fill: color-mix(in srgb, var(--u6) 28%, var(--card)); }
+.cf-out.fam, .cf-in.fam { fill: color-mix(in srgb, var(--u6) 40%, var(--card)); }
+.cf-out.sel, .cf-in.sel { fill: var(--u6); }
+.cf-out.done { fill: color-mix(in srgb, var(--good) 45%, var(--card)); }
+.cf-out.play, .cf-in.play { fill: var(--accent); }
+.cf-out.det, .cf-in.det { stroke: var(--accent); stroke-width: 7; stroke-dasharray: none; }
+.cf-out.qok, .cf-in.qok { fill: var(--good); }
+.cf-out.qshow, .cf-in.qshow { fill: var(--good); opacity: .75; }
+.cf-out.qbad, .cf-in.qbad { fill: var(--bad); }
+.cf-seg text { pointer-events: none; }
+.cf-t1 { font-family: var(--font-display); font-size: 48px; fill: var(--ink); }
+.cf-t2 { font-family: var(--font-ui); font-weight: 700; font-size: 25px; fill: var(--ink); }
+.cf-t3 { font-family: var(--font-ui); font-weight: 700; font-size: 20px; fill: var(--muted); }
+.cf-t1.on, .cf-t2.on, .cf-t3.on { fill: #fff; }
+.cf-roman { font-family: var(--font-ui); font-weight: 800; font-size: 15px; fill: var(--u6); }
+.cf-hub { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+.cf-h1 { font-family: var(--font-display); font-size: 30px; fill: var(--ink); }
+.cf-h3 { font-family: var(--font-ui); font-weight: 600; font-size: 17px; fill: var(--muted); }
+.cf-sig { cursor: pointer; }
+.cf-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.cf-panel { display: flex; flex-direction: column; gap: 12px; }
+.cf-card { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r); padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cf-card .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cf-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+.cf-title { font-family: var(--font-display); font-weight: 400; font-size: 30px; line-height: 1.1; margin: 2px 0 0; }
+.cf-card h3 { margin: 0; }
+.cf-card p { margin: 0; }
+.cf-sigs { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.cf-mnem { display: flex; gap: 6px; flex-wrap: wrap; }
+.cf-mnem span { display: flex; flex-direction: column; align-items: center; padding: 4px 8px; border-radius: 10px; background: var(--well); color: var(--muted); opacity: .55; }
+.cf-mnem span.on { background: color-mix(in srgb, var(--u6) 18%, var(--card)); color: var(--ink); opacity: 1; }
+.cf-mnem b { font-family: var(--font-display); font-weight: 400; font-size: 19px; }
+.cf-mnem small { font-size: 11px; font-weight: 700; }
+.cf-fing { border-collapse: collapse; font-size: 14px; width: 100%; max-width: 460px; }
+.cf-fing th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 700; padding: 4px 8px 4px 0; white-space: nowrap; }
+.cf-fing td { text-align: center; padding: 4px 2px; font-family: var(--font-mono); border-top: 1px solid var(--rule); }
+.cf-fing td.rh { color: var(--rh); font-weight: 700; } .cf-fing td.lh { color: var(--lh); font-weight: 700; }
+.cf-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.cf-dots span { min-width: 40px; text-align: center; padding: 6px 4px; border-radius: 10px; border: 1px solid var(--rule); font-family: var(--font-display); font-size: 18px; }
+.cf-dots span.new { border-color: var(--u2); color: var(--u2); }
+.cf-dots span.got { background: var(--good); border-color: var(--good); color: #fff; }
+.cf-slots { display: flex; gap: 8px; flex-wrap: wrap; min-height: 64px; }
+.cf-slot { display: flex; flex-direction: column; align-items: center; min-width: 74px; padding: 6px 6px 2px; border-radius: 12px; border: 2px solid var(--rule); background: var(--paper); }
+.cf-slot b { font-family: var(--font-display); font-weight: 400; font-size: 20px; }
+.cf-slot span { font-size: 13px; color: var(--muted); font-weight: 700; }
+.cf-slot.on { border-color: var(--accent); background: var(--accent-soft); }
+.cf-tip { border-left: 4px solid var(--u6); }
 .song-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
 .song-card { display: flex; flex-direction: column; gap: 8px; text-align: left; padding: 14px; border-radius: var(--r); border: 1px solid var(--rule); background: var(--card); color: var(--ink); min-width: 0; }
 .song-card:hover { border-color: var(--accent); }
@@ -432,6 +489,7 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
       <button type="button" data-view="learn" aria-current="page">Learn</button>
       <button type="button" data-view="practice">Practice</button>
       <button type="button" data-view="songs">Songs</button>
+      <button type="button" data-view="circle">Circle</button>
       <button type="button" data-view="play">Free play</button>
     </nav>
     <div class="top-spacer"></div>
@@ -446,6 +504,7 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 <main class="wrap view" id="view-learn"></main>
 <main class="wrap view" id="view-practice" hidden></main>
 <main class="wrap view" id="view-songs" hidden></main>
+<main class="wrap view" id="view-circle" hidden></main>
 <main class="wrap view" id="view-play" hidden></main>
 
 <section class="sheet" id="lesson" hidden aria-label="Lesson"></section>
@@ -3570,7 +3629,8 @@ const SOURCES = [
 
 function showView(name, push = true) {
   VIEW.cur = name;
-  for (const v of ['learn', 'practice', 'songs', 'play']) $('#view-' + v).hidden = v !== name;
+  for (const v of ['learn', 'practice', 'songs', 'circle', 'play']) $('#view-' + v).hidden = v !== name;
+  if (name === 'circle') renderCircle(); else if (typeof cfStop === 'function') { cfStop(); if (CF.build) CF.build.playing = false; }
   $$('.nav button').forEach((b) => (b.dataset.view === name ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current')));
   if (push) { try { history.replaceState(null, '', '#' + name); } catch (e) { /* sandboxed */ } }
   if (name === 'play') renderPlay();
@@ -5283,6 +5343,12 @@ const COURSE = [
   { id: 'practice', title: 'Practising and performing', color: 'var(--u9)', desc: 'How to practise, the metronome, a daily routine, memorising, playing for others and what to learn next.',
     lessons: [['practice', 'B'], ['metronome', 'B'], ['routine', 'B'], ['memorize', 'I'], ['perform', 'I'], ['nextsteps', 'I']] },
 ];
+{
+  const cl = LESSONS.find((l) => l.id === 'circle');
+  if (cl) cl.steps.push({ h: 'Explore it yourself', p: '<p>The <b>Circle</b> tab has the full interactive circle: tap any key to see its signature, scale, fingering and chords; play a scale and watch the circle find it; walk around it one sharp or flat at a time; build chord progressions; and quiz yourself.</p>', w: { type: 'circlelink' } });
+  const ks = LESSONS.find((l) => l.id === 'keysig');
+  if (ks) ks.steps.push({ h: 'See every key at once', p: '<p>All fifteen key signatures are drawn around the circle of fifths. Open it to see them side by side and hear each scale.</p>', w: { type: 'circlelink' } });
+}
 (function buildCourse() {
   const all = new Map(LESSONS.concat(NEW_LESSONS).map((l) => [l.id, l]));
   UNITS.length = 0; LESSONS.length = 0;
@@ -5548,6 +5614,593 @@ function hexAlpha(hex, a) {
   return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
 }
 
+/* ===== 25-circle.js ===== */
+/* ---------- Circle of fifths explorer: explore, walk, build, quiz, and live key detection ---------- */
+const CF_SEGS = [
+  { main: ['C', 0], minor: 'A' }, { main: ['G', 1], minor: 'E' }, { main: ['D', 2], minor: 'B' }, { main: ['A', 3], minor: 'F♯' },
+  { main: ['E', 4], minor: 'C♯' }, { main: ['B', 5], alt: ['C♭', -7], minor: 'G♯' }, { main: ['G♭', -6], alt: ['F♯', 6], minor: 'E♭', minorAlt: 'D♯' },
+  { main: ['D♭', -5], alt: ['C♯', 7], minor: 'B♭', minorAlt: 'A♯' }, { main: ['A♭', -4], minor: 'F' }, { main: ['E♭', -3], minor: 'C' },
+  { main: ['B♭', -2], minor: 'G' }, { main: ['F', -1], minor: 'D' },
+];
+CF_SEGS.forEach((sg, i) => { sg.i = i; sg.pc = (i * 7) % 12; sg.mpc = (sg.pc + 9) % 12; });
+/* standard one-octave fingerings for every major scale (right hand, left hand) */
+const CF_FINGERS = {
+  0: ['1 2 3 1 2 3 4 5', '5 4 3 2 1 3 2 1'], 7: ['1 2 3 1 2 3 4 5', '5 4 3 2 1 3 2 1'], 2: ['1 2 3 1 2 3 4 5', '5 4 3 2 1 3 2 1'],
+  9: ['1 2 3 1 2 3 4 5', '5 4 3 2 1 3 2 1'], 4: ['1 2 3 1 2 3 4 5', '5 4 3 2 1 3 2 1'], 11: ['1 2 3 1 2 3 4 5', '4 3 2 1 4 3 2 1'],
+  6: ['2 3 4 1 2 3 1 2', '4 3 2 1 3 2 1 4'], 1: ['2 3 1 2 3 4 1 2', '3 2 1 4 3 2 1 3'], 8: ['3 4 1 2 3 1 2 3', '3 2 1 4 3 2 1 3'],
+  3: ['3 1 2 3 4 1 2 3', '3 2 1 4 3 2 1 3'], 10: ['2 1 2 3 1 2 3 4', '3 2 1 4 3 2 1 3'], 5: ['1 2 3 4 1 2 3 4', '5 4 3 2 1 3 2 1'],
+};
+const CF_TIPS = [
+  ['Why fifths?', 'From C, count up five letters: C D E F G. That’s a 5th, and G is the next key clockwise. Keep counting fifths and you visit all twelve keys before landing back on C.'],
+  ['Neighbours share notes', 'Any two keys side by side share six of their seven notes. That’s why songs slide so easily into a neighbouring key.'],
+  ['Your chord family lives next door', 'Tap a key: the chords that sound good in it are the key itself, its two neighbours, and the three minor keys just inside them. Six chords, one slice of pie.'],
+  ['The last sharp trick', 'To name a sharp key from its signature, find the last sharp and go up one half step. Last sharp C♯? Up a half step is D, so it’s D major.'],
+  ['The flat trick', 'For flat keys, the second-to-last flat is the key’s name. B♭ E♭ A♭: the second-to-last is E♭, so it’s E♭ major. One flat (just B♭) is F major.'],
+  ['Same sound, two names', 'At the bottom, the circle closes: F♯ major and G♭ major are the same keys on the piano, written two ways. The same goes for C♯/D♭ and B/C♭.'],
+  ['Happy and sad twins', 'Each major key on the outside has a minor twin on the inside with the same key signature. C major and A minor use exactly the same notes.'],
+  ['Clockwise = brighter', 'Moving clockwise raises one note (the 4th) a half step. Moving counter-clockwise lowers one note (the 7th). That one-note change is the whole secret of the circle.'],
+];
+const CF = { sel: { i: 0, minor: false, alt: false }, mode: 'explore', recent: [], detect: null, walk: null, build: null, quiz: null, keys: null, off: null, seq: null, timers: [], svg: null, segEls: [], tip: 0 };
+const cfKey = (sel) => { const sg = CF_SEGS[sel.i], k = sel.alt && sg.alt ? sg.alt : sg.main; return { name: k[0], f: k[1], pc: sg.pc, seg: sg }; };
+const ascii = (nm) => nm.replace(SHARP, '#').replace(FLAT, 'b');
+function cfScale(sel) {
+  const k = cfKey(sel);
+  if (sel.minor) {
+    const mn = sel.alt && k.seg.minorAlt ? k.seg.minorAlt : k.seg.minor;
+    const pc = k.seg.mpc;
+    const oct = pc >= 5 ? 3 : 4;
+    return scaleNotes(ascii(mn) + oct, 'minor');
+  }
+  return scaleNotes(ascii(k.name) + (k.pc >= 8 ? 3 : 4), 'major');
+}
+function sigText(f) {
+  if (!f) return 'no sharps or flats';
+  const list = f > 0 ? SHARP_ORDER.slice(0, f).split('').map((l) => l + SHARP) : FLAT_ORDER.slice(0, -f).split('').map((l) => l + FLAT);
+  return Math.abs(f) + (f > 0 ? (f === 1 ? ' sharp: ' : ' sharps: ') : (f === -1 ? ' flat: ' : ' flats: ')) + list.join(' ');
+}
+function cfStop() { CF.timers.forEach(clearTimeout); CF.timers = []; if (CF.seq) CF.seq.stop(); CF.seq = null; }
+function cfLater(fn, ms) { CF.timers.push(setTimeout(fn, ms)); }
+/* diatonic family around a key: [segment index, ring, roman] */
+function cfFamily(sel) {
+  const i = sel.i, L = (d) => (i + d + 12) % 12;
+  if (sel.minor) return [[L(-1), 'in', 'iv'], [i, 'in', 'i'], [L(1), 'in', 'v'], [L(-1), 'out', 'VI'], [i, 'out', 'III'], [L(1), 'out', 'VII']];
+  return [[L(-1), 'out', 'IV'], [i, 'out', 'I'], [L(1), 'out', 'V'], [L(-1), 'in', 'ii'], [i, 'in', 'vi'], [L(1), 'in', 'iii']];
+}
+function cfChordOf(segI, ring) { const sg = CF_SEGS[segI]; return ring === 'out' ? { pc: sg.pc, type: 'maj', name: sg.main[0] } : { pc: sg.mpc, type: 'min', name: sg.minor + 'm' }; }
+function cfPlayChord(ch, dur = 1.3, when = 0) {
+  const r = 60 + ch.pc > 66 ? 48 + ch.pc : 60 + ch.pc;
+  const bass = 36 + ch.pc;
+  Piano.chord([bass].concat(chordNotes(r, ch.type)), dur, 0.58, 0, when);
+}
+
+/* ----- the circle itself (SVG) ----- */
+function cfDrawCircle(host) {
+  const cx = 470, cy = 455, R1 = 250, R2 = 174, R3 = 100;
+  const svg = s('svg', { viewBox: '0 0 940 960', class: 'cf-svg', role: 'img', 'aria-label': 'Circle of fifths' });
+  const arc = (r0, r1, a0, a1) => {
+    const p = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+    const [x0, y0] = p(r1, a0), [x1, y1] = p(r1, a1), [x2, y2] = p(r0, a1), [x3, y3] = p(r0, a0);
+    return `M${x0} ${y0}A${r1} ${r1} 0 0 1 ${x1} ${y1}L${x2} ${y2}A${r0} ${r0} 0 0 0 ${x3} ${y3}Z`;
+  };
+  svg.append(s('circle', { cx, cy, r: R1 + 4, class: 'cf-rim' }));
+  CF.segEls = [];
+  CF_SEGS.forEach((sg, i) => {
+    const a0 = (i - 0.5) * Math.PI / 6, a1 = (i + 0.5) * Math.PI / 6, am = i * Math.PI / 6;
+    const pt = (r) => [cx + r * Math.sin(am), cy - r * Math.cos(am)];
+    const outer = s('path', { d: arc(R2, R1, a0, a1), class: 'cf-out', 'data-i': i, 'data-ring': 'out', tabindex: '0', role: 'button', 'aria-label': sg.main[0] + ' major' });
+    const inner = s('path', { d: arc(R3, R2, a0, a1), class: 'cf-in', 'data-i': i, 'data-ring': 'in', tabindex: '0', role: 'button', 'aria-label': sg.minor + ' minor' });
+    const [ox, oy] = pt((R1 + R2) / 2), [ix, iy] = pt((R2 + R3) / 2);
+    const tMain = s('text', { x: ox, y: oy + (sg.alt ? -8 : 0), class: 'cf-t1', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, sg.main[0]);
+    const tAlt = sg.alt ? s('text', { x: ox, y: oy + 28, class: 'cf-t3', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, sg.alt[0]) : null;
+    const tMin = s('text', { x: ix, y: iy, class: 'cf-t2', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, sg.minor + 'm');
+    const [rx, ry] = pt(R1 - 16), [qx, qy] = pt(R2 - 13);
+    const rOut = s('text', { x: rx, y: ry, class: 'cf-roman', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+    const rIn = s('text', { x: qx, y: qy, class: 'cf-roman', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+    const g = s('g', { class: 'cf-seg' }, outer, inner, tMain, tAlt, tMin, rOut, rIn);
+    svg.append(g);
+    CF.segEls[i] = { outer, inner, tMain, tMin, tAlt, rOut, rIn };
+    /* key signatures around the outside, like a printed chart */
+    const sigs = [sg.main].concat(sg.alt ? [sg.alt] : []);
+    sigs.forEach((k, j) => {
+      const st = Staff({ clef: 'treble', sp: 8, key: k[1], items: [], minWidth: 0 });
+      st.removeAttribute('style'); st.setAttribute('style', 'color:var(--staff);overflow:visible');
+      const w = +st.getAttribute('width'), hgt = +st.getAttribute('height');
+      const vb = st.getAttribute('viewBox').split(' ').map(Number);
+      let [px, py] = pt(R1 + 64);
+      if (j === 1) py += hgt * 0.92;
+      st.setAttribute('x', (px - w / 2).toFixed(1)); st.setAttribute('y', (py - hgt / 2).toFixed(1));
+      if (sg.alt) st.append(s('text', { x: vb[2] + 4, y: vb[1] + vb[3] / 2, 'dominant-baseline': 'central', style: 'font-family:var(--font-ui);font-weight:700;font-size:13px;fill:var(--muted)' }, k[0]));
+      const hit = s('g', { class: 'cf-sig', 'data-i': i, 'data-alt': j === 1 ? '1' : '0' }, st);
+      svg.append(hit);
+    });
+  });
+  const hub = s('circle', { cx, cy, r: R3 - 3, class: 'cf-hub' });
+  const h1 = s('text', { x: cx, y: cy - 22, class: 'cf-h1', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, 'Circle');
+  const h2 = s('text', { x: cx, y: cy + 8, class: 'cf-h1', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, 'of Fifths');
+  const h3 = s('text', { x: cx, y: cy + 40, class: 'cf-h3', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+  svg.append(hub, h1, h2, h3);
+  CF.hub = { h1, h2, h3 };
+  svg.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-i]'); if (!t) return;
+    Piano.ensure();
+    const i = +t.dataset.i;
+    const ring = t.dataset.ring || 'out';
+    cfOnTap(i, ring, t.dataset.alt === '1');
+  });
+  svg.addEventListener('keydown', (e) => { if (e.key !== 'Enter' && e.key !== ' ') return; const t = e.target.closest('[data-i]'); if (!t) return; e.preventDefault(); cfOnTap(+t.dataset.i, t.dataset.ring || 'out', false); });
+  host.append(svg);
+  CF.svg = svg;
+}
+function cfPaint() {
+  const quietSel = CF.mode === 'quiz' || CF.mode === 'walk';
+  const fam = quietSel ? [] : cfFamily(CF.sel);
+  const wt = CF.mode === 'walk' && CF.walk ? cfWalkTarget() : null;
+  CF.segEls.forEach((el, i) => {
+    for (const ring of ['out', 'in']) {
+      const p = ring === 'out' ? el.outer : el.inner;
+      const r = ring === 'out' ? el.rOut : el.rIn;
+      const f = fam.find((x) => x[0] === i && x[1] === ring);
+      const selected = !quietSel && CF.sel.i === i && (CF.sel.minor ? ring === 'in' : ring === 'out');
+      p.classList.toggle('sel', selected);
+      p.classList.toggle('fam', !!f && !selected);
+      p.classList.toggle('det', (!!CF.detect && CF.mode !== 'walk' && CF.detect.i === i && (CF.detect.minor ? ring === 'in' : ring === 'out')) || (!!wt && wt.segI === i && ring === 'out'));
+      p.classList.toggle('done', !!(CF.walk && CF.walk.doneSegs.has(i + ring)));
+      p.classList.toggle('play', !!(CF.build && CF.build.cur && CF.build.cur.i === i && CF.build.cur.ring === ring));
+      r.textContent = f && CF.mode !== 'walk' ? f[2] : '';
+      (ring === 'out' ? el.tMain : el.tMin).classList.toggle('on', selected);
+      if (ring === 'out' && el.tAlt) el.tAlt.classList.toggle('on', selected);
+    }
+  });
+  if (CF.hub) {
+    const k = cfKey(CF.sel);
+    if (CF.mode === 'quiz') { CF.hub.h1.textContent = 'Quiz'; CF.hub.h2.textContent = CF.quiz ? CF.quiz.score + ' right' : ''; CF.hub.h3.textContent = CF.quiz && CF.quiz.streak > 1 ? CF.quiz.streak + ' in a row' : ''; }
+    else if (CF.mode === 'walk' && CF.walk) { CF.hub.h1.textContent = 'Walk'; CF.hub.h2.textContent = CF.walk.step + ' / 7'; CF.hub.h3.textContent = CF.walk.dir > 0 ? 'sharps' : 'flats'; }
+    else { CF.hub.h1.textContent = CF.sel.minor ? (CF.sel.alt && k.seg.minorAlt ? k.seg.minorAlt : k.seg.minor) + ' minor' : k.name + ' major'; CF.hub.h2.textContent = k.f === 0 ? 'no ♯ or ♭' : Math.abs(k.f) + (k.f > 0 ? ' ♯' : ' ♭'); CF.hub.h3.textContent = CF.sel.minor ? 'relative of ' + k.name : 'relative: ' + (CF.sel.alt && k.seg.minorAlt ? k.seg.minorAlt : k.seg.minor) + 'm'; }
+  }
+}
+function cfOnTap(i, ring, alt) {
+  if (CF.mode === 'quiz') return cfQuizAnswer(i, ring, alt);
+  if (CF.mode === 'build' && CF.build) {
+    const fam = cfFamily(CF.sel).find((x) => x[0] === i && x[1] === ring);
+    if (fam) { cfBuildAdd(fam[2]); return; }
+  }
+  CF.sel = { i, minor: ring === 'in', alt: !!alt || (CF.sel.i === i && CF.sel.alt) };
+  if (!CF_SEGS[i].alt) CF.sel.alt = false;
+  cfStop();
+  const k = cfKey(CF.sel);
+  if (CF.sel.minor) { const sc = cfScale(CF.sel); Piano.chord([sc[0].midi - 12, sc[0].midi, sc[2].midi, sc[4].midi], 1.4, 0.55, 0.04); }
+  else cfPlayChord({ pc: k.pc, type: 'maj' }, 1.4);
+  cfPaint();
+  cfRenderPanel();
+}
+
+/* ----- keyboard marks ----- */
+function cfMarkScale(sel, opts = {}) {
+  if (!CF.keys) return;
+  CF.keys.clearMarks();
+  const sc = cfScale(sel);
+  const fing = !sel.minor ? CF_FINGERS[cfKey(sel).pc][0].split(' ') : null;
+  const shift = CF.keys.o.lo > sc[0].midi ? 12 : 0;
+  sc.forEach((n, j) => {
+    if (opts.only && !opts.only.includes(j)) return;
+    const kind = j === 0 || j === 7 ? 'root' : opts.changed === j ? 'u2' : 'u6';
+    CF.keys.mark(n.midi + shift, kind, opts.labels === 'fingers' && fing ? fing[j] : n.letter + accStr(n.acc));
+  });
+}
+
+/* ----- Explore panel ----- */
+function cfRenderPanel() {
+  const P = $('#cf-panel'); if (!P) return;
+  P.textContent = '';
+  if (CF.mode === 'explore') cfExplore(P);
+  else if (CF.mode === 'walk') cfWalkPanel(P);
+  else if (CF.mode === 'build') cfBuildPanel(P);
+  else if (CF.mode === 'quiz') cfQuizPanel(P);
+}
+function cfExplore(P) {
+  const sel = CF.sel, k = cfKey(sel), sc = cfScale(sel);
+  const mname = sel.alt && k.seg.minorAlt ? k.seg.minorAlt : k.seg.minor;
+  const title = sel.minor ? mname + ' minor' : k.name + ' major';
+  const f = k.f;
+  cfMarkScale(sel);
+  const sigStaff = Staff({ clef: 'grand', sp: 7.5, key: f, items: [], minWidth: 150 });
+  const scaleStaff = Staff({ clef: sc[0].midi < 57 ? 'bass' : 'treble', sp: 7.5, key: f, items: sc.map((n) => ({ notes: [n], dur: 'q' })), gap: 3 });
+  const order = f > 0 ? SHARP_ORDER : FLAT_ORDER;
+  const mn = f > 0 ? ['Father', 'Charles', 'Goes', 'Down', 'And', 'Ends', 'Battle'] : ['Battle', 'Ends', 'And', 'Down', 'Goes', 'Charles’', 'Father'];
+  const mnem = h('div', { class: 'cf-mnem' }, order.split('').map((L, j) => h('span', { class: j < Math.abs(f) ? 'on' : '' }, h('b', { text: L + (f > 0 ? SHARP : FLAT) }), h('small', { text: mn[j] }))));
+  const fam = cfFamily(sel);
+  const chips = h('div', { class: 'diatonic' }, ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'i', 'III', 'iv', 'v', 'VI', 'VII'].map((rn) => fam.find((x) => x[2] === rn)).filter(Boolean).map(([si, ring, rn]) => {
+    const ch = cfChordOf(si, ring);
+    return h('button', { type: 'button', onclick: () => { cfStop(); cfPlayChord(ch); } }, h('b', { text: rn }), h('span', { text: ch.name }));
+  }));
+  const fing = !sel.minor ? CF_FINGERS[k.pc] : null;
+  const fTable = fing ? h('table', { class: 'cf-fing' },
+    h('tr', null, h('th', { text: 'Note' }), sc.map((n) => h('td', { text: n.letter + accStr(n.acc) }))),
+    h('tr', null, h('th', { text: 'Right hand' }), fing[0].split(' ').map((x) => h('td', { text: x, class: 'rh' }))),
+    h('tr', null, h('th', { text: 'Left hand' }), fing[1].split(' ').map((x) => h('td', { text: x, class: 'lh' })))) : null;
+  const next = (d) => {
+    const ni = (sel.i + d + 12) % 12;
+    let nsel = { i: ni, minor: sel.minor, alt: false };
+    /* keep spelling sensible across the bottom of the circle */
+    if (d > 0 && f >= 5 && CF_SEGS[ni].alt) nsel.alt = true;
+    if (d < 0 && f <= -5 && CF_SEGS[ni].alt) nsel.alt = true;
+    return nsel;
+  };
+  const transfer = (d) => {
+    cfStop();
+    const nsel = next(d), a = cfScale(sel), b = cfScale(nsel);
+    const nk = cfKey(nsel);
+    /* the one note that changes */
+    const aSet = a.slice(0, 7).map((n) => n.letter + n.acc), diffs = b.slice(0, 7).filter((n) => !aSet.includes(n.letter + n.acc)).length;
+    const changedJ = diffs === 1 ? b.slice(0, 7).findIndex((n) => !aSet.includes(n.letter + n.acc)) : -1;
+    const was = changedJ >= 0 ? b[changedJ].letter + accStr(b[changedJ].acc - (d > 0 ? 1 : -1)) : '';
+    const now = changedJ >= 0 ? b[changedJ].letter + accStr(b[changedJ].acc) : '';
+    CF.sel = nsel; cfPaint();
+    const P2 = $('#cf-panel');
+    P2.textContent = '';
+    const nt = nsel.minor ? (nsel.alt && nk.seg.minorAlt ? nk.seg.minorAlt : nk.seg.minor) + ' minor' : nk.name + ' major';
+    P2.append(h('div', { class: 'cf-card cf-transfer' },
+      h('p', { class: 'eyebrow', text: d > 0 ? 'One step clockwise' : 'One step counter-clockwise' }),
+      h('h3', { text: title + ' → ' + nt }),
+      h('p', { html: diffs > 1 ? 'Here the circle switches spelling. The next key would need ' + (d > 0 ? Math.abs(k.f) + 1 + ' sharps' : Math.abs(k.f) + 1 + ' flats') + ', so musicians write the same sound as <b>' + nt + '</b> (' + sigText(nk.f) + '). On the piano, still just one note has changed.' : changedJ >= 0 ? 'Only <b>one note changes</b>: <b>' + was + '</b> becomes <b>' + now + '</b>' + (d > 0 ? ' (raised a half step). It’s the ' + (nsel.minor ? '2nd' : '7th') + ' note of the new key, pulling up to its home note.' : ' (lowered a half step). It’s the ' + (nsel.minor ? '6th' : '4th') + ' note of the new key.') + ' Every other note stays the same.' : 'These two keys are the same notes spelled differently.' }),
+      h('div', { class: 'stf-wrap' }, Staff({ clef: 'treble', sp: 7, key: 0, items: a.map((n) => ({ notes: [n], dur: 'q', color: 'var(--muted)' })), gap: 2.9 })),
+      h('div', { class: 'stf-wrap' }, Staff({ clef: 'treble', sp: 7, key: 0, items: b.map((n, j) => ({ notes: [n], dur: 'q', color: j === changedJ || j === changedJ + 7 ? 'var(--u2)' : null })), gap: 2.9 })),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn small', type: 'button', onclick: () => { cfStop(); cfPlayScale(sel); } }, iconEl('play'), 'Hear ' + title),
+        h('button', { class: 'btn small', type: 'button', onclick: () => { cfStop(); cfPlayScale(nsel, changedJ); } }, iconEl('play'), 'Hear ' + nt),
+        h('button', { class: 'btn small primary', type: 'button', onclick: () => cfRenderPanel() }, 'Explore ' + nt, iconEl('next')))));
+    CF.keys.clearMarks();
+    const shift = CF.keys.o.lo > b[0].midi ? 12 : 0;
+    b.forEach((n, j) => CF.keys.mark(n.midi + shift, j === changedJ || j === changedJ + 7 ? 'u2' : j === 0 || j === 7 ? 'root' : 'u6', n.letter + accStr(n.acc)));
+    cfPlayScale(nsel, changedJ);
+  };
+  const tip = CF_TIPS[CF.tip % CF_TIPS.length];
+  P.append(
+    h('div', { class: 'cf-card' },
+      h('div', { class: 'cf-head' },
+        h('div', null, h('p', { class: 'eyebrow', text: sel.minor ? 'Minor key' : 'Major key' }), h('h3', { class: 'cf-title', text: title }),
+          h('p', { class: 'cap', text: sigText(f) + ' · ' + (sel.minor ? 'relative major: ' + k.name : 'relative minor: ' + mname + ' minor') })),
+        k.seg.alt ? h('button', { class: 'btn small', type: 'button', onclick: () => { CF.sel = Object.assign({}, sel, { alt: !sel.alt }); cfPaint(); cfRenderPanel(); } }, 'Spell it as ' + (sel.alt ? k.seg.main[0] : k.seg.alt[0])) : null),
+      h('div', { class: 'cf-sigs' }, h('div', { class: 'stf-wrap' }, sigStaff), f ? mnem : h('p', { class: 'cap', text: 'C major and A minor have no sharps or flats: all white keys.' })),
+      h('div', { class: 'stf-wrap' }, scaleStaff),
+      fTable,
+      h('div', { class: 'row' },
+        h('button', { class: 'btn small primary', type: 'button', onclick: () => { cfStop(); cfPlayScale(sel); } }, iconEl('play'), 'Play the scale'),
+        h('button', { class: 'btn small', type: 'button', onclick: () => cfPlayCadence(sel) }, iconEl('play'), sel.minor ? 'i – iv – V – i' : 'I – IV – V – I'),
+        h('button', { class: 'btn small', type: 'button', onclick: () => { cfStop(); const o = { i: sel.i, minor: !sel.minor, alt: sel.alt }; cfPlayScale(o); } }, iconEl('ear'), sel.minor ? 'Hear its major twin' : 'Hear its minor twin'),
+        h('button', { class: 'btn small', type: 'button', onclick: () => cfPlayModulation(sel, next(1)) }, iconEl('ear'), 'Hear a key change'))),
+    h('div', { class: 'cf-card' },
+      h('p', { class: 'eyebrow', text: 'Move around the circle' }),
+      h('p', { class: 'cap', text: 'See exactly what changes when you move to the next key.' }),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn small', type: 'button', onclick: () => transfer(-1) }, iconEl('back'), 'One step: add a ♭'),
+        h('button', { class: 'btn small', type: 'button', onclick: () => transfer(1) }, 'One step: add a ♯', iconEl('next')))),
+    h('div', { class: 'cf-card' },
+      h('p', { class: 'eyebrow', text: 'Chords in ' + title }),
+      h('p', { class: 'cap', text: 'These six chords sit right around ' + title + ' on the circle (they’re lit up). Tap to hear each one.' }),
+      chips),
+    h('div', { class: 'cf-card cf-tip' },
+      h('p', { class: 'eyebrow', text: 'Did you know? · ' + ((CF.tip % CF_TIPS.length) + 1) + ' of ' + CF_TIPS.length }),
+      h('h3', { text: tip[0] }), h('p', { text: tip[1] }),
+      h('button', { class: 'btn small', type: 'button', onclick: () => { CF.tip++; cfRenderPanel(); } }, 'Next idea', iconEl('next'))));
+}
+function cfPlayScale(sel, hiJ = -1) {
+  const sc = cfScale(sel);
+  const fing = !sel.minor ? CF_FINGERS[cfKey(sel).pc][0].split(' ') : null;
+  const shift = CF.keys && CF.keys.o.lo > sc[0].midi ? 12 : 0;
+  const notes = sc.map((n) => n.midi + shift);
+  const all = notes.concat(notes.slice(0, -1).reverse());
+  CF.seq = Piano.sequence(all.map((p, j) => ({ p, t: j * 0.36, d: 0.38 })), {
+    onNote: (e, j) => {
+      if (!CF.keys) return;
+      const idx = j < notes.length ? j : notes.length * 2 - 2 - j;
+      CF.keys.flash(e.p, 'good', 360);
+      const n = sc[idx];
+      CF.keys.mark(e.p, idx === hiJ || idx === hiJ + 7 ? 'u2' : idx === 0 || idx === 7 ? 'root' : 'u6', fing ? fing[idx] : n.letter + accStr(n.acc));
+    },
+  });
+}
+function cfPlayCadence(sel) {
+  cfStop();
+  const fam = cfFamily(sel);
+  const get = (rn) => { const x = fam.find((y) => y[2] === rn); return x ? cfChordOf(x[0], x[1]) : null; };
+  const seq = sel.minor ? [get('i'), get('iv'), Object.assign({}, get('v'), { type: 'maj' }), get('i')] : [get('I'), get('IV'), get('V'), get('I')];
+  const c = Piano.ensure();
+  seq.forEach((ch, j) => cfPlayChord(ch, 1.0, c.currentTime + 0.05 + j * 1.0));
+  seq.forEach((ch, j) => cfLater(() => { CF.keys && CF.keys.clearMarks(); const r = 60 + ch.pc > 66 ? 48 + ch.pc : 60 + ch.pc; chordNotes(r, ch.type).forEach((p) => CF.keys && CF.keys.mark(p + (CF.keys.o.lo > p ? 12 : 0), 'u6')); }, 50 + j * 1000));
+  cfLater(() => cfMarkScale(CF.sel), 4300);
+}
+/* a short pivot-chord modulation into the next key clockwise */
+function cfPlayModulation(sel, nsel) {
+  cfStop();
+  const A = cfFamily(sel), B = cfFamily(nsel);
+  const g = (F, rn) => { const x = F.find((y) => y[2] === rn); return cfChordOf(x[0], x[1]); };
+  const c = Piano.ensure();
+  const t0 = c.currentTime + 0.05;
+  const plan = sel.minor ? [g(A, 'i'), g(A, 'iv'), g(A, 'VI'), g(B, 'i')] : [g(A, 'I'), g(A, 'vi'), g(B, 'ii'), g(B, 'V'), g(B, 'I')];
+  plan.forEach((ch, j) => cfPlayChord(ch, 0.95, t0 + j * 0.95));
+  const nk = cfKey(nsel);
+  toast('From ' + cfKey(sel).name + ' to ' + nk.name + ': the middle chord belongs to both keys, so the change feels smooth.', 5200);
+}
+
+/* ----- live key detection: play anything ----- */
+function cfDetect() {
+  const now = performance.now();
+  CF.recent = CF.recent.filter((x) => now - x.t < 9000).slice(-16);
+  const pcs = [...new Set(CF.recent.map((x) => pcOf(x.p)))];
+  if (pcs.length < 4) return null;
+  let best = null;
+  for (const sg of CF_SEGS) {
+    const sc = new Set(SCALES.major.iv.map((v) => (sg.pc + v) % 12));
+    const inn = pcs.filter((p) => sc.has(p)).length, out = pcs.length - inn;
+    let score = inn - 2.2 * out;
+    const first = pcOf(CF.recent[0].p), last = pcOf(CF.recent[CF.recent.length - 1].p);
+    if (first === sg.pc || last === sg.pc) score += 0.6;
+    if (first === sg.mpc || last === sg.mpc) score += 0.5;
+    if (!best || score > best.score) best = { i: sg.i, score, out, inn };
+  }
+  if (!best || best.out > 1) return null;
+  const sg = CF_SEGS[best.i];
+  const first = pcOf(CF.recent[0].p), last = pcOf(CF.recent[CF.recent.length - 1].p);
+  const minor = (first === sg.mpc || last === sg.mpc) && first !== sg.pc && last !== sg.pc;
+  /* did they play a whole scale, up or down? */
+  const seq = CF.recent.slice(-8).map((x) => x.p);
+  let scale = false;
+  if (seq.length === 8) {
+    const up = seq.every((p, j) => j === 0 || p > seq[j - 1]), down = seq.every((p, j) => j === 0 || p < seq[j - 1]);
+    const s8 = up ? seq : down ? seq.slice().reverse() : null;
+    const tonic = minor ? sg.mpc : sg.pc, iv = minor ? SCALES.minor.iv : SCALES.major.iv;
+    if (s8 && pcOf(s8[0]) === tonic && s8[7] - s8[0] === 12 && s8.slice(0, 7).every((p, j) => (p - s8[0]) === iv[j])) scale = up ? 'up' : 'down';
+  }
+  return { i: best.i, minor, scale };
+}
+function cfOnInput(type, p) {
+  if (type !== 'down' || VIEW.cur !== 'circle') return;
+  CF.recent.push({ p, t: performance.now() });
+  if (CF.mode === 'walk') return cfWalkInput(p);
+  const d = cfDetect();
+  CF.detect = d;
+  cfPaint();
+  const box = $('#cf-detect'); if (!box) return;
+  if (!d) { box.innerHTML = 'Keep playing… <span class="cap">(a few more notes from one scale)</span>'; return; }
+  const sg = CF_SEGS[d.i];
+  const name = d.minor ? sg.minor + ' minor' : sg.main[0] + ' major';
+  const f = sg.main[1];
+  box.textContent = '';
+  box.append(h('span', { html: d.scale ? '<b>You played the ' + name + ' scale!</b> ' + sigText(f) + '.' : 'That sounds like <b>' + name + '</b> (' + sigText(f) + ').' }),
+    h('button', { class: 'btn small', type: 'button', onclick: () => { CF.sel = { i: d.i, minor: d.minor, alt: false }; CF.mode = 'explore'; cfSyncTabs(); cfPaint(); cfRenderPanel(); } }, 'Explore it'));
+  if (d.scale) { CF.recent = []; }
+}
+
+/* ----- Walk the circle game ----- */
+const WALK_STEPS = { 1: [['G', 1], ['D', 2], ['A', 3], ['E', 4], ['B', 5], ['F♯', 6], ['C♯', 7]], '-1': [['F', -1], ['B♭', -2], ['E♭', -3], ['A♭', -4], ['D♭', -5], ['G♭', -6], ['C♭', -7]] };
+function cfWalkStart(dir) {
+  CF.walk = { dir, step: 0, doneSegs: new Set(['0out']), hint: false, buf: [] };
+  cfPaint(); cfRenderPanel();
+}
+function cfWalkTarget() {
+  const w = CF.walk; if (!w || w.step >= 7) return null;
+  const [name, f] = WALK_STEPS[w.dir][w.step];
+  const segI = CF_SEGS.findIndex((sg) => sg.main[1] === f || (sg.alt && sg.alt[1] === f));
+  const tonic = N(ascii(name) + (LETTER_PC[name[0]] + (name.includes(SHARP) ? 1 : name.includes(FLAT) ? -1 : 0) >= 8 ? 3 : 4));
+  const sc = scaleNotes(tonic.letter + (tonic.acc > 0 ? '#' : tonic.acc < 0 ? 'b' : '') + tonic.oct, 'major');
+  const newAcc = w.dir > 0 ? SHARP_ORDER[w.step] + SHARP : FLAT_ORDER[w.step] + FLAT;
+  const newJ = sc.findIndex((n) => n.letter + accStr(n.acc) === newAcc);
+  return { name, f, segI, sc, newAcc, newJ };
+}
+function cfWalkPanel(P) {
+  const w = CF.walk;
+  if (!w) {
+    CF.keys && CF.keys.clearMarks();
+    P.append(h('div', { class: 'cf-card' },
+      h('p', { class: 'eyebrow', text: 'Game' }), h('h3', { class: 'cf-title', text: 'Walk the circle' }),
+      h('p', { text: 'Start at C. Play each new scale on your keyboard (up one octave) to take one step around the circle. Each step adds exactly one sharp or one flat, and Keystone shows you which note changed.' }),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn primary', type: 'button', onclick: () => cfWalkStart(1) }, 'Walk clockwise (sharps)', iconEl('next')),
+        h('button', { class: 'btn', type: 'button', onclick: () => cfWalkStart(-1) }, iconEl('back'), 'Counter-clockwise (flats)'))));
+    return;
+  }
+  const tg = cfWalkTarget();
+  if (!tg) {
+    P.append(h('div', { class: 'cf-card' }, h('h3', { class: 'cf-title', text: 'You walked the whole way!' }),
+      h('p', { text: w.dir > 0 ? 'From C to C♯ major: seven sharps, one at a time, in the order F C G D A E B.' : 'From C to C♭ major: seven flats, one at a time, in the order B E A D G C F.' }),
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', onclick: () => cfWalkStart(-w.dir) }, 'Now go the other way'), h('button', { class: 'btn', type: 'button', onclick: () => { CF.walk = null; cfPaint(); cfRenderPanel(); } }, 'Done'))));
+    return;
+  }
+  const prev = w.step === 0 ? 'C' : WALK_STEPS[w.dir][w.step - 1][0];
+  const line = h('div', { class: 'cf-dots', id: 'cf-walk-dots' }, tg.sc.map((n, j) => h('span', { text: n.letter + accStr(n.acc), class: j === tg.newJ || j === tg.newJ + 7 ? 'new' : '' })));
+  P.append(h('div', { class: 'cf-card' },
+    h('p', { class: 'eyebrow', text: 'Step ' + (w.step + 1) + ' of 7 · ' + (w.dir > 0 ? 'clockwise' : 'counter-clockwise') }),
+    h('h3', { class: 'cf-title', text: 'Play the ' + tg.name + ' major scale' }),
+    h('p', { html: 'Start on <b>' + tg.name + '</b> and play up one octave to the next ' + tg.name + '. It’s the ' + prev + ' major scale with one change: <b>' + tg.newAcc + '</b> is new (' + (w.dir > 0 ? 'the 7th note, raised' : 'the 4th note, lowered') + ').' }),
+    line,
+    h('div', { class: 'stf-wrap' }, Staff({ clef: tg.sc[0].midi < 57 ? 'bass' : 'treble', sp: 7.5, key: tg.f, items: w.hint ? tg.sc.map((n, j) => ({ notes: [n], dur: 'q', color: j === tg.newJ || j === tg.newJ + 7 ? 'var(--u2)' : null })) : [], minWidth: 220, gap: 3 })),
+    h('div', { class: 'feedback', id: 'cf-walk-fb' }),
+    h('div', { class: 'row' },
+      h('button', { class: 'btn small', type: 'button', onclick: () => { cfStop(); cfPlayScale({ i: tg.segI, minor: false, alt: tg.f >= 6 || tg.f <= -7 }); } }, iconEl('ear'), 'Hear it first'),
+      h('button', { class: 'btn small', type: 'button', onclick: () => { w.hint = !w.hint; cfRenderPanel(); } }, w.hint ? 'Hide the notes' : 'Show the notes'),
+      h('button', { class: 'btn small quiet', type: 'button', onclick: () => cfWalkAdvance(true) }, 'Skip'))));
+  CF.keys.clearMarks();
+  if (w.hint) { const fing = CF_FINGERS[pcOf(tg.sc[0].midi)][0].split(' '); const shift = CF.keys.o.lo > tg.sc[0].midi ? 12 : 0; tg.sc.forEach((n, j) => CF.keys.mark(n.midi + shift, j === tg.newJ || j === tg.newJ + 7 ? 'u2' : 'faint', fing[j])); }
+  else { const shift = CF.keys.o.lo > tg.sc[tg.newJ].midi ? 12 : 0; CF.keys.mark(tg.sc[tg.newJ].midi + shift, 'u2', 'new'); }
+}
+function cfWalkInput(p) {
+  const w = CF.walk, tg = cfWalkTarget(); if (!w || !tg) return;
+  const pcs = tg.sc.map((n) => pcOf(n.midi));
+  w.got = w.got || 0;
+  if (w.got > 0 && pcOf(p) === pcs[w.got] && p > w.lastP) { w.got++; w.lastP = p; }
+  else if (pcOf(p) === pcs[0]) { w.got = 1; w.lastP = p; }
+  else w.got = 0;
+  $$('#cf-walk-dots span').forEach((d0, j) => d0.classList.toggle('got', j < w.got));
+  const fb = $('#cf-walk-fb');
+  if (w.got === 0) { CF.keys.flash(p, 'bad'); if (fb) { fb.className = 'feedback bad'; fb.textContent = 'Start on ' + tg.name + ', then go up one note at a time. Watch for ' + tg.newAcc + '.'; } }
+  else { CF.keys.flash(p, 'good', 300); if (fb) { fb.className = 'feedback good'; fb.textContent = w.got < 8 ? w.got + ' of 8' : ''; } }
+  if (w.got >= 8) { w.got = 0; cfWalkAdvance(false); }
+}
+function cfWalkAdvance(skipped) {
+  const w = CF.walk, tg = cfWalkTarget(); if (!w || !tg) return;
+  w.doneSegs.add(tg.segI + 'out');
+  w.step++;
+  cfPaint();
+  const fb = $('#cf-walk-fb');
+  if (!skipped && fb) { fb.className = 'feedback good'; fb.textContent = '✓ ' + tg.name + ' major! ' + sigText(tg.f) + '.'; }
+  if (!skipped) cfPlayChord({ pc: pcOf(tg.sc[0].midi), type: 'maj' }, 1.4);
+  cfLater(() => cfRenderPanel(), skipped ? 50 : 1600);
+}
+
+/* ----- Build a progression ----- */
+const CF_PRESETS = [['Pop', ['I', 'V', 'vi', 'IV']], ['1950s', ['I', 'vi', 'IV', 'V']], ['Emotional', ['vi', 'IV', 'I', 'V']], ['Folk', ['I', 'IV', 'I', 'V']], ['Jazz', ['ii', 'V', 'I', 'I']], ['Canon', ['I', 'V', 'vi', 'iii', 'IV', 'I', 'IV', 'V']]];
+const CF_PATTERNS = [['block', 'Block chords'], ['broken', 'Broken (up)'], ['ballad', 'Ballad'], ['waltz', 'Waltz (3/4)']];
+function cfBuildPanel(P) {
+  if (CF.sel.minor) CF.sel = Object.assign({}, CF.sel, { minor: false });
+  if (!CF.build) CF.build = { prog: ['I', 'V', 'vi', 'IV'], pat: 'block', bpm: 84, playing: false, cur: null };
+  const B = CF.build, k = cfKey(CF.sel);
+  const fam = cfFamily(CF.sel);
+  const chordFor = (rn) => { const x = fam.find((y) => y[2] === rn); return x ? Object.assign(cfChordOf(x[0], x[1]), { i: x[0], ring: x[1], rn }) : null; };
+  cfPaint();
+  const slots = h('div', { class: 'cf-slots' }, B.prog.map((rn, j) => {
+    const ch = chordFor(rn);
+    return h('div', { class: 'cf-slot', id: 'cf-slot-' + j }, h('b', { text: rn }), h('span', { text: ch ? ch.name : '?' }),
+      h('button', { class: 'btn icon small quiet', type: 'button', 'aria-label': 'Remove', onclick: () => { B.prog.splice(j, 1); cfRenderPanel(); } }, iconEl('close')));
+  }));
+  const add = h('div', { class: 'diatonic' }, ['I', 'ii', 'iii', 'IV', 'V', 'vi'].map((rn) => { const ch = chordFor(rn); return h('button', { type: 'button', onclick: () => cfBuildAdd(rn) }, h('b', { text: rn }), h('span', { text: ch.name })); }));
+  const bpm = h('input', { type: 'range', min: '50', max: '140', value: String(B.bpm), id: 'cf-bpm', 'aria-label': 'Tempo' });
+  bpm.addEventListener('input', () => { B.bpm = +bpm.value; $('#cf-bpm-out').textContent = B.bpm + ' bpm'; });
+  P.append(h('div', { class: 'cf-card' },
+    h('p', { class: 'eyebrow', text: 'Create' }), h('h3', { class: 'cf-title', text: 'Build a chord progression in ' + k.name + ' major' }),
+    h('p', { class: 'cap', text: 'Tap the lit chords on the circle (or below) to add them, then press Play to loop it. Move to another key and your progression moves with it, because the chord family is always the same shape around the circle.' }),
+    h('div', { class: 'row' }, h('span', { class: 'cap', text: 'Key:' }),
+      h('button', { class: 'btn small', type: 'button', onclick: () => { CF.sel = { i: (CF.sel.i + 11) % 12, minor: false, alt: false }; cfPaint(); cfRenderPanel(); } }, iconEl('back'), 'Move left'),
+      h('b', { text: k.name + ' major', style: { fontFamily: 'var(--font-display)', fontWeight: '400', fontSize: '18px' } }),
+      h('button', { class: 'btn small', type: 'button', onclick: () => { CF.sel = { i: (CF.sel.i + 1) % 12, minor: false, alt: false }; cfPaint(); cfRenderPanel(); } }, 'Move right', iconEl('next'))),
+    slots, add,
+    h('div', { class: 'row' }, h('span', { class: 'cap', text: 'Try a famous one:' }), CF_PRESETS.map(([nm, pr]) => h('button', { class: 'btn small', type: 'button', text: nm, onclick: () => { B.prog = pr.slice(); cfRenderPanel(); } }))),
+    h('div', { class: 'row' }, h('span', { class: 'cap', text: 'Left-hand style:' }), h('div', { class: 'seg' }, CF_PATTERNS.map(([v, l]) => h('button', { type: 'button', text: l, 'aria-pressed': String(B.pat === v), onclick: () => { B.pat = v; cfRenderPanel(); } })))),
+    h('div', { class: 'row' }, h('label', { class: 'tb-speed' }, 'Tempo', bpm, h('output', { id: 'cf-bpm-out', text: B.bpm + ' bpm' }))),
+    h('div', { class: 'row' },
+      h('button', { class: 'btn primary', type: 'button', onclick: () => (B.playing ? cfBuildStop() : cfBuildPlay()) }, B.playing ? h('span', { text: '❚❚' }) : iconEl('play'), B.playing ? 'Stop' : 'Play (loops)'),
+      h('button', { class: 'btn', type: 'button', onclick: () => { B.prog = []; cfBuildStop(); cfRenderPanel(); } }, 'Clear')),
+    h('p', { class: 'cap', text: 'Challenge: play the bass notes along with it on your keyboard, or make up a melody using the lit keys.' })));
+  cfBuildMarks();
+}
+function cfBuildAdd(rn) {
+  const B = CF.build; if (!B) return;
+  if (B.prog.length >= 8) B.prog.shift();
+  B.prog.push(rn);
+  const fam = cfFamily(CF.sel).find((y) => y[2] === rn);
+  if (fam && !B.playing) cfPlayChord(cfChordOf(fam[0], fam[1]));
+  cfRenderPanel();
+}
+function cfBuildMarks() {
+  if (!CF.keys) return;
+  CF.keys.clearMarks();
+  const sc = cfScale(CF.sel), shift = CF.keys.o.lo > sc[0].midi ? 12 : 0;
+  sc.forEach((n, j) => CF.keys.mark(n.midi + shift, j === 0 || j === 7 ? 'root' : 'faint'));
+}
+function cfBuildStop() { const B = CF.build; if (!B) return; B.playing = false; B.cur = null; cfStop(); if (CF.mode === 'build') { cfPaint(); cfRenderPanel(); } }
+function cfBuildPlay() {
+  const B = CF.build; if (!B || !B.prog.length) return;
+  cfStop();
+  B.playing = true;
+  const loop = () => {
+    if (!B.playing || CF.mode !== 'build') return;
+    const fam = cfFamily(CF.sel);
+    const chords = B.prog.map((rn) => { const x = fam.find((y) => y[2] === rn); return x ? Object.assign(cfChordOf(x[0], x[1]), { i: x[0], ring: x[1] }) : null; }).filter(Boolean);
+    const beats = B.pat === 'waltz' ? 3 : 4, spb = 60 / B.bpm, bar = beats * spb;
+    const c = Piano.ensure(), t0 = c.currentTime + 0.06;
+    chords.forEach((ch, j) => {
+      const at = t0 + j * bar, r = 60 + ch.pc > 66 ? 48 + ch.pc : 60 + ch.pc, bass = 36 + ch.pc;
+      const tri = chordNotes(r, ch.type);
+      if (B.pat === 'block') { Piano.chord([bass, bass + 12].concat(tri), bar * 0.95, 0.56, 0, at); }
+      else if (B.pat === 'broken') { [bass, bass + 7, bass + 12, tri[0], tri[1], tri[2], tri[1], bass + 12].forEach((p, q) => Piano.play(p, 0.55, at + q * bar / 8, bar / 8 * 1.6)); }
+      else if (B.pat === 'ballad') { Piano.chord(tri, bar * 0.95, 0.5, 0, at); [bass, bass + 7, bass + 12, bass + 7, bass, bass + 7, bass + 12, bass + 7].forEach((p, q) => Piano.play(p, 0.5, at + q * bar / 8, bar / 8 * 1.5)); }
+      else { Piano.play(bass, 0.6, at, spb * 0.9); [1, 2].forEach((q) => Piano.chord(tri, spb * 0.7, 0.45, 0, at + q * spb)); }
+      cfLater(() => {
+        if (!B.playing) return;
+        B.cur = { i: ch.i, ring: ch.ring }; cfPaint();
+        $$('.cf-slot').forEach((el, q) => el.classList.toggle('on', q === j));
+        if (CF.keys) { cfBuildMarks(); tri.forEach((p) => CF.keys.mark(p + (CF.keys.o.lo > p ? 12 : 0), 'u6')); }
+      }, (at - c.currentTime) * 1000);
+    });
+    cfLater(loop, chords.length * bar * 1000 - 30);
+  };
+  loop();
+  cfRenderPanel();
+}
+
+/* ----- Quiz: answer by tapping the circle ----- */
+function cfQuizNew() {
+  const Q = CF.quiz;
+  const types = ['sharps', 'flats', 'relmin', 'relmaj', 'dominant', 'subdominant', 'sig'];
+  const type = pick(types.filter((t) => t !== Q.last));
+  Q.last = type;
+  const segs = CF_SEGS;
+  let q;
+  if (type === 'sharps') { const n = randInt(1, 6); const i = segs.findIndex((sg) => sg.main[1] === n || (sg.alt && sg.alt[1] === n)); q = { text: 'Tap the major key with <b>' + n + ' sharp' + (n > 1 ? 's' : '') + '</b>.', ok: (i2, r) => i2 === i && r === 'out', show: [i, 'out'], why: (segs[i].main[1] === n ? segs[i].main[0] : segs[i].alt[0]) + ' major: ' + sigText(n) + '.' }; }
+  else if (type === 'flats') { const n = randInt(1, 6); const i = segs.findIndex((sg) => sg.main[1] === -n || (sg.alt && sg.alt[1] === -n)); q = { text: 'Tap the major key with <b>' + n + ' flat' + (n > 1 ? 's' : '') + '</b>.', ok: (i2, r) => i2 === i && r === 'out', show: [i, 'out'], why: segs[i].main[0] + ' major: ' + sigText(-n) + '.' }; }
+  else if (type === 'relmin') { const i = randInt(0, 11); q = { text: 'Tap the <b>relative minor</b> of <b>' + segs[i].main[0] + ' major</b>.', ok: (i2, r) => i2 === i && r === 'in', show: [i, 'in'], why: segs[i].minor + ' minor shares ' + segs[i].main[0] + ' major’s key signature. It sits just inside it.' }; }
+  else if (type === 'relmaj') { const i = randInt(0, 11); q = { text: 'Tap the <b>relative major</b> of <b>' + segs[i].minor + ' minor</b>.', ok: (i2, r) => i2 === i && r === 'out', show: [i, 'out'], why: segs[i].main[0] + ' major sits just outside ' + segs[i].minor + ' minor.' }; }
+  else if (type === 'dominant') { const i = randInt(0, 11), j = (i + 1) % 12; q = { text: 'Tap the <b>V chord</b> (the dominant) of <b>' + segs[i].main[0] + ' major</b>.', ok: (i2, r) => i2 === j && r === 'out', show: [j, 'out'], why: 'V is one step clockwise: ' + segs[j].main[0] + '.' }; }
+  else if (type === 'subdominant') { const i = randInt(0, 11), j = (i + 11) % 12; q = { text: 'Tap the <b>IV chord</b> (the subdominant) of <b>' + segs[i].main[0] + ' major</b>.', ok: (i2, r) => i2 === j && r === 'out', show: [j, 'out'], why: 'IV is one step counter-clockwise: ' + segs[j].main[0] + '.' }; }
+  else { const f = randInt(-6, 6); const i = segs.findIndex((sg) => sg.main[1] === f || (sg.alt && sg.alt[1] === f)); q = { text: 'Which <b>major key</b> has this key signature? Tap it.', staff: f, ok: (i2, r) => i2 === i && r === 'out', show: [i, 'out'], why: (segs[i].main[1] === f ? segs[i].main[0] : segs[i].alt[0]) + ' major: ' + sigText(f) + '.' }; }
+  Q.q = q; Q.answered = false;
+  cfRenderPanel();
+}
+function cfQuizPanel(P) {
+  if (!CF.quiz) { CF.quiz = { score: 0, streak: 0, best: store.get('cfBest', 0), total: 0 }; cfQuizNew(); return; }
+  const Q = CF.quiz, q = Q.q;
+  CF.keys && CF.keys.clearMarks();
+  P.append(h('div', { class: 'cf-card' },
+    h('p', { class: 'eyebrow', text: 'Quiz · ' + Q.score + ' of ' + Q.total + ' · best streak ' + Q.best }),
+    h('h3', { class: 'cf-title', html: q.text }),
+    q.staff != null ? h('div', { class: 'stf-wrap' }, Staff({ clef: 'grand', sp: 9, key: q.staff, items: [], minWidth: 200 })) : null,
+    h('div', { class: 'feedback', id: 'cf-q-fb' }),
+    h('div', { class: 'row' }, h('button', { class: 'btn small', type: 'button', onclick: () => cfQuizNew() }, Q.answered ? 'Next question' : 'Skip', iconEl('next')))));
+}
+function cfQuizAnswer(i, ring) {
+  const Q = CF.quiz; if (!Q || !Q.q || Q.answered) return;
+  const q = Q.q, ok = q.ok(i, ring);
+  Q.answered = true; Q.total++;
+  if (ok) { Q.score++; Q.streak++; if (Q.streak > Q.best) { Q.best = Q.streak; store.set('cfBest', Q.best); } } else Q.streak = 0;
+  const [si, sr] = q.show;
+  const el = CF.segEls[si][sr === 'out' ? 'outer' : 'inner'];
+  el.classList.add(ok ? 'qok' : 'qshow');
+  if (!ok) CF.segEls[i][ring === 'out' ? 'outer' : 'inner'].classList.add('qbad');
+  cfPlayChord(cfChordOf(si, sr));
+  cfPaint();
+  cfRenderPanel();
+  const fb = $('#cf-q-fb'); if (fb) { fb.className = 'feedback ' + (ok ? 'good' : 'bad'); fb.textContent = (ok ? '✓ Right! ' : 'Not quite. ') + q.why; }
+  cfLater(() => { $$('.cf-svg .qok, .cf-svg .qshow, .cf-svg .qbad').forEach((x) => x.classList.remove('qok', 'qshow', 'qbad')); if (ok && CF.mode === 'quiz') cfQuizNew(); }, ok ? 1800 : 3200);
+}
+
+/* ----- page ----- */
+function cfSyncTabs() { $$('#cf-tabs button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === CF.mode))); }
+function renderCircle() {
+  const v = $('#view-circle');
+  cfStop();
+  if (CF.keys) { CF.keys.destroy(); CF.keys = null; }
+  if (CF.off) CF.off();
+  v.textContent = '';
+  const tabs = h('div', { class: 'seg', id: 'cf-tabs' }, [['explore', 'Explore'], ['walk', 'Walk the circle'], ['build', 'Build a progression'], ['quiz', 'Quiz']].map(([m, l]) => h('button', { type: 'button', 'data-v': m, text: l, onclick: () => {
+    if (CF.build && CF.build.playing) cfBuildStop();
+    cfStop(); CF.mode = m; CF.detect = null; cfSyncTabs(); cfPaint(); cfRenderPanel();
+  } })));
+  const circleHost = h('div', { class: 'cf-circle' });
+  const kd = h('div');
+  v.append(
+    h('div', { class: 'sec-head' }, h('h2', { text: 'Circle of fifths' }), h('p', { text: 'All 24 keys on one wheel. Tap any key to explore it, play a scale and watch the circle find it, walk around the circle one sharp or flat at a time, build chord progressions, or quiz yourself.' })),
+    h('div', { class: 'cf-detect', id: 'cf-detect', html: 'Play a few notes or a whole scale on your keyboard, and I’ll find its key on the circle.' }),
+    h('div', { class: 'cf-grid' }, circleHost, h('div', { class: 'cf-side' }, tabs, h('div', { id: 'cf-panel', class: 'cf-panel' }))),
+    h('div', { class: 'big-keys' }, h('div', { class: 'keys-frame' }, kd)));
+  cfDrawCircle(circleHost);
+  const wide = window.innerWidth > 760;
+  CF.keys = new Keys(kd, { lo: wide ? 48 : 60, hi: 84 });
+  CF.off = Input.on(cfOnInput);
+  cfSyncTabs(); cfPaint(); cfRenderPanel();
+}
+W.circlelink = () => ({ el: h('div', { class: 'widget' }, h('p', { class: 'cap', text: 'The full interactive circle has every key signature, scale fingerings, a key detector, a walking game, a chord-progression builder and a quiz.' }),
+  h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', onclick: () => { closeLesson(); showView('circle'); } }, 'Open the Circle of fifths', iconEl('next')))) });
+
 /* ===== 99-main.js ===== */
 /* ---------- boot ---------- */
 function syncSound() {
@@ -5614,7 +6267,7 @@ function boot() {
   document.addEventListener('visibilitychange', () => { if (document.hidden) { Input.allUp(); if (BK.running && !BK.demo && BK.mode === 'tempo') { BK.running = false; restartBlocks(); } } });
   renderAll();
   const start = (location.hash || '').replace('#', '');
-  showView(['learn', 'practice', 'songs', 'play'].includes(start) ? start : 'learn', false);
+  showView(['learn', 'practice', 'songs', 'circle', 'play'].includes(start) ? start : 'learn', false);
   if (IN_VIEWER && typeof navigator.requestMIDIAccess !== 'function') { /* MIDI help appears when the button is tapped */ }
 }
 boot();
