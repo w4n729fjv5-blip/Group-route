@@ -424,6 +424,49 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .cf-slot span { font-size: 13px; color: var(--muted); font-weight: 700; }
 .cf-slot.on { border-color: var(--accent); background: var(--accent-soft); }
 .cf-tip { border-left: 4px solid var(--u6); }
+.cf-card .cap, .cf-detect .cap { font-size: 14px; color: var(--muted); }
+#cf-tabs button svg { width: 16px; height: 16px; vertical-align: -3px; margin-right: 5px; }
+.sg-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.sg-top .btn svg { width: 18px; height: 18px; }
+.sg-status { font-size: 14px; font-weight: 650; color: var(--muted); }
+.sg-status.on { color: var(--good); }
+.sg-status.on::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--bad); margin-right: 7px; vertical-align: 1px; animation: sg-pulse 1.4s ease-in-out infinite; }
+@keyframes sg-pulse { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .sg-status.on::before { animation: none; } }
+.sg-tuner { display: flex; align-items: center; gap: 16px; }
+.sg-note { font-family: var(--font-display); font-size: 52px; line-height: 1; min-width: 2.6em; text-align: center; font-variant-numeric: tabular-nums; }
+.sg-note.dim { color: var(--muted); opacity: .45; }
+.sg-tmeta { flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sg-meter { position: relative; height: 14px; border-radius: 999px; background: linear-gradient(90deg, color-mix(in srgb, var(--bad) 22%, var(--well)), var(--well) 35%, color-mix(in srgb, var(--good) 30%, var(--well)) 50%, var(--well) 65%, color-mix(in srgb, var(--bad) 22%, var(--well))); }
+.sg-meter b { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--muted); opacity: .6; }
+.sg-meter i { position: absolute; left: 50%; top: -4px; width: 6px; height: 22px; margin-left: -3px; border-radius: 3px; background: var(--ink); transition: left .08s linear; }
+.sg-meter i.ok { background: var(--good); }
+.sg-cents { font-size: 14px; font-weight: 650; color: var(--muted); min-height: 1.3em; }
+.sg-level { height: 4px; border-radius: 2px; background: var(--well); overflow: hidden; }
+.sg-level i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .08s linear; }
+.sg-trace { width: 100%; height: 230px; border-radius: 12px; border: 1px solid var(--rule); display: block; touch-action: pan-y; }
+@media (max-width: 600px) { .sg-trace { height: 190px; } .sg-note { font-size: 42px; } }
+.sg-err { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: color-mix(in srgb, var(--bad) 9%, var(--card)); border: 1px solid color-mix(in srgb, var(--bad) 30%, var(--rule)); }
+.sg-err p { margin: 0; font-size: 15px; }
+#sg-tabs { align-self: flex-start; }
+.sg-prog { height: 8px; border-radius: 999px; background: var(--well); overflow: hidden; }
+.sg-prog i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .25s ease; }
+.sg-hold i { background: var(--good); transition: width .06s linear; }
+.sg-bars { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 4px; align-items: end; }
+.sg-bar { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+.sg-col { position: relative; width: 100%; height: 84px; border-radius: 6px; background: var(--well); overflow: hidden; }
+.sg-col i { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--muted); border-radius: 6px 6px 0 0; transition: height .3s ease; }
+.sg-bar span { font-family: var(--font-display); font-size: 15px; white-space: nowrap; }
+.sg-bar[data-k="in"] .sg-col { background: color-mix(in srgb, var(--u6) 14%, var(--well)); }
+.sg-bar[data-k="in"] .sg-col i { background: var(--u6); }
+.sg-bar[data-k="home"] .sg-col { background: color-mix(in srgb, var(--accent) 16%, var(--well)); }
+.sg-bar[data-k="home"] .sg-col i { background: var(--accent); }
+.sg-bar[data-k="home"] span { color: var(--accent); font-weight: 700; }
+.sg-bar[data-k="out"] span { color: var(--muted); }
+@media (max-width: 420px) { .sg-bar span { font-size: 12px; } .sg-col { height: 64px; } }
+.sg-ideas { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+.sg-steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+.sg-chips .btn { min-height: 36px; }
 .song-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
 .song-card { display: flex; flex-direction: column; gap: 8px; text-align: left; padding: 14px; border-radius: var(--r); border: 1px solid var(--rule); background: var(--card); color: var(--ink); min-width: 0; }
 .song-card:hover { border-color: var(--accent); }
@@ -624,6 +667,7 @@ const ICON = {
   replay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>',
   ear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 9a5 5 0 0 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5 2"/><path d="M10 10a2 2 0 0 1 4 0"/></svg>',
   back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
   next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
 };
 const iconEl = (name) => { const sp = document.createElement('span'); sp.style.display = 'contents'; sp.innerHTML = ICON[name]; return sp.firstChild; };
@@ -895,6 +939,7 @@ const Piano = {
     const c = this.ensure();
     if (!c) return null;
     const t = Math.max(c.currentTime, when || 0);
+    this.busyUntil = Math.max(this.busyUntil || 0, t + (dur > 0 ? dur + 0.25 : 1.6));
     const layer = this.layerFor(vel);
     const m = clamp(21 + Math.round((p - 21) / 3) * 3, 21, 108);
     const buf = this.buffers[layer].get(m) || this.buffers[9].get(m);
@@ -3630,7 +3675,7 @@ const SOURCES = [
 function showView(name, push = true) {
   VIEW.cur = name;
   for (const v of ['learn', 'practice', 'songs', 'circle', 'play']) $('#view-' + v).hidden = v !== name;
-  if (name === 'circle') renderCircle(); else if (typeof cfStop === 'function') { cfStop(); if (CF.build) CF.build.playing = false; }
+  if (name === 'circle') renderCircle(); else if (typeof cfStop === 'function') { cfStop(); if (CF.build) CF.build.playing = false; if (typeof Voice !== 'undefined') { Voice.stop(); SING.match = null; } }
   $$('.nav button').forEach((b) => (b.dataset.view === name ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current')));
   if (push) { try { history.replaceState(null, '', '#' + name); } catch (e) { /* sandboxed */ } }
   if (name === 'play') renderPlay();
@@ -3762,7 +3807,13 @@ function renderPractice() {
     const cards = h('div', { class: 'cards' });
     if (g === 'Ear') cards.append(h('button', { class: 'p-card', type: 'button', style: { borderColor: 'var(--u3)' }, onclick: () => openTrainer() },
       h('span', { class: 'pc-t', text: 'Note trainer' }), h('span', { class: 'pc-s', text: 'Hear a note, think, then see the answer. Hands-free and as slow as you like.' }),
-      h('span', { class: 'pc-m' }, h('span', { class: 'tag', text: 'Just listen' }))));
+      h('span', { class: 'pc-m' }, h('span', { class: 'tag', text: 'Just listen' }))),
+      h('button', { class: 'p-card', type: 'button', style: { borderColor: 'var(--u3)' }, onclick: () => openSing('key') },
+        h('span', { class: 'pc-t', text: 'Sing: find your key' }), h('span', { class: 'pc-s', text: 'Sing or hum any song. Keystone listens, shows your notes and finds the key on the circle.' }),
+        h('span', { class: 'pc-m' }, h('span', { class: 'tag', text: 'Microphone' }))),
+      h('button', { class: 'p-card', type: 'button', style: { borderColor: 'var(--u3)' }, onclick: () => openSing('match') },
+        h('span', { class: 'pc-t', text: 'Match the note (sing)' }), h('span', { class: 'pc-s', text: 'Hear a note, sing it back, and steer your voice into the band. Also measures your vocal range.' }),
+        h('span', { class: 'pc-m' }, h('span', { class: 'tag', text: 'Microphone' }))));
     v.append(cards);
     append(cards, ids.map((id) => h('button', { class: 'p-card', type: 'button', onclick: () => openDrill(id) },
       h('span', { class: 'pc-t', text: DRILLS[id].title }), h('span', { class: 'pc-s', text: DRILLS[id].sub }),
@@ -5322,6 +5373,13 @@ lesson('nextsteps', 'Where to go next', 'Repertoire and skills beyond this cours
   ['Keep building', '<ul><li>Learn all 12 major and minor scales, hands together.</li><li>Read a little new music every day.</li><li>Play from lead sheets and try improvising over the blues.</li><li>A teacher, even occasionally, will catch habits an app can’t.</li></ul>' ],
 ], { blocks: ['song-prelude', 'song-canon'] });
 
+lesson('singing', 'Sing to train your ear', 'Use your voice: match notes, find your range, and find the key of any song.', ['Ear', 'Voice'], [
+  ['Why sing?', '<p>Singing is the quickest bridge between hearing a note and knowing it. If you can sing a note, you can hear it in your head before you play it. Musicians call this <b>inner hearing</b>, and it’s how people learn to play by ear.</p><p>You don’t need a “good voice”. Humming works just as well, and nobody else has to hear it.</p>' + tip('How it works', 'Keystone listens through your microphone and measures the pitch of your voice about 30 times a second. Nothing is recorded or sent anywhere.')],
+  ['Match a note', '<p>The first skill is <b>pitch matching</b>: hear a note and sing the same one. On the graph, your voice draws a line; get it inside the orange band and hold it.</p><p>Any octave counts. Most voices sit higher or lower than the piano note, and that’s fine: it’s still the same note.</p>', { type: 'singlink', sub: 'match', label: 'Play Match the note', cap: 'Opens the Sing tools in the Circle tab, on the matching game.' }],
+  ['Know your range', '<p>Your <b>range</b> is the span from the lowest to the highest note you can sing comfortably. Knowing it helps you choose keys that suit your voice: a song in the wrong key feels too high or too low, even though it’s the same tune.</p>', { type: 'singlink', sub: 'range', label: 'Measure my range' }],
+  ['Find the key of any song', '<p>Every song has a <b>home note</b> and a family of seven notes around it: that’s its key. Sing or hum a song you know and Keystone finds its key on the circle of fifths. Then sing it again, starting higher or lower, and watch the key move.</p>', { type: 'singlink', sub: 'key', label: 'Sing and find the key' }],
+], { drills: ['ear-echo-3', 'ear-same'], text: 'Finish one of these to complete the lesson. Before you play each answer, try singing it first.' });
+
 /* ---------- course order: units, levels (B beginner, I intermediate) ---------- */
 const COURSE = [
   { id: 'keyboard', title: 'The keyboard', color: 'var(--u1)', desc: 'Find your way around: black-key groups, every note name, middle C, octaves, the whole range, sharps and flats.',
@@ -5332,8 +5390,8 @@ const COURSE = [
     lessons: [['staff', 'B'], ['readcde', 'B'], ['readfg', 'B'], ['scrollread', 'B'], ['treble', 'B'], ['highnotes', 'B'], ['bassnear', 'B'], ['bass', 'B'], ['landmarks', 'B'], ['readint', 'B'], ['readacc', 'B'], ['signs', 'B'], ['sightread', 'B'], ['lownotes', 'I'], ['wholestaff', 'I'], ['readkey', 'I'], ['readchords', 'I'], ['octsigns', 'I']] },
   { id: 'rhythm', title: 'Rhythm and counting', color: 'var(--u7)', desc: 'Every note value one at a time, rests, dots and ties, time signatures, then sixteenths, triplets, 6/8 and syncopation. Tap along to check yourself.',
     lessons: [['beat', 'B'], ['wholenote', 'B'], ['halfnote', 'B'], ['quarternote', 'B'], ['rhythm', 'B'], ['meter', 'B'], ['eighthnote', 'B'], ['dottednotes', 'B'], ['ties', 'B'], ['pickup', 'B'], ['sixteenth', 'I'], ['triplets', 'I'], ['compound', 'I'], ['syncopation', 'I']] },
-  { id: 'ear', title: 'Ear training', color: 'var(--u3)', desc: 'High and low, notes by ear at your own speed, melodies, rhythms, intervals, chord colours, scale degrees and chord changes.',
-    lessons: [['pitch', 'B'], ['meetnotes', 'B'], ['echo', 'B'], ['earsteps', 'B'], ['melodies', 'B'], ['rhythmear', 'B'], ['intervals', 'B'], ['majmin', 'B'], ['qualities', 'I'], ['degrees', 'I'], ['chordear', 'I']] },
+  { id: 'ear', title: 'Ear training', color: 'var(--u3)', desc: 'High and low, notes by ear at your own speed, singing, melodies, rhythms, intervals, chord colours, scale degrees and chord changes.',
+    lessons: [['pitch', 'B'], ['meetnotes', 'B'], ['echo', 'B'], ['singing', 'B'], ['earsteps', 'B'], ['melodies', 'B'], ['rhythmear', 'B'], ['intervals', 'B'], ['majmin', 'B'], ['qualities', 'I'], ['degrees', 'I'], ['chordear', 'I']] },
   { id: 'scales', title: 'Scales and keys', color: 'var(--u5)', desc: 'Major and minor scales, keys and key signatures, sharp and flat keys, two octaves, the circle of fifths, pentatonic, blues, modes and transposing.',
     lessons: [['scale', 'B'], ['build', 'B'], ['keysig', 'B'], ['minor', 'B'], ['circle', 'I'], ['sharpkeys', 'I'], ['flatkeys', 'I'], ['twooctaves', 'I'], ['minorkeys', 'I'], ['pentablues', 'I'], ['modes', 'I'], ['transpose', 'I']] },
   { id: 'chords', title: 'Chords and harmony', color: 'var(--u6)', desc: 'Triads, inversions, chord symbols, progressions, accompaniment patterns, arpeggios, sevenths, lead sheets, cadences, the blues and ii–V–I.',
@@ -5732,7 +5790,8 @@ function cfDrawCircle(host) {
   CF.svg = svg;
 }
 function cfPaint() {
-  const quietSel = CF.mode === 'quiz' || CF.mode === 'walk';
+  const singNoKey = CF.mode === 'sing' && !SING.key;
+  const quietSel = CF.mode === 'quiz' || CF.mode === 'walk' || singNoKey;
   const fam = quietSel ? [] : cfFamily(CF.sel);
   const wt = CF.mode === 'walk' && CF.walk ? cfWalkTarget() : null;
   CF.segEls.forEach((el, i) => {
@@ -5743,7 +5802,7 @@ function cfPaint() {
       const selected = !quietSel && CF.sel.i === i && (CF.sel.minor ? ring === 'in' : ring === 'out');
       p.classList.toggle('sel', selected);
       p.classList.toggle('fam', !!f && !selected);
-      p.classList.toggle('det', (!!CF.detect && CF.mode !== 'walk' && CF.detect.i === i && (CF.detect.minor ? ring === 'in' : ring === 'out')) || (!!wt && wt.segI === i && ring === 'out'));
+      p.classList.toggle('det', (!!CF.detect && CF.mode !== 'walk' && CF.mode !== 'sing' && CF.detect.i === i && (CF.detect.minor ? ring === 'in' : ring === 'out')) || (!!wt && wt.segI === i && ring === 'out'));
       p.classList.toggle('done', !!(CF.walk && CF.walk.doneSegs.has(i + ring)));
       p.classList.toggle('play', !!(CF.build && CF.build.cur && CF.build.cur.i === i && CF.build.cur.ring === ring));
       r.textContent = f && CF.mode !== 'walk' ? f[2] : '';
@@ -5754,12 +5813,14 @@ function cfPaint() {
   if (CF.hub) {
     const k = cfKey(CF.sel);
     if (CF.mode === 'quiz') { CF.hub.h1.textContent = 'Quiz'; CF.hub.h2.textContent = CF.quiz ? CF.quiz.score + ' right' : ''; CF.hub.h3.textContent = CF.quiz && CF.quiz.streak > 1 ? CF.quiz.streak + ' in a row' : ''; }
+    else if (singNoKey) { CF.hub.h1.textContent = 'Sing'; CF.hub.h2.textContent = 'anything'; CF.hub.h3.textContent = Voice.live ? 'I’m listening' : 'tap Start listening'; }
     else if (CF.mode === 'walk' && CF.walk) { CF.hub.h1.textContent = 'Walk'; CF.hub.h2.textContent = CF.walk.step + ' / 7'; CF.hub.h3.textContent = CF.walk.dir > 0 ? 'sharps' : 'flats'; }
     else { CF.hub.h1.textContent = CF.sel.minor ? (CF.sel.alt && k.seg.minorAlt ? k.seg.minorAlt : k.seg.minor) + ' minor' : k.name + ' major'; CF.hub.h2.textContent = k.f === 0 ? 'no ♯ or ♭' : Math.abs(k.f) + (k.f > 0 ? ' ♯' : ' ♭'); CF.hub.h3.textContent = CF.sel.minor ? 'relative of ' + k.name : 'relative: ' + (CF.sel.alt && k.seg.minorAlt ? k.seg.minorAlt : k.seg.minor) + 'm'; }
   }
 }
 function cfOnTap(i, ring, alt) {
   if (CF.mode === 'quiz') return cfQuizAnswer(i, ring, alt);
+  if (CF.mode === 'sing') { cfStop(); cfPlayChord(cfChordOf(i, ring), 1.8); return; }
   if (CF.mode === 'build' && CF.build) {
     const fam = cfFamily(CF.sel).find((x) => x[0] === i && x[1] === ring);
     if (fam) { cfBuildAdd(fam[2]); return; }
@@ -5796,6 +5857,7 @@ function cfRenderPanel() {
   else if (CF.mode === 'walk') cfWalkPanel(P);
   else if (CF.mode === 'build') cfBuildPanel(P);
   else if (CF.mode === 'quiz') cfQuizPanel(P);
+  else if (CF.mode === 'sing') singPanel(P);
 }
 function cfExplore(P) {
   const sel = CF.sel, k = cfKey(sel), sc = cfScale(sel);
@@ -5955,7 +6017,7 @@ function cfDetect() {
   return { i: best.i, minor, scale };
 }
 function cfOnInput(type, p) {
-  if (type !== 'down' || VIEW.cur !== 'circle') return;
+  if (type !== 'down' || VIEW.cur !== 'circle' || CF.mode === 'sing') return;
   CF.recent.push({ p, t: performance.now() });
   if (CF.mode === 'walk') return cfWalkInput(p);
   const d = cfDetect();
@@ -6174,32 +6236,657 @@ function cfQuizAnswer(i, ring) {
 }
 
 /* ----- page ----- */
-function cfSyncTabs() { $$('#cf-tabs button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === CF.mode))); }
+function cfSyncTabs() {
+  $$('#cf-tabs button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === CF.mode)));
+  const d = $('#cf-detect'); if (d) d.hidden = CF.mode === 'sing';
+}
+function cfKeysRange() {
+  if (!CF.keys) return;
+  const wide = window.innerWidth > 760;
+  if (CF.mode === 'sing') CF.keys.range(wide ? 36 : 48, wide ? 84 : 72); else CF.keys.range(wide ? 48 : 60, 84);
+  CF.keys.clearMarks();
+}
+function cfSetMode(m) {
+  if (CF.build && CF.build.playing) cfBuildStop();
+  cfStop();
+  if (CF.mode === 'sing' && m !== 'sing') { Voice.stop(); SING.match = null; }
+  CF.mode = m; CF.detect = null;
+  cfKeysRange(); cfSyncTabs(); cfPaint(); cfRenderPanel();
+}
 function renderCircle() {
   const v = $('#view-circle');
   cfStop();
   if (CF.keys) { CF.keys.destroy(); CF.keys = null; }
   if (CF.off) CF.off();
   v.textContent = '';
-  const tabs = h('div', { class: 'seg', id: 'cf-tabs' }, [['explore', 'Explore'], ['walk', 'Walk the circle'], ['build', 'Build a progression'], ['quiz', 'Quiz']].map(([m, l]) => h('button', { type: 'button', 'data-v': m, text: l, onclick: () => {
-    if (CF.build && CF.build.playing) cfBuildStop();
-    cfStop(); CF.mode = m; CF.detect = null; cfSyncTabs(); cfPaint(); cfRenderPanel();
-  } })));
+  const tabs = h('div', { class: 'seg', id: 'cf-tabs' }, [['explore', 'Explore'], ['sing', 'Sing: find your key'], ['walk', 'Walk the circle'], ['build', 'Build a progression'], ['quiz', 'Quiz']].map(([m, l]) => h('button', { type: 'button', 'data-v': m, onclick: () => cfSetMode(m) }, m === 'sing' ? iconEl('mic') : null, l)));
   const circleHost = h('div', { class: 'cf-circle' });
   const kd = h('div');
   v.append(
-    h('div', { class: 'sec-head' }, h('h2', { text: 'Circle of fifths' }), h('p', { text: 'All 24 keys on one wheel. Tap any key to explore it, play a scale and watch the circle find it, walk around the circle one sharp or flat at a time, build chord progressions, or quiz yourself.' })),
+    h('div', { class: 'sec-head' }, h('h2', { text: 'Circle of fifths' }), h('p', { text: 'All 24 keys on one wheel. Tap any key to explore it, play a scale or sing a song and watch the circle find its key, walk around the circle one sharp or flat at a time, build chord progressions, or quiz yourself.' })),
     h('div', { class: 'cf-detect', id: 'cf-detect', html: 'Play a few notes or a whole scale on your keyboard, and I’ll find its key on the circle.' }),
     h('div', { class: 'cf-grid' }, circleHost, h('div', { class: 'cf-side' }, tabs, h('div', { id: 'cf-panel', class: 'cf-panel' }))),
     h('div', { class: 'big-keys' }, h('div', { class: 'keys-frame' }, kd)));
   cfDrawCircle(circleHost);
   const wide = window.innerWidth > 760;
-  CF.keys = new Keys(kd, { lo: wide ? 48 : 60, hi: 84 });
+  CF.keys = new Keys(kd, CF.mode === 'sing' ? { lo: wide ? 36 : 48, hi: wide ? 84 : 72 } : { lo: wide ? 48 : 60, hi: 84 });
   CF.off = Input.on(cfOnInput);
   cfSyncTabs(); cfPaint(); cfRenderPanel();
 }
 W.circlelink = () => ({ el: h('div', { class: 'widget' }, h('p', { class: 'cap', text: 'The full interactive circle has every key signature, scale fingerings, a key detector, a walking game, a chord-progression builder and a quiz.' }),
-  h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', onclick: () => { closeLesson(); showView('circle'); } }, 'Open the Circle of fifths', iconEl('next')))) });
+  h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', onclick: () => { closeLesson(); if (CF.mode === 'sing') CF.mode = 'explore'; showView('circle'); } }, 'Open the Circle of fifths', iconEl('next')),
+    h('button', { class: 'btn', type: 'button', onclick: () => openSing('key') }, iconEl('mic'), 'Sing and find your key'))) });
+
+/* ===== 26-voice.js ===== */
+/* ---------- Sing: listen to your voice, find your key, your range, and match notes ---------- */
+const PC_CIRCLE = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
+/* Krumhansl–Kessler key profiles: how strongly each scale degree belongs to a major or minor key */
+const KK_MAJ = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88];
+const KK_MIN = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+/* common choral ranges (MIDI numbers) */
+const VOICE_TYPES = [['bass', 40, 64], ['baritone', 43, 67], ['tenor', 48, 72], ['alto', 53, 77], ['mezzo-soprano', 57, 81], ['soprano', 60, 84]];
+const median = (a) => { const b = a.slice().sort((x, y) => x - y), n = b.length; return n % 2 ? b[(n - 1) >> 1] : (b[n / 2 - 1] + b[n / 2]) / 2; };
+
+/* YIN pitch detection (de Cheveigné & Kawahara, 2002) on one window of samples */
+function yinPitch(buf, sr, d) {
+  const n = buf.length;
+  let rms = 0;
+  for (let i = 0; i < n; i++) rms += buf[i] * buf[i];
+  rms = Math.sqrt(rms / n);
+  if (rms < 0.006) return { f: 0, rms, clar: 0 };
+  const maxTau = Math.min(Math.floor(sr / 62), (n >> 1) + 200, d.length - 2), minTau = Math.max(2, Math.floor(sr / 1150));
+  const W = n - maxTau;
+  let run = 0;
+  d[0] = 1;
+  for (let tau = 1; tau <= maxTau; tau++) {
+    let sum = 0;
+    for (let j = 0; j < W; j++) { const x = buf[j] - buf[j + tau]; sum += x * x; }
+    run += sum;
+    d[tau] = run > 0 ? (sum * tau) / run : 1;
+  }
+  let tau = -1;
+  for (let t = minTau; t < maxTau; t++) {
+    if (d[t] < 0.15) { while (t + 1 < maxTau && d[t + 1] < d[t]) t++; tau = t; break; }
+  }
+  if (tau < 0) {
+    let best = 1;
+    for (let t = minTau; t < maxTau; t++) if (d[t] < best) { best = d[t]; tau = t; }
+    if (best > 0.3) return { f: 0, rms, clar: 0 };
+  }
+  const x0 = d[tau - 1], x1 = d[tau], x2 = d[tau + 1], den = x0 - 2 * x1 + x2;
+  const shift = den ? (x0 - x2) / (2 * den) : 0;
+  return { f: sr / (tau + (Math.abs(shift) < 1 ? shift : 0)), rms, clar: 1 - x1 };
+}
+
+/* the microphone: one shared engine, ~30 pitch readings a second */
+const Voice = {
+  live: false, starting: false, err: null, stream: null, nodes: null, buf: null, d: null, byteBuf: null,
+  timer: 0, subs: new Set(), hist: [], miss: 0, glitch: 0, lastT: 0, level: 0,
+  async start() {
+    if (this.live || this.starting) return this.live;
+    const md = navigator.mediaDevices;
+    if (!md || !md.getUserMedia || window.isSecureContext === false) { this.err = 'unsupported'; return false; }
+    const c = Piano.ensure();
+    if (!c) { this.err = 'unsupported'; return false; }
+    this.starting = true;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'play-and-record'; } catch (e) { /* older Safari */ }
+    try {
+      this.stream = await md.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    } catch (e) {
+      this.starting = false;
+      this.restoreSession();
+      const n = e && e.name;
+      this.err = n === 'NotAllowedError' || n === 'SecurityError' || n === 'PermissionDeniedError' ? 'denied' : n === 'NotFoundError' || n === 'OverconstrainedError' ? 'nomic' : 'failed';
+      return false;
+    }
+    try { await c.resume(); } catch (e) { /* resumes on next tap */ }
+    const src = c.createMediaStreamSource(this.stream);
+    const an = c.createAnalyser(); an.fftSize = 2048; an.smoothingTimeConstant = 0;
+    const sink = c.createGain(); sink.gain.value = 0;
+    src.connect(an); an.connect(sink); sink.connect(c.destination);
+    this.nodes = { src, an, sink };
+    this.buf = new Float32Array(an.fftSize);
+    this.d = new Float32Array(an.fftSize);
+    this.byteBuf = typeof an.getFloatTimeDomainData === 'function' ? null : new Uint8Array(an.fftSize);
+    this.hist = []; this.miss = 0; this.glitch = 0; this.level = 0; this.lastT = performance.now();
+    this.live = true; this.starting = false; this.err = null;
+    this.timer = setInterval(() => this.tick(), 33);
+    const tr = this.stream.getAudioTracks()[0];
+    if (tr) tr.addEventListener('ended', () => { this.stop(); this.emit({ ended: true }); });
+    return true;
+  },
+  restoreSession() { try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* older Safari */ } },
+  stop() {
+    if (!this.live && !this.stream) return;
+    clearInterval(this.timer); this.timer = 0;
+    if (this.nodes) { Object.values(this.nodes).forEach((n) => { try { n.disconnect(); } catch (e) { /* gone */ } }); this.nodes = null; }
+    if (this.stream) { this.stream.getTracks().forEach((t) => t.stop()); this.stream = null; }
+    this.live = false; this.hist = []; this.level = 0;
+    this.restoreSession();
+    this.emit({ ended: true });
+  },
+  listen(fn) { this.subs.add(fn); return () => this.subs.delete(fn); },
+  emit(fr) { this.subs.forEach((fn) => { try { fn(fr); } catch (e) { console.error(e); } }); },
+  /* one reading; `gated` while the app's own piano is sounding so we don't hear ourselves */
+  tick() {
+    const now = performance.now(), dt = Math.min(0.12, (now - this.lastT) / 1000);
+    this.lastT = now;
+    const c = Piano.ctx, an = this.nodes && this.nodes.an;
+    if (!c || !an) return;
+    if (this.byteBuf) { an.getByteTimeDomainData(this.byteBuf); for (let i = 0; i < this.buf.length; i++) this.buf[i] = (this.byteBuf[i] - 128) / 128; }
+    else an.getFloatTimeDomainData(this.buf);
+    const gated = c.currentTime < (Piano.busyUntil || 0) + 0.3;
+    const fr = { t: now, dt, m: null, rms: 0, gated };
+    if (!gated) {
+      const r = yinPitch(this.buf, c.sampleRate, this.d);
+      fr.rms = r.rms;
+      if (r.f > 0 && r.clar > 0.8) {
+        const m = 69 + 12 * Math.log2(r.f / 440), H = this.hist;
+        const med = H.length ? median(H) : m;
+        if (H.length >= 3 && Math.abs(m - med) > 7 && this.glitch < 3) { this.glitch++; fr.m = med; }
+        else { if (this.glitch >= 3) H.length = 0; this.glitch = 0; H.push(m); if (H.length > 5) H.shift(); fr.m = median(H); }
+        this.miss = 0;
+      } else if (++this.miss > 2) { this.hist = []; this.glitch = 0; }
+    } else { this.hist = []; }
+    this.level = this.level * 0.7 + fr.rms * 0.3;
+    this.emit(fr);
+  },
+};
+document.addEventListener('visibilitychange', () => { if (document.hidden && Voice.live) Voice.stop(); });
+
+/* ----- what we've heard ----- */
+const SING = { sub: 'key', frames: [], trace: [], cur: null, silent: 0, lo: null, hi: null, analysis: null, key: null, cand: null, runs: 0, conf: '', lastEval: 0, view: 57, match: null, matchLevel: 'white', col: null, shownKey: null };
+const keyPcSet = (K) => new Set((K.minor ? [0, 2, 3, 5, 7, 8, 10] : [0, 2, 4, 5, 7, 9, 11]).map((v) => (K.tonic + v) % 12));
+const keySeg = (K) => CF_SEGS.find((sg) => (K.minor ? sg.mpc : sg.pc) === K.tonic);
+const keyF = (K) => (K ? keySeg(K).main[1] : 0);
+const keyName = (K) => { const sg = keySeg(K); return K.minor ? sg.minor + ' minor' : sg.main[0] + ' major'; };
+const pcName = (pc, f) => (f < 0 ? PC_FLAT : PC_SHARP)[pc];
+function singReset(what) {
+  const S = SING;
+  if (what !== 'range') { S.frames = []; S.analysis = null; S.key = null; S.cand = null; S.runs = 0; S.conf = ''; S.shownKey = null; }
+  if (what !== 'key') { S.lo = null; S.hi = null; }
+}
+function pearson(x, y) {
+  let mx = 0, my = 0;
+  for (let i = 0; i < 12; i++) { mx += x[i]; my += y[i]; }
+  mx /= 12; my /= 12;
+  let sxy = 0, sxx = 0, syy = 0;
+  for (let i = 0; i < 12; i++) { const a = x[i] - mx, b = y[i] - my; sxy += a * b; sxx += a * a; syy += b * b; }
+  return sxx && syy ? sxy / Math.sqrt(sxx * syy) : 0;
+}
+/* duration-weighted note histogram (corrected for the singer's own tuning), matched against all 24 keys */
+function singAnalyse() {
+  const F = SING.frames;
+  let tot = 0, sx = 0, sy = 0;
+  for (const [m, dt] of F) { tot += dt; const a = 2 * Math.PI * m; sx += Math.cos(a) * dt; sy += Math.sin(a) * dt; }
+  const hist = new Array(12).fill(0);
+  if (tot < 0.2) return { tot, off: 0, hist, used: 0, best: null, all: [] };
+  const off = Math.atan2(sy, sx) / (2 * Math.PI);
+  for (const [m, dt] of F) hist[pcOf(Math.round(m - off))] += dt;
+  const used = hist.filter((x) => x >= tot * 0.03).length;
+  const out = { tot, off, hist, used, best: null, all: [] };
+  if (tot < 3 || used < 4) return out;
+  for (let t = 0; t < 12; t++) for (const minor of [false, true]) {
+    const prof = minor ? KK_MIN : KK_MAJ;
+    out.all.push({ tonic: t, minor, r: pearson(hist, prof.map((_, k) => prof[(k - t + 12) % 12])) });
+  }
+  out.all.sort((a, b) => b.r - a.r);
+  out.best = out.all[0];
+  return out;
+}
+function singEvaluate() {
+  const S = SING, A = singAnalyse();
+  S.analysis = A;
+  const same = (a, b) => a && b && a.tonic === b.tonic && a.minor === b.minor;
+  if (A.best) {
+    const b = A.best;
+    if (!S.key || same(b, S.key)) { S.key = b; S.cand = null; S.runs = 0; }
+    else {
+      const curR = (A.all.find((x) => same(x, S.key)) || { r: -1 }).r;
+      if (same(S.cand, b)) S.runs++; else { S.cand = b; S.runs = 1; }
+      if (S.runs >= 3 || b.r - curR > 0.12) { S.key = b; S.cand = null; S.runs = 0; }
+      else S.key = A.all.find((x) => same(x, S.key)) || S.key;
+    }
+    const K = S.key;
+    const twinT = K.minor ? (K.tonic + 3) % 12 : (K.tonic + 9) % 12;
+    const twin = A.all.find((x) => x.tonic === twinT && x.minor !== K.minor);
+    const rival = A.all.find((x) => !same(x, K) && x !== twin) || { r: 0 };
+    S.twinClose = !!twin && K.r - twin.r < 0.07;
+    S.conf = K.r >= 0.75 && K.r - rival.r >= 0.1 ? 'very likely' : K.r >= 0.6 && K.r - rival.r >= 0.04 ? 'likely' : 'best guess so far';
+  }
+  if (CF.mode === 'sing') {
+    if (S.key) {
+      const sg = keySeg(S.key), sel = { i: sg.i, minor: S.key.minor, alt: false };
+      if (CF.sel.i !== sel.i || CF.sel.minor !== sel.minor || CF.sel.alt) { CF.sel = sel; cfPaint(); singMarks(); }
+    }
+    if (S.sub === 'key') singKeyUpdate();
+  }
+}
+
+/* one pitch reading from the microphone */
+function singOnFrame(fr) {
+  const S = SING;
+  if (fr.ended) { S.cur = null; singUI(); singDraw(); return; }
+  S.trace.push({ t: fr.t, m: fr.m });
+  while (S.trace.length && fr.t - S.trace[0].t > 9000) S.trace.shift();
+  if (fr.m != null) {
+    S.silent = 0;
+    const n = Math.round(fr.m);
+    if (S.cur && Math.abs(fr.m - S.cur.n) < 0.7) S.cur.dur += fr.dt;
+    else { singEndNote(); S.cur = { n, dur: fr.dt }; }
+    const c = S.cur;
+    if (c.dur >= 0.09) {
+      S.frames.push([fr.m, fr.dt]);
+      if (S.frames.length > 5400) S.frames.splice(0, 600);
+      if (!c.shown) { c.shown = true; singMarks(); }
+    }
+    if (c.dur >= 0.35 && c.n >= 36 && c.n <= 96 && !c.ranged) {
+      c.ranged = true;
+      let ch = false;
+      if (S.lo == null || c.n < S.lo) { S.lo = c.n; ch = true; }
+      if (S.hi == null || c.n > S.hi) { S.hi = c.n; ch = true; }
+      if (ch && CF.mode === 'sing' && S.sub === 'range') { singRangeFill(); singMarks(); }
+    }
+  } else {
+    S.silent += fr.dt;
+    if (S.silent > 0.12 && S.cur) singEndNote();
+  }
+  if (S.match) matchFrame(fr);
+  singLive(fr);
+  if (fr.t - S.lastEval > 450) { S.lastEval = fr.t; singEvaluate(); }
+}
+Voice.listen(singOnFrame);
+function singEndNote() { if (!SING.cur) return; const was = SING.cur.shown; SING.cur = null; if (was) singMarks(); }
+
+/* keyboard: your key's notes, your range, and the note you're singing right now */
+function singMarks() {
+  const K = CF.keys, S = SING;
+  if (!K || CF.mode !== 'sing') return;
+  K.clearMarks();
+  if (S.sub === 'range' && S.lo != null) { for (let p = S.lo; p <= S.hi; p++) K.mark(p, 'faint'); K.mark(S.lo, 'root', 'low'); K.mark(S.hi, 'root', 'high'); }
+  else if (S.sub === 'key' && S.key) { const f = keyF(S.key); K.els.forEach((el, p) => { if (pcOf(p) === S.key.tonic) K.mark(p, 'root', nameOf(p, false, f)); }); }
+  if (S.match && S.match.target != null && (S.match.show || S.match.state === 'done')) K.mark(S.match.target, 'u2', nameOf(S.match.target, false));
+  if (S.cur && S.cur.shown) K.mark(S.cur.n, 'accent', nameOf(S.cur.n, true, keyF(S.key)));
+}
+
+/* ----- live readout: note name, tuning needle, level, and the pitch line ----- */
+function singLive(fr) {
+  const nEl = $('#sg-note');
+  if (nEl) {
+    if (fr.m != null) {
+      const n = Math.round(fr.m), cents = Math.round((fr.m - n) * 100);
+      nEl.textContent = nameOf(n, true, keyF(SING.key));
+      nEl.classList.remove('dim');
+      $('#sg-cents').textContent = (cents > 0 ? '+' : cents < 0 ? '−' : '±') + Math.abs(cents) + '¢ ' + (Math.abs(cents) <= 15 ? 'in tune' : cents < 0 ? 'a bit flat' : 'a bit sharp');
+      $('#sg-needle').style.left = clamp(50 + cents, 2, 98) + '%';
+      $('#sg-needle').classList.toggle('ok', Math.abs(cents) <= 15);
+    } else if (!fr.gated) {
+      nEl.classList.add('dim');
+      $('#sg-cents').textContent = Voice.live ? (Voice.level > 0.02 ? 'Hearing sound, but no clear note' : 'Sing or hum…') : '';
+    } else { $('#sg-cents').textContent = 'Pausing while the piano plays…'; }
+    const lv = $('#sg-level'); if (lv) lv.style.width = clamp(Math.sqrt(Voice.level) * 260, 0, 100) + '%';
+  }
+  singDraw();
+}
+function singColors() {
+  const v = (n) => cssVar(n) || '#888888';
+  return { ink: v('--ink'), muted: v('--muted'), rule: v('--rule'), accent: v('--accent'), u6: v('--u6'), u2: v('--u2'), good: v('--good'), card: v('--card'), paper: v('--paper'), well: v('--well') };
+}
+function singDraw() {
+  const cv = $('#sg-trace'); if (!cv) return;
+  const S = SING, dpr = Math.min(2, window.devicePixelRatio || 1);
+  const W = cv.clientWidth, H = cv.clientHeight; if (!W || !H) return;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const C = S.col || (S.col = singColors());
+  const now = performance.now(), T = 7000, gut = 42, right = W - 16;
+  const M = S.match && S.match.target != null ? S.match : null;
+  const recent = S.trace.filter((p) => p.m != null && now - p.t < 2500).map((p) => p.m);
+  let want = recent.length ? median(recent) : M ? M.target + 12 * Math.round((S.view - M.target) / 12) : S.view;
+  if (M && recent.length) { const tg = M.target + 12 * Math.round((want - M.target) / 12); want = (want + tg) / 2; }
+  S.view += (want - S.view) * (Math.abs(want - S.view) > 9 ? 0.5 : 0.07);
+  const span = 15, lo = S.view - span / 2, rowH = H / span, y = (m) => H - ((m - lo) / span) * H;
+  g.globalAlpha = 1; g.fillStyle = C.card; g.fillRect(0, 0, W, H);
+  const K = S.sub === 'key' ? S.key : null, set = K ? keyPcSet(K) : null, f = keyF(K);
+  for (let n = Math.floor(lo) - 1; n <= Math.ceil(lo + span) + 1; n++) {
+    const yc = y(n), pc = pcOf(n);
+    let col = null, a = 0;
+    if (set && set.has(pc)) { col = pc === K.tonic ? C.accent : C.u6; a = pc === K.tonic ? 0.2 : 0.11; }
+    else if (isBlack(pc)) { col = C.ink; a = 0.045; }
+    if (col) { g.globalAlpha = a; g.fillStyle = col; g.fillRect(gut, yc - rowH / 2, W - gut, rowH); }
+    g.globalAlpha = 1;
+    if (!isBlack(pc) || (set && set.has(pc))) {
+      const strong = pc === 0 || (K && pc === K.tonic);
+      g.fillStyle = K && pc === K.tonic ? C.accent : strong ? C.ink : C.muted;
+      g.font = (strong ? '700 ' : '500 ') + Math.max(9, Math.min(12, rowH * 0.85)) + 'px Figtree, system-ui, sans-serif';
+      g.textBaseline = 'middle';
+      g.fillText(nameOf(n, true, f), 6, yc);
+    }
+  }
+  g.globalAlpha = 1; g.fillStyle = C.rule; g.fillRect(gut - 1, 0, 1, H);
+  if (M) {
+    for (let k = -3; k <= 3; k++) {
+      const tm = M.target + 12 * k; if (tm < lo - 1 || tm > lo + span + 1) continue;
+      g.globalAlpha = M.state === 'done' ? 0.4 : 0.24; g.fillStyle = M.state === 'done' ? C.good : C.u2;
+      g.fillRect(gut, y(tm) - rowH * 0.45, W - gut, rowH * 0.9);
+      g.globalAlpha = 0.9; g.strokeStyle = M.state === 'done' ? C.good : C.u2; g.lineWidth = 1.5; g.setLineDash([6, 5]);
+      g.beginPath(); g.moveTo(gut, y(tm)); g.lineTo(W, y(tm)); g.stroke(); g.setLineDash([]);
+    }
+    g.globalAlpha = 1;
+  }
+  g.strokeStyle = C.ink; g.lineWidth = 3; g.lineCap = 'round'; g.lineJoin = 'round';
+  g.beginPath();
+  let on = false, last = null;
+  for (const p of S.trace) {
+    const x = gut + (1 - (now - p.t) / T) * (right - gut);
+    if (x < gut || p.m == null) { on = false; continue; }
+    const yy = y(p.m);
+    if (on && last && Math.abs(p.m - last) > 1.2) on = false;
+    if (!on) { g.moveTo(x, yy); on = true; } else g.lineTo(x, yy);
+    last = p.m;
+  }
+  g.stroke();
+  const tail = S.trace[S.trace.length - 1];
+  if (tail && tail.m != null && now - tail.t < 200) {
+    g.fillStyle = C.accent; g.beginPath(); g.arc(right, y(tail.m), 6.5, 0, Math.PI * 2); g.fill();
+  }
+  if (!Voice.live) {
+    g.globalAlpha = 0.86; g.fillStyle = C.card; g.fillRect(gut, 0, W - gut, H); g.globalAlpha = 1;
+    g.fillStyle = C.muted; g.font = '600 15px Figtree, system-ui, sans-serif'; g.textAlign = 'center';
+    g.fillText(S.trace.length ? 'Paused. Tap Start listening to carry on.' : 'Your voice draws a line here as you sing.', (gut + W) / 2, H / 2);
+    g.textAlign = 'start';
+  }
+}
+
+/* ----- the panel ----- */
+async function singStartMic() {
+  const st = $('#sg-status'); if (st) st.textContent = 'Asking to use the microphone…';
+  const ok = await Voice.start();
+  singUI();
+  return ok;
+}
+async function singToggle() {
+  Piano.ensure();
+  if (Voice.live) { Voice.stop(); if (SING.match) { SING.match.state = 'idle'; matchUI(); } singUI(); return; }
+  await singStartMic();
+}
+function singUI() {
+  const go = $('#sg-go'); if (!go) return;
+  go.textContent = '';
+  go.append(Voice.live ? h('span', { text: '■' }) : iconEl('mic'), Voice.live ? 'Stop listening' : 'Start listening');
+  go.classList.toggle('primary', !Voice.live);
+  const st = $('#sg-status');
+  st.textContent = Voice.live ? 'Listening. Sing or hum.' : '';
+  st.classList.toggle('on', Voice.live);
+  const help = $('#sg-help'); help.textContent = '';
+  const e = Voice.live ? null : Voice.err;
+  if (e) {
+    let msg;
+    if (e === 'denied' && IN_VIEWER) msg = 'This preview can’t use your microphone. Open Keystone from your own link and sing there. (Move your progress across with a save file in Settings.)';
+    else if (e === 'denied') msg = IS_IOS ? 'The microphone is blocked. In Safari, tap the aA (or page) icon in the address bar, choose Website Settings, set Microphone to Allow, then tap Start listening again. In another browser app, allow the microphone in that app’s settings.' : 'The microphone is blocked. Click the icon at the left of the address bar, allow the microphone, then tap Start listening again.';
+    else if (e === 'nomic') msg = 'No microphone was found. Plug one in, or use the one built into your iPad.';
+    else if (e === 'unsupported') msg = 'This browser can’t listen to the microphone here.' + (IN_VIEWER ? ' Open Keystone from your own link instead.' : ' Try Safari or Chrome.');
+    else msg = 'The microphone didn’t start. Close other apps that might be using it, then try again.';
+    help.append(h('div', { class: 'sg-err' }, h('p', { text: msg }),
+      IN_VIEWER || e === 'unsupported' ? h('div', { class: 'copy-row' }, h('input', { readonly: true, value: HOSTED_COPY, 'aria-label': 'App link' }),
+        h('button', { class: 'btn small', type: 'button', onclick: (ev) => { const inp = ev.target.closest('.copy-row').querySelector('input'); try { navigator.clipboard.writeText(inp.value).then(() => toast('Link copied.'), () => inp.select()); } catch (er) { inp.select(); } } }, 'Copy'),
+        h('a', { class: 'btn small primary', href: HOSTED_COPY, target: '_blank', rel: 'noopener' }, 'Open')) : null));
+  } else if (!Voice.live) {
+    help.append(h('p', { class: 'cap', text: 'Your iPad will ask to use the microphone. Nothing is recorded or sent anywhere: Keystone only measures the pitch, right here. Sing in a quiet room, about an arm’s length away. Humming works too.' }));
+  }
+  singDraw();
+}
+function singPanel(P) {
+  SING.col = null;
+  const mic = h('div', { class: 'cf-card sg-mic' },
+    h('div', { class: 'sg-top' }, h('button', { class: 'btn primary', type: 'button', id: 'sg-go', onclick: singToggle }), h('span', { class: 'sg-status', id: 'sg-status' })),
+    h('div', { class: 'sg-tuner' },
+      h('div', { class: 'sg-note dim', id: 'sg-note', text: '–' }),
+      h('div', { class: 'sg-tmeta' },
+        h('div', { class: 'sg-meter', 'aria-hidden': 'true' }, h('b'), h('i', { id: 'sg-needle' })),
+        h('div', { class: 'sg-cents', id: 'sg-cents' }),
+        h('div', { class: 'sg-level', 'aria-hidden': 'true', title: 'Microphone level' }, h('i', { id: 'sg-level' })))),
+    h('canvas', { class: 'sg-trace', id: 'sg-trace', role: 'img', 'aria-label': 'Your pitch over the last few seconds' }),
+    h('div', { id: 'sg-help' }));
+  const seg = h('div', { class: 'seg', id: 'sg-tabs' }, [['key', 'Find my key'], ['range', 'My range'], ['match', 'Match the note']].map(([v, l]) => h('button', { type: 'button', 'data-v': v, text: l, 'aria-pressed': String(SING.sub === v), onclick: () => {
+    if (SING.sub === v) return;
+    SING.sub = v;
+    if (v !== 'match' && SING.match) { SING.match = null; cfStop(); }
+    cfPaint(); cfRenderPanel();
+  } })));
+  P.append(mic, seg, h('div', { id: 'sg-sub', class: 'cf-panel' }));
+  const box = $('#sg-sub');
+  if (SING.sub === 'key') singKeyBuild(box);
+  else if (SING.sub === 'range') { box.append(h('div', { class: 'cf-card', id: 'sg-rangecard' })); singRangeFill(); }
+  else { box.append(h('div', { class: 'cf-card', id: 'sg-matchcard' })); matchUI(); }
+  singUI(); singMarks();
+}
+
+/* Find my key */
+const SING_IDEAS = [
+  ['Same song, new key', 'Sing a song, press Start over, then sing it again starting higher or lower. Watch the circle jump to a new key. That’s called transposing.'],
+  ['Happy or sad?', 'Sing a cheerful tune, then a sad one. Happy songs usually land on the outer ring (major keys), sad ones on the inner ring (minor keys).'],
+  ['Find home', 'When I find your key, press Play the home note and hum along. Most songs end right on it.'],
+  ['Sing a scale', 'Sing do re mi fa sol la ti do, slowly. The circle should land on the note you started on.'],
+  ['Hum over a chord', 'Tap any lit chord on the circle and hum one of its notes while it rings.'],
+];
+function singKeyBuild(box) {
+  box.append(h('div', { class: 'cf-card', id: 'sg-keycard' },
+    h('p', { class: 'eyebrow', id: 'sg-k-eye' }), h('h3', { class: 'cf-title', id: 'sg-k-title' }), h('p', { id: 'sg-k-sub' }),
+    h('div', { class: 'sg-prog', id: 'sg-k-progwrap' }, h('i', { id: 'sg-k-prog' })),
+    h('div', { class: 'sg-bars', id: 'sg-bars' }, PC_CIRCLE.map((pc) => h('div', { class: 'sg-bar', 'data-pc': pc }, h('div', { class: 'sg-col' }, h('i')), h('span')))),
+    h('p', { class: 'cap', id: 'sg-k-cap' }),
+    h('div', { class: 'row', id: 'sg-k-act' })),
+  h('div', { class: 'cf-card cf-tip' }, h('p', { class: 'eyebrow', text: 'Things to try' }),
+    h('ul', { class: 'sg-ideas' }, SING_IDEAS.map(([t, x]) => h('li', null, h('b', { text: t + (/[?!.]$/.test(t) ? ' ' : '. ') }), x)))));
+  SING.shownKey = undefined;
+  singKeyUpdate();
+}
+function singKeyUpdate() {
+  const eye = $('#sg-k-eye'); if (!eye) return;
+  const S = SING, A = S.analysis, K = S.key;
+  const tot = A ? A.tot : 0, used = A ? A.used : 0;
+  const hist = A ? A.hist : new Array(12).fill(0), mx = Math.max(0.001, ...hist);
+  const set = K ? keyPcSet(K) : null, f = keyF(K);
+  $$('#sg-bars .sg-bar').forEach((el) => {
+    const pc = +el.dataset.pc;
+    el.querySelector('i').style.height = Math.round((hist[pc] / mx) * 100) + '%';
+    el.querySelector('span').textContent = pcName(pc, f);
+    el.dataset.k = !set ? '' : pc === K.tonic ? 'home' : set.has(pc) ? 'in' : 'out';
+  });
+  const sig = K ? K.tonic + (K.minor ? 'm' : 'M') : 'none';
+  const act = $('#sg-k-act');
+  if (!K) {
+    eye.textContent = Voice.live ? 'Listening…' : 'Find my key';
+    $('#sg-k-title').textContent = tot > 0.3 ? 'Keep singing…' : 'Sing or hum any song';
+    $('#sg-k-sub').textContent = tot <= 0.3
+      ? (Voice.live ? 'Try a tune you know well: Happy Birthday, a chorus you love, anything. Keep going for 10 to 20 seconds.' : 'Tap Start listening, then sing a tune you know well for 10 to 20 seconds.')
+      : used < 4 ? 'I’ve heard ' + used + ' different note' + (used === 1 ? '' : 's') + ' so far. Keep going and I’ll work out the key.' : 'Almost there…';
+    $('#sg-k-progwrap').hidden = false;
+    $('#sg-k-prog').style.width = Math.round(clamp(Math.min(tot / 3, 1) * 0.6 + Math.min(used / 4, 1) * 0.4, 0, 1) * 100) + '%';
+    $('#sg-k-cap').textContent = 'Each bar is one of the 12 notes, in circle-of-fifths order. The longer you sing a note, the taller its bar grows.';
+  } else {
+    const sg = keySeg(K), name = keyName(K), tonicName = pcName(K.tonic, f);
+    eye.textContent = 'You’re singing in';
+    $('#sg-k-title').textContent = name;
+    const twin = K.minor ? sg.main[0] + ' major' : sg.minor + ' minor';
+    $('#sg-k-sub').textContent = sigText(f).replace(/^./, (c) => c.toUpperCase()) + ' · ' + S.conf + '.' + (S.twinClose ? ' It could also be its twin, ' + twin + ': same notes, different home note.' : '');
+    $('#sg-k-progwrap').hidden = true;
+    const offC = Math.round(A.off * 100);
+    $('#sg-k-cap').textContent = 'Look at the bars: the notes you sang bunch together in one slice of the circle. Those seven neighbours (shaded) are the notes of ' + name + ', and ' + tonicName + ' is home. A key is just that: a home note and its family.' + (Math.abs(offC) >= 20 ? ' (You sing about ' + Math.abs(offC) + ' cents ' + (offC > 0 ? 'sharp' : 'flat') + ' of the piano’s tuning. That’s normal, and I allow for it.)' : '');
+  }
+  if (S.shownKey !== sig) {
+    S.shownKey = sig;
+    act.textContent = '';
+    if (K) {
+      const sel = { i: keySeg(K).i, minor: K.minor, alt: false };
+      act.append(
+        h('button', { class: 'btn small primary', type: 'button', onclick: () => singHome() }, iconEl('play'), 'Play the home note'),
+        h('button', { class: 'btn small', type: 'button', onclick: () => cfPlayCadence(sel) }, iconEl('play'), 'Hear the key'),
+        h('button', { class: 'btn small', type: 'button', onclick: () => { Voice.stop(); CF.sel = sel; cfSetMode('explore'); } }, 'Explore ' + keyName(K), iconEl('next')));
+    }
+    act.append(h('button', { class: 'btn small quiet', type: 'button', onclick: () => { singReset('key'); CF.sel = { i: 0, minor: false, alt: false }; cfPaint(); singMarks(); singKeyUpdate(); singDraw(); } }, iconEl('replay'), 'Start over'));
+  }
+}
+function singHome() {
+  const K = SING.key; if (!K) return;
+  cfStop();
+  const recent = SING.trace.filter((p) => p.m != null).map((p) => p.m);
+  const centre = recent.length ? median(recent) : SING.view;
+  let t = K.tonic + 12 * Math.round((centre - K.tonic) / 12);
+  t = clamp(t, 43, 79);
+  Piano.chord([t - 12, t - 5, t], 2.4, 0.5);
+  if (CF.keys) CF.keys.flash(t, 'good', 2400);
+  toast('That’s ' + nameOf(t, false, keyF(K)) + ', the home note of ' + keyName(K) + '. Hum it, then sing your song’s last line: does it land here?', 6000);
+}
+
+/* My range */
+function singRangeFill() {
+  const card = $('#sg-rangecard'); if (!card) return;
+  const S = SING;
+  card.textContent = '';
+  card.append(h('p', { class: 'eyebrow', text: 'My range' }));
+  if (S.lo == null) {
+    card.append(h('h3', { class: 'cf-title', text: 'How low and high can you sing?' }),
+      h('ol', { class: 'sg-steps' },
+        h('li', { text: 'Tap Start listening.' }),
+        h('li', { text: 'Sing a comfortable “ooh” and slide slowly down, as low as feels easy. Hold your lowest note for a second.' }),
+        h('li', { text: 'Now slide up as high as feels easy and hold that note too.' })),
+      h('p', { class: 'cap', text: 'Never push or strain. A comfortable range is what matters for choosing keys.' }));
+    return;
+  }
+  const span = S.hi - S.lo, oct = Math.floor(span / 12), rest = span % 12;
+  const sizeTxt = span === 0 ? 'Just one note so far. Slide down low, then up high.' : 'That’s ' + span + ' half step' + (span === 1 ? '' : 's') + (oct ? ' (' + (oct === 1 ? 'one octave' : oct + ' octaves') + (rest ? ' and ' + rest + ' more' : '') + ')' : '') + '.';
+  const items = [{ notes: [spell(S.lo)], dur: 'w', label: nameOf(S.lo) }];
+  if (span) items.push({ notes: [spell(S.hi)], dur: 'w', label: nameOf(S.hi) });
+  card.append(h('h3', { class: 'cf-title', text: nameOf(S.lo) + (span ? ' to ' + nameOf(S.hi) : '') }),
+    h('p', { text: sizeTxt }),
+    h('div', { class: 'stf-wrap' }, Staff({ clef: 'grand', sp: 7, items, gap: 5, minWidth: 180 })));
+  if (span >= 12) {
+    const scored = VOICE_TYPES.map(([nm, a, b]) => { const ov = Math.max(0, Math.min(b, S.hi) - Math.max(a, S.lo)), un = Math.max(b, S.hi) - Math.min(a, S.lo); return { nm, a, b, s: ov / un }; }).sort((x, y) => y.s - x.s);
+    const v = scored[0];
+    card.append(h('p', { html: 'Your range so far is closest to a typical <b>' + v.nm + '</b> range (' + nameOf(v.a) + '–' + nameOf(v.b) + '). Ranges overlap a lot and grow with practice, so take this as a rough guide.' }));
+  }
+  if (span >= 4) {
+    const mid = Math.round((S.lo + S.hi) / 2);
+    card.append(h('p', { html: 'The middle of your voice is around <b>' + nameOf(mid) + '</b>. Songs whose tunes stay near there will feel easiest.' }));
+  }
+  const fits = [];
+  for (let t = S.lo; t + 12 <= S.hi && fits.length < 12; t++) fits.push(t);
+  if (fits.length) {
+    card.append(h('p', { class: 'eyebrow', text: 'Scales that fit your voice' }),
+      h('p', { class: 'cap', text: 'Each of these major scales fits inside your range. Tap one to hear it, then sing it back and watch your line climb the rows.' }),
+      h('div', { class: 'row sg-chips' }, fits.map((t) => h('button', { class: 'btn small', type: 'button', text: nameOf(t, true, CF_SEGS.find((sg) => sg.pc === pcOf(t)).main[1]) + ' major', onclick: () => singPlayScale(t) }))));
+  } else if (span > 0) card.append(h('p', { class: 'cap', text: 'Once your range spans an octave (12 half steps), I’ll show which scales fit it.' }));
+  card.append(h('div', { class: 'row' }, h('button', { class: 'btn small quiet', type: 'button', onclick: () => { singReset('range'); singRangeFill(); singMarks(); } }, iconEl('replay'), 'Measure again')));
+}
+function singPlayScale(t) {
+  cfStop();
+  const f = CF_SEGS.find((sg) => sg.pc === pcOf(t)).main[1];
+  const ps = SCALES.major.iv.map((v) => t + v).concat(t + 12);
+  CF.seq = Piano.sequence(ps.map((p, j) => ({ p, t: j * 0.6, d: 0.58 })), { onNote: (e) => { if (CF.keys) CF.keys.flash(e.p, 'good', 560); } });
+  toast(nameOf(t, true, f) + ' major. Now sing it back: ' + ps.map((p) => nameOf(p, false, f)).join(' '), 6500);
+}
+
+/* Match the note */
+function matchRange() {
+  const S = SING;
+  if (S.lo != null && S.hi - S.lo >= 9) return [S.lo + 2, S.hi - 2];
+  return [52, 64];
+}
+function matchStart() {
+  SING.match = { target: null, state: 'idle', hold: 0, score: 0, streak: 0, best: store.get('singBest', 0), d: null, k: 0, show: false };
+  matchNext();
+}
+function matchNext() {
+  const M = SING.match; if (!M) return;
+  const [a, b] = matchRange(), pool = [];
+  for (let p = a; p <= b; p++) if (SING.matchLevel === 'any' || !isBlack(p)) pool.push(p);
+  let t = pick(pool);
+  for (let k = 0; k < 6 && pool.length > 1 && t === M.target; k++) t = pick(pool);
+  M.target = t; M.show = false;
+  matchPlay();
+}
+function matchPlay() {
+  const M = SING.match; if (!M) return;
+  cfStop();
+  M.state = 'listen'; M.hold = 0; M.d = null;
+  Piano.play(M.target, 0.72, 0, 1.0);
+  cfLater(() => { if (SING.match === M && M.state === 'listen') { M.state = 'sing'; matchUI(); } }, 1900);
+  matchUI(); singMarks();
+}
+function matchFrame(fr) {
+  const M = SING.match; if (!M || M.state !== 'sing') return;
+  if (fr.m == null) { M.hold = Math.max(0, M.hold - fr.dt); M.d = null; matchFeedback(); return; }
+  const diff = fr.m - M.target, k = Math.round(diff / 12), d = diff - 12 * k;
+  M.k = k; M.d = d;
+  if (Math.abs(d) <= 0.45) M.hold += fr.dt; else M.hold = Math.max(0, M.hold - fr.dt * 2);
+  matchFeedback();
+  if (M.hold >= 0.7) matchWin();
+}
+function matchFeedback() {
+  const M = SING.match, fb = $('#sg-m-fb'); if (!M || !fb) return;
+  const hb = $('#sg-m-hold'); if (hb) hb.style.width = Math.round(clamp(M.hold / 0.7, 0, 1) * 100) + '%';
+  if (M.state !== 'sing') return;
+  const d = M.d;
+  if (d == null) { fb.className = 'feedback'; fb.textContent = Voice.live ? 'Sing or hum the note you heard, and hold it.' : 'Tap Start listening first.'; return; }
+  const c = Math.round(d * 100);
+  if (Math.abs(d) <= 0.45) { fb.className = 'feedback good'; fb.textContent = 'That’s it! Hold it…'; return; }
+  fb.className = 'feedback bad';
+  const how = Math.abs(d) < 1.5 ? 'A little ' : Math.abs(d) < 4 ? '' : 'Much ';
+  fb.textContent = (d < 0 ? how + (how ? 'higher' : 'Higher') + ' ↑' : how + (how ? 'lower' : 'Lower') + ' ↓') + '  (' + (c > 0 ? '+' : '−') + Math.abs(c) + '¢)';
+}
+function matchWin() {
+  const M = SING.match;
+  M.state = 'done'; M.score++; M.streak++;
+  if (M.streak > M.best) { M.best = M.streak; store.set('singBest', M.best); }
+  if (CF.keys) CF.keys.flash(M.target, 'good', 1200);
+  matchUI(); singMarks();
+  cfLater(() => { if (SING.match === M && M.state === 'done') matchNext(); }, 2600);
+}
+function matchUI() {
+  const card = $('#sg-matchcard'); if (!card) return;
+  card.textContent = '';
+  const M = SING.match;
+  const level = h('div', { class: 'seg' }, [['white', 'White keys only'], ['any', 'Any note']].map(([v, l]) => h('button', { type: 'button', text: l, 'aria-pressed': String(SING.matchLevel === v), onclick: () => { SING.matchLevel = v; matchUI(); } })));
+  if (!M) {
+    card.append(h('p', { class: 'eyebrow', text: 'Game' }), h('h3', { class: 'cf-title', text: 'Match the note' }),
+      h('p', { text: 'Keystone plays a note. Sing or hum it back and hold it steady. On the graph, steer your line into the orange band. Any octave counts, so sing wherever it’s comfortable.' }),
+      h('p', { class: 'cap', text: 'Matching pitch is the first step in ear training: once your voice can find a note, your ear can too. ' + (SING.lo != null && SING.hi - SING.lo >= 9 ? 'Notes are picked from inside your measured range.' : 'Measure your range first (My range) and I’ll pick notes that suit your voice.') }),
+      h('div', { class: 'row' }, level),
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', onclick: async () => { Piano.ensure(); if (!Voice.live && !(await singStartMic())) return; matchStart(); } }, iconEl('play'), 'Start')));
+    return;
+  }
+  const title = M.state === 'listen' ? 'Listen…' : M.state === 'sing' ? 'Now sing it!' : M.state === 'done' ? '✓ Matched!' : 'Paused';
+  let note = '';
+  if (M.state === 'done') {
+    note = 'The note was ' + nameOf(M.target) + '.';
+    if (M.k) note += ' You sang it ' + (Math.abs(M.k) === 1 ? 'an octave' : Math.abs(M.k) + ' octaves') + ' ' + (M.k > 0 ? 'higher' : 'lower') + ', and that counts: it’s the same note in a range that suits your voice.';
+  } else if (M.show) note = 'The note is ' + nameOf(M.target) + ' (lit on the keyboard).';
+  card.append(h('p', { class: 'eyebrow', text: 'Match the note · ' + M.score + ' matched · ' + (M.streak > 1 ? M.streak + ' in a row · ' : '') + 'best streak ' + M.best }),
+    h('h3', { class: 'cf-title', text: title }),
+    h('p', { class: 'feedback' + (M.state === 'done' ? ' good' : ''), id: 'sg-m-fb', text: M.state === 'listen' ? 'Listen to the piano. Your turn in a moment.' : M.state === 'idle' ? 'Tap Start listening to carry on.' : M.state === 'done' ? 'Next note coming up…' : '' }),
+    h('div', { class: 'sg-prog sg-hold', 'aria-hidden': 'true' }, h('i', { id: 'sg-m-hold', style: { width: M.state === 'done' ? '100%' : '0%' } })),
+    note ? h('p', { text: note }) : null,
+    h('div', { class: 'row' },
+      h('button', { class: 'btn small', type: 'button', onclick: () => matchPlay() }, iconEl('ear'), 'Hear it again'),
+      M.state !== 'done' && !M.show ? h('button', { class: 'btn small', type: 'button', onclick: () => { M.show = true; matchUI(); singMarks(); } }, 'Show me the note') : null,
+      h('button', { class: 'btn small', type: 'button', onclick: () => { if (M.state !== 'done') M.streak = 0; matchNext(); } }, M.state === 'done' ? 'Next note' : 'Skip', iconEl('next')),
+      h('button', { class: 'btn small quiet', type: 'button', onclick: () => { SING.match = null; cfStop(); matchUI(); singMarks(); } }, 'Stop game')),
+    h('div', { class: 'row' }, level));
+  matchFeedback();
+}
+
+/* links from lessons and Practice */
+function openSing(sub) {
+  if (sub) SING.sub = sub;
+  CF.mode = 'sing';
+  if (typeof closeLesson === 'function' && !$('#lesson').hidden) closeLesson();
+  showView('circle');
+}
+W.singlink = (o) => ({ el: h('div', { class: 'widget' },
+  h('p', { class: 'cap', text: o.cap || 'Open the singing tools in the Circle tab. Keystone listens through your microphone.' }),
+  h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', onclick: () => openSing(o.sub) }, iconEl('mic'), o.label || 'Open Sing', iconEl('next')))) });
 
 /* ===== 99-main.js ===== */
 /* ---------- boot ---------- */
@@ -6267,7 +6954,8 @@ function boot() {
   document.addEventListener('visibilitychange', () => { if (document.hidden) { Input.allUp(); if (BK.running && !BK.demo && BK.mode === 'tempo') { BK.running = false; restartBlocks(); } } });
   renderAll();
   const start = (location.hash || '').replace('#', '');
-  showView(['learn', 'practice', 'songs', 'circle', 'play'].includes(start) ? start : 'learn', false);
+  if (start === 'sing') { CF.mode = 'sing'; showView('circle'); }
+  else showView(['learn', 'practice', 'songs', 'circle', 'play'].includes(start) ? start : 'learn', false);
   if (IN_VIEWER && typeof navigator.requestMIDIAccess !== 'function') { /* MIDI help appears when the button is tapped */ }
 }
 boot();
