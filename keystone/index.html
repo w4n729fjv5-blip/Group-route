@@ -34,7 +34,7 @@
   --good: #1B8A57;
   --bad: #CF3B2B;
   --warn: #B7791F;
-  --u1: #0C8580; --u2: #D2691A; --u3: #7246CC; --u4: #2762C9; --u5: #368F3A; --u6: #C2386A; --u7: #8B5A2B; --u8: #46607A; --u9: #A07A12;
+  --u1: #0C8580; --u2: #D2691A; --u3: #7246CC; --u4: #2762C9; --u5: #368F3A; --u6: #C2386A; --u7: #8B5A2B; --u8: #46607A; --u9: #A07A12; --u10: #0A7AA6;
   --kw: #FCFCFB; --kw-down: #DCE3F2; --kb: #1A1D27; --kb-down: #3B4462; --kedge: #B8BFCB; --klabel: #6B7385;
   --stage: #E4E8EE; --lane: #D9DEE6; --lane-line: rgba(21, 25, 38, 0.08);
   --staff: #20253A;
@@ -51,7 +51,7 @@
     --paper: #0F121A; --card: #181C27; --well: #232838; --ink: #E9ECF3; --muted: #9AA2B6; --rule: #2C3244;
     --accent: #8EA2FF; --accent-soft: rgba(142, 162, 255, 0.14); --accent-ink: #0E1430;
     --rh: #F29A4E; --lh: #5FA8F0; --good: #45C285; --bad: #F2705F; --warn: #E3B04E;
-    --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F; --u7: #D29A66; --u8: #93ABC6; --u9: #DDB84E;
+    --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F; --u7: #D29A66; --u8: #93ABC6; --u9: #DDB84E; --u10: #4CC0EA;
     --kw: #E8EAEF; --kw-down: #B8C4E6; --kb: #10121A; --kb-down: #42507C; --kedge: #7E8598; --klabel: #5C6477;
     --stage: #0B0D13; --lane: #121520; --lane-line: rgba(233, 236, 243, 0.06);
     --staff: #DDE2EE;
@@ -64,7 +64,7 @@
   --paper: #0F121A; --card: #181C27; --well: #232838; --ink: #E9ECF3; --muted: #9AA2B6; --rule: #2C3244;
   --accent: #8EA2FF; --accent-soft: rgba(142, 162, 255, 0.14); --accent-ink: #0E1430;
   --rh: #F29A4E; --lh: #5FA8F0; --good: #45C285; --bad: #F2705F; --warn: #E3B04E;
-  --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F; --u7: #D29A66; --u8: #93ABC6; --u9: #DDB84E;
+  --u1: #34C0B8; --u2: #F29A4E; --u3: #A88BF0; --u4: #6E9DF5; --u5: #6CC66F; --u6: #F0779F; --u7: #D29A66; --u8: #93ABC6; --u9: #DDB84E; --u10: #4CC0EA;
   --kw: #E8EAEF; --kw-down: #B8C4E6; --kb: #10121A; --kb-down: #42507C; --kedge: #7E8598; --klabel: #5C6477;
   --stage: #0B0D13; --lane: #121520; --lane-line: rgba(233, 236, 243, 0.06);
   --staff: #DDE2EE;
@@ -424,6 +424,56 @@ select.pick { min-height: 40px; border: 1px solid var(--rule); border-radius: 99
 .cf-slot span { font-size: 13px; color: var(--muted); font-weight: 700; }
 .cf-slot.on { border-color: var(--accent); background: var(--accent-soft); }
 .cf-tip { border-left: 4px solid var(--u6); }
+.cf-out.mine-hid, .cf-in.mine-hid { fill: var(--well); stroke-dasharray: 2 7; opacity: .6; }
+.cf-seg text.mine-hid { opacity: 0; }
+.cf-mine { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; margin-top: 10px; }
+/* Chords around the circle: reveal circle and chord cards */
+.cs-wrap { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 16px; align-items: center; }
+@media (max-width: 640px) { .cs-wrap { grid-template-columns: minmax(0, 1fr); } .cs-svg { max-width: 300px; margin: 0 auto; } }
+.cs-svg { width: 100%; height: auto; display: block; user-select: none; -webkit-user-select: none; }
+.cs-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; align-items: flex-start; }
+.cs-rim { fill: none; stroke: var(--ink); stroke-width: 3.5; }
+.cs-hub { fill: var(--card); stroke: var(--ink); stroke-width: 1.5; }
+.cs-p { fill: color-mix(in srgb, var(--u10) 12%, var(--card)); stroke: var(--card); stroke-width: 2; cursor: pointer; transition: fill .25s, opacity .25s; }
+.cs-p:focus-visible { outline: none; stroke: var(--accent); stroke-width: 4; }
+.cs-p.cs-hid { fill: var(--well); opacity: .55; cursor: default; }
+.cs-p.cs-wait { fill: color-mix(in srgb, var(--u2) 22%, var(--well)); opacity: 1; cursor: pointer; stroke: var(--u2); stroke-dasharray: 4 4; }
+.cs-p.cs-fam { fill: color-mix(in srgb, var(--u6) 30%, var(--card)); }
+.cs-p.cs-home { fill: var(--u6); }
+.cs-p.cs-new { stroke: var(--u2); stroke-width: 4; }
+.cs-p.cs-play { fill: var(--accent); }
+.cs-p.cs-det { stroke: var(--good); stroke-width: 6; }
+.cs-g text { pointer-events: none; }
+.cs-t1 { font-family: var(--font-display); font-size: 25px; fill: var(--ink); }
+.cs-t2 { font-family: var(--font-ui); font-weight: 750; font-size: 14.5px; fill: var(--ink); }
+.cs-p.cs-home + .cs-t1, .cs-p.cs-home + .cs-t2, .cs-p.cs-play + .cs-t1, .cs-p.cs-play + .cs-t2 { fill: #fff; }
+.cs-p.cs-wait + text { fill: var(--u2); font-weight: 800; }
+.cs-rom { font-family: var(--font-ui); font-weight: 800; font-size: 11px; fill: var(--u6); }
+.cs-p.cs-home ~ .cs-rom, .cs-p.cs-play ~ .cs-rom { fill: #fff; }
+.cs-h1 { font-family: var(--font-display); font-size: 24px; fill: var(--ink); }
+.cs-h2 { font-family: var(--font-ui); font-weight: 650; font-size: 13px; fill: var(--muted); }
+.cs-progs { display: flex; flex-wrap: wrap; gap: 8px; }
+.cs-progs .btn { min-height: 40px; }
+.cs-progs small { font-weight: 500; color: var(--muted); font-size: 13px; }
+.cs-keylab { font-family: var(--font-display); font-weight: 400; font-size: 19px; }
+.cs-rn { display: inline-block; min-width: 30px; padding: 1px 7px; border-radius: 8px; background: var(--u6); color: #fff; font-weight: 800; font-size: 13px; text-align: center; vertical-align: 3px; }
+.cs-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12.5px; color: var(--muted); font-weight: 650; }
+.cs-legend span::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; }
+.cs-legend .lg-home::before { background: var(--u6); }
+.cs-legend .lg-fam::before { background: color-mix(in srgb, var(--u6) 30%, var(--card)); border: 1px solid var(--rule); }
+.cs-legend .lg-new::before { background: var(--card); border: 3px solid var(--u2); width: 8px; height: 8px; }
+.cs-legend .lg-hid::before { background: var(--well); }
+.cc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.cc-card { border: 2px solid var(--rule); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--card); transition: border-color .2s; }
+.cc-card .keys { height: 92px; }
+.cc-head { display: flex; justify-content: space-between; align-items: center; }
+.cc-name { font-family: var(--font-display); font-weight: 400; font-size: 28px; line-height: 1; }
+.cc-ok { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--well); color: transparent; }
+.cc-ok svg { width: 16px; height: 16px; }
+.cc-card.got { border-color: var(--good); }
+.cc-card.got .cc-ok { background: var(--good); color: #fff; }
+.cc-notes { font-size: 14px; color: var(--muted); font-weight: 600; }
+.cc-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cf-card .cap, .cf-detect .cap { font-size: 14px; color: var(--muted); }
 #cf-tabs button svg { width: 16px; height: 16px; vertical-align: -3px; margin-right: 5px; }
 .sg-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -3787,7 +3837,7 @@ function renderPractice() {
   v.append(h('p', { class: 'overall-note', style: { marginTop: '-4px' } }, 'Looking for songs? They have their own tab: ', h('button', { class: 'btn small', type: 'button', onclick: () => showView('songs') }, 'Open Songs')));
   for (const g of ['Reading'].concat(EX_GROUPS)) {
     const exs = EXERCISES.filter((e) => e.group === g);
-    v.append(h('div', { class: 'group-title', text: g === 'Reading' ? 'Reading runs · scrolling staff · new notes every time' : g }));
+    v.append(h('div', { class: 'group-title', text: g === 'Reading' ? 'Reading runs · scrolling staff · new notes every time' : g === 'Progressions' ? 'Chord progressions around the circle' : g }));
     v.append(h('div', { class: 'cards' }, exs.map((ex) => {
       prepareExercise(ex);
       const cv = h('canvas', { 'aria-hidden': 'true' });
@@ -3800,10 +3850,10 @@ function renderPractice() {
   }
   v.append(h('div', { class: 'sec-head', style: { marginTop: '44px' } }, h('h2', { text: 'Skill drills' }), h('p', { text: 'Ten quick questions each. Earn up to three stars, then go again to keep the skill sharp.' })));
   const EAR_ORDER = ['ear-hl', 'ear-same', 'ear-name-5', 'ear-name-8', 'ear-echo-3', 'ear-echo-5', 'ear-echo', 'ear-echo-black', 'ear-echo-wide', 'ear-step', 'ear-melody-3', 'ear-melody-4', 'ear-int-basic', 'ear-int-all', 'ear-mm', 'ear-4'];
-  for (const g of ['Ear', 'Rhythm', 'Reading', 'Keyboard', 'Chords', 'Scales', 'Expression']) {
+  for (const g of ['Ear', 'Rhythm', 'Reading', 'Keyboard', 'Chords', 'Circle', 'Scales', 'Expression']) {
     let ids = Object.keys(DRILLS).filter((k) => DRILLS[k].group === g);
     if (g === 'Ear') ids = EAR_ORDER.filter((k) => DRILLS[k]).concat(ids.filter((k) => !EAR_ORDER.includes(k)));
-    v.append(h('div', { class: 'group-title', text: g === 'Ear' ? 'Ear training (slow listening)' : g }));
+    v.append(h('div', { class: 'group-title', text: g === 'Ear' ? 'Ear training (slow listening)' : g === 'Circle' ? 'Chords around the circle' : g }));
     const cards = h('div', { class: 'cards' });
     if (g === 'Ear') cards.append(h('button', { class: 'p-card', type: 'button', style: { borderColor: 'var(--u3)' }, onclick: () => openTrainer() },
       h('span', { class: 'pc-t', text: 'Note trainer' }), h('span', { class: 'pc-s', text: 'Hear a note, think, then see the answer. Hands-free and as slow as you like.' }),
@@ -5161,6 +5211,425 @@ lesson('sightread', 'Sight-reading', 'Playing music you’ve never seen before.'
   ['While you play', '<ul><li>Keep going. Don’t stop to fix mistakes. A steady beat matters more than every note.</li><li>Look one note ahead of the one you’re playing.</li><li>Don’t look down at your hands. Feel the black-key groups instead.</li><li>Choose a slow tempo you can keep.</li></ul>' + tip('Little and often', 'Two minutes of sight-reading every day builds this skill faster than anything else.') ],
 ], { drills: ['sight-c', 'sight-c2', 'sight-oct', 'sight-bass'], blocks: ['rr-octave', 'rr-rhythm', 'rr-turns', 'rr-grand'] });
 
+/* ===== 22b-circlepath.js ===== */
+/* ---------- Chords around the circle: a unit that reveals the circle of fifths one or two chords at a time ---------- */
+/* chord names like 'C', 'F♯m', 'B♭' -> pitch class, quality, and whether to spell with flats */
+function cpParse(nm) {
+  const m = /^([A-G])([♯♭]?)(m?)$/.exec(nm);
+  const pc = (LETTER_PC[m[1]] + (m[2] === '♯' ? 1 : m[2] === '♭' ? -1 : 0) + 12) % 12;
+  return { name: nm, pc, type: m[3] ? 'min' : 'maj', flat: nm.includes('♭') || ['F', 'Dm', 'Gm', 'Cm', 'Fm'].includes(nm) };
+}
+const cpSpell = (p, flat) => spell(p, flat ? -1 : 1);
+const cpNote = (p, flat) => { const n = cpSpell(p, flat); return n.letter + accStr(n.acc); };
+const cpTriad = (c, root) => (c.type === 'maj' ? [0, 4, 7] : [0, 3, 7]).map((v) => root + v);
+
+/* the path: each lesson reveals one or two chords (or four, for the very first) */
+const CP = [
+  { id: 'cp-four', fresh: ['C', 'G', 'Am', 'F'], key: 'C', set: ['C', 'G', 'Am', 'F'], prog: ['C', 'G', 'Am', 'F'] },
+  { id: 'cp-family', fresh: ['Dm', 'Em'], key: 'C', set: ['C', 'Dm', 'Em', 'F', 'G', 'Am'], prog: ['C', 'Am', 'F', 'G'] },
+  { id: 'cp-g', fresh: ['D', 'Bm'], key: 'G', set: ['G', 'Am', 'Bm', 'C', 'D', 'Em'], prog: ['G', 'D', 'Em', 'C'] },
+  { id: 'cp-f', fresh: ['B♭', 'Gm'], key: 'F', set: ['F', 'Gm', 'Am', 'B♭', 'C', 'Dm'], prog: ['F', 'C', 'Dm', 'B♭'] },
+  { id: 'cp-minor', fresh: ['E'], key: 'Am', set: ['Am', 'Dm', 'E', 'F', 'G', 'C'], prog: ['Am', 'Dm', 'E', 'Am', 'Am', 'G', 'F', 'E'], end: 'Am' },
+  { id: 'cp-d', fresh: ['A', 'F♯m'], key: 'D', set: ['D', 'Em', 'F♯m', 'G', 'A', 'Bm'], prog: ['D', 'A', 'Bm', 'G'] },
+  { id: 'cp-a', fresh: ['C♯m'], key: 'A', set: ['A', 'Bm', 'C♯m', 'D', 'E', 'F♯m'], prog: ['A', 'E', 'F♯m', 'D'] },
+  { id: 'cp-e', fresh: ['B', 'G♯m'], key: 'E', set: ['E', 'F♯m', 'G♯m', 'A', 'B', 'C♯m'], prog: ['E', 'B', 'C♯m', 'A'] },
+  { id: 'cp-bb', fresh: ['E♭', 'Cm'], key: 'B♭', set: ['B♭', 'Cm', 'Dm', 'E♭', 'F', 'Gm'], prog: ['B♭', 'F', 'Gm', 'E♭'] },
+  { id: 'cp-eb', fresh: ['A♭', 'Fm'], key: 'E♭', set: ['E♭', 'Fm', 'Gm', 'A♭', 'B♭', 'Cm'], prog: ['E♭', 'B♭', 'Cm', 'A♭'] },
+  { id: 'cp-db', fresh: ['D♭', 'G♭'], key: 'D♭', set: ['D♭', 'G♭', 'A♭', 'E♭', 'Fm'], prog: ['D♭', 'G♭', 'A♭', 'D♭'] },
+  { id: 'cp-close', fresh: ['B♭m', 'E♭m'], key: 'D♭', set: ['D♭', 'E♭m', 'Fm', 'G♭', 'A♭', 'B♭m'], prog: ['D♭', 'A♭', 'B♭m', 'G♭'] },
+  { id: 'cp-anykey', fresh: [], key: 'C', set: null, prog: ['C', 'G', 'Am', 'F', 'G', 'D', 'Em', 'C', 'D', 'A', 'Bm', 'G'], end: 'D' },
+];
+const cpLesson = (id) => CP.find((x) => x.id === id);
+/* where each chord lives on the circle (needs CF_SEGS, so only call at run time) */
+function cpLoc(nm) {
+  for (const sg of CF_SEGS) {
+    if (sg.main[0] === nm || (sg.alt && sg.alt[0] === nm)) return { i: sg.i, ring: 'out', k: 'out' + sg.i };
+    if (sg.minor + 'm' === nm || (sg.minorAlt && sg.minorAlt + 'm' === nm)) return { i: sg.i, ring: 'in', k: 'in' + sg.i };
+  }
+  return null;
+}
+const cpSegName = (i, ring) => (ring === 'out' ? CF_SEGS[i].main[0] : CF_SEGS[i].minor + 'm');
+function cpKnown(uptoId, onlyDone) {
+  const set = new Set();
+  for (const L of CP) {
+    if (onlyDone ? progress.lessons[L.id] : true) L.fresh.forEach((n) => set.add(cpLoc(n).k));
+    if (L.id === uptoId) break;
+  }
+  return set;
+}
+function cpKeySel(nm) { const c = cpParse(nm), l = cpLoc(nm); return { i: l.i, minor: c.type === 'min', alt: false }; }
+const cpKeyName = (nm) => (cpParse(nm).type === 'min' ? nm.slice(0, -1) + ' minor' : nm + ' major');
+/* chord voicing for listening: left-hand root C3–B3, right-hand triad from the octave above */
+function cpVoicing(nm) { const c = cpParse(nm); return { bass: 48 + c.pc, tri: cpTriad(c, 60 + c.pc), c }; }
+function cpPlay(nm, when = 0, dur = 1.5) { const v = cpVoicing(nm); Piano.chord([v.bass - 12, v.bass].concat(v.tri), dur, 0.56, 0, when); return v; }
+
+/* ----- widget: the circle with only what you've learned so far ----- */
+W.circlestep = (o) => {
+  const L = cpLesson(o.upto) || CP[CP.length - 1];
+  const known = cpKnown(L.id);
+  const fresh = new Set(L.fresh.map((n) => cpLoc(n).k));
+  const S = { key: o.key || L.key, hide: new Set(o.reveal && !progress.lessons[L.id] ? fresh : []), play: null, det: null, timers: [] };
+  const later = (fn, ms) => S.timers.push(setTimeout(fn, ms));
+  const cx = 180, cy = 180, R1 = 174, R2 = 120, R3 = 68;
+  const svg = s('svg', { viewBox: '0 0 360 360', class: 'cs-svg', role: 'img', 'aria-label': 'Circle of fifths, showing the chords learned so far' });
+  const arc = (r0, r1, a0, a1) => {
+    const p = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+    const [x0, y0] = p(r1, a0), [x1, y1] = p(r1, a1), [x2, y2] = p(r0, a1), [x3, y3] = p(r0, a0);
+    return `M${x0.toFixed(1)} ${y0.toFixed(1)}A${r1} ${r1} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}L${x2.toFixed(1)} ${y2.toFixed(1)}A${r0} ${r0} 0 0 0 ${x3.toFixed(1)} ${y3.toFixed(1)}Z`;
+  };
+  const els = {};
+  for (let i = 0; i < 12; i++) {
+    const a0 = (i - 0.5) * Math.PI / 6, a1 = (i + 0.5) * Math.PI / 6, am = i * Math.PI / 6;
+    const pt = (r) => [cx + r * Math.sin(am), cy - r * Math.cos(am)];
+    for (const ring of ['out', 'in']) {
+      const k = ring + i;
+      const path = s('path', { d: ring === 'out' ? arc(R2, R1, a0, a1) : arc(R3, R2, a0, a1), class: 'cs-p', 'data-k': k, 'data-i': i, 'data-ring': ring, tabindex: '0', role: 'button' });
+      const [tx, ty] = pt(ring === 'out' ? (R1 + R2) / 2 + 4 : (R2 + R3) / 2);
+      const txt = s('text', { x: tx, y: ty, class: ring === 'out' ? 'cs-t1' : 'cs-t2', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+      const [rx, ry] = pt(ring === 'out' ? R1 - 12 : R2 - 10);
+      const rom = s('text', { x: rx, y: ry, class: 'cs-rom', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+      svg.append(s('g', { class: 'cs-g' }, path, txt, rom));
+      els[k] = { path, txt, rom, i, ring };
+    }
+  }
+  svg.append(s('circle', { cx, cy, r: R1 + 2, class: 'cs-rim' }), s('circle', { cx, cy, r: R3 - 2, class: 'cs-hub' }));
+  const hub1 = s('text', { x: cx, y: cy - 12, class: 'cs-h1', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+  const hub2 = s('text', { x: cx, y: cy + 16, class: 'cs-h2', 'text-anchor': 'middle', 'dominant-baseline': 'central' }, '');
+  svg.append(hub1, hub2);
+  const { frame, k: kb } = frameKeys('C3', 'B5', { labels: 'none' });
+  const line = h('div', { class: 'readline' });
+  const isShown = (k) => known.has(k) && !S.hide.has(k);
+  const fam = () => (S.key ? cfFamily(cpKeySel(S.key)) : []);
+  const paint = () => {
+    const F = fam();
+    for (const k in els) {
+      const e = els[k], shown = isShown(k), f = F.find((x) => x[0] === e.i && x[1] === e.ring);
+      const home = S.key && cpLoc(S.key).k === k;
+      e.path.classList.toggle('cs-hid', !shown);
+      e.path.classList.toggle('cs-wait', S.hide.has(k));
+      e.path.classList.toggle('cs-new', shown && fresh.has(k) && !home);
+      e.path.classList.toggle('cs-fam', shown && !!f && !home);
+      e.path.classList.toggle('cs-home', shown && !!home);
+      e.path.classList.toggle('cs-play', S.play === k);
+      e.path.classList.toggle('cs-det', S.det === k);
+      e.txt.textContent = shown ? cpSegName(e.i, e.ring) : S.hide.has(k) ? '?' : '';
+      e.rom.textContent = shown && f ? f[2] : '';
+      e.path.setAttribute('aria-label', shown ? cpKeyName(cpSegName(e.i, e.ring)).replace(' major', ' major chord').replace(' minor', ' minor chord') : 'Not revealed yet');
+    }
+    const n = [...known].filter((k) => !S.hide.has(k)).length;
+    hub1.textContent = n + ' / 24';
+    hub2.textContent = 'chords';
+  };
+  const show = (nm, rn) => {
+    const v = cpVoicing(nm), fl = v.c.flat;
+    kb.clearMarks();
+    kb.mark(v.bass, 'lh', cpNote(v.bass, fl));
+    v.tri.forEach((p) => kb.mark(p, 'u6', cpNote(p, fl)));
+    line.innerHTML = (rn ? '<span class="cs-rn">' + rn + '</span> ' : '') + '<b>' + cpKeyName(nm) + '</b> · ' + v.tri.map((p) => cpNote(p, fl)).join(' – ');
+  };
+  const stopAll = () => { S.timers.forEach(clearTimeout); S.timers = []; S.play = null; };
+  const tap = (k) => {
+    const e = els[k];
+    if (S.hide.has(k)) { reveal(); return; }
+    if (!isShown(k)) { line.innerHTML = '<span class="cap">Not revealed yet. You’ll meet this chord later in the unit.</span>'; return; }
+    stopAll();
+    const nm = cpSegName(e.i, e.ring), f = fam().find((x) => x[0] === e.i && x[1] === e.ring);
+    cpPlay(nm); show(nm, f ? f[2] : '');
+    S.play = k; paint(); later(() => { S.play = null; paint(); }, 1200);
+  };
+  svg.addEventListener('click', (ev) => { const t = ev.target.closest('[data-k]'); if (t) { Piano.ensure(); tap(t.dataset.k); } });
+  svg.addEventListener('keydown', (ev) => { if (ev.key !== 'Enter' && ev.key !== ' ') return; const t = ev.target.closest('[data-k]'); if (t) { ev.preventDefault(); tap(t.dataset.k); } });
+  const revealBtn = h('button', { class: 'btn primary small', type: 'button', onclick: () => reveal() }, 'Reveal ' + (L.fresh.length === 1 ? 'the new chord' : 'the ' + L.fresh.length + ' new chords'));
+  revealBtn.hidden = !S.hide.size;
+  function reveal() {
+    if (!S.hide.size) return;
+    Piano.ensure(); stopAll();
+    revealBtn.hidden = true;
+    L.fresh.forEach((nm, j) => later(() => { const k = cpLoc(nm).k; S.hide.delete(k); S.play = k; paint(); cpPlay(nm, 0, 1.2); show(nm); later(() => { if (S.play === k) { S.play = null; paint(); } }, 900); }, j * 1100));
+  }
+  /* progressions: named chords, or roman numerals that follow the key */
+  const resolve = (pr) => {
+    if (!o.roman) return pr;
+    const F = fam();
+    return pr.map((rn) => { const x = F.find((y) => y[2] === rn); return x ? cpSegName(x[0], x[1]) : null; }).filter(Boolean);
+  };
+  const playProg = (pr, rn) => {
+    Piano.ensure(); stopAll();
+    const names = resolve(pr), F = fam(), c = Piano.ensure(), t0 = c.currentTime + 0.05, step = o.step || 1.15;
+    names.forEach((nm, j) => {
+      cpPlay(nm, t0 + j * step, step * 0.98);
+      later(() => { const l = cpLoc(nm); S.play = l.k; paint(); const f = F.find((x) => x[0] === l.i && x[1] === l.ring); show(nm, f ? f[2] : ''); }, j * step * 1000 + 50);
+    });
+    later(() => { S.play = null; paint(); }, names.length * step * 1000 + 200);
+  };
+  const progRow = o.progs ? h('div', { class: 'cs-progs' }, o.progs.map(([label, pr]) => h('button', { class: 'btn small', type: 'button', onclick: () => playProg(pr) }, iconEl('play'), h('span', null, h('b', { text: label }), h('small', { text: o.roman ? '' : ' ' + pr.join(' – ') }))))) : null;
+  let keyRow = null;
+  if (o.move) {
+    const lab = h('b', { class: 'cs-keylab' });
+    const setKey = (d) => {
+      stopAll();
+      const sel = cpKeySel(S.key), ni = (sel.i + d + 12) % 12;
+      S.key = cpSegName(ni, 'out');
+      lab.textContent = 'Key: ' + cpKeyName(S.key);
+      paint();
+      if (progRow) $$('button', progRow).forEach((b, j) => { const sm = b.querySelector('small'); if (sm) sm.textContent = ' ' + resolve(o.progs[j][1]).join(' – '); });
+      if (d) { cpPlay(S.key); show(S.key, 'I'); }
+    };
+    keyRow = h('div', { class: 'row' }, h('button', { class: 'btn small', type: 'button', onclick: () => setKey(-1), 'aria-label': 'One step counter-clockwise' }, iconEl('back'), 'Turn left'), lab, h('button', { class: 'btn small', type: 'button', onclick: () => setKey(1), 'aria-label': 'One step clockwise' }, 'Turn right', iconEl('next')));
+    setTimeout(() => setKey(0));
+  }
+  /* play a chord on your keyboard and it lights up */
+  const off = Input.on((type) => {
+    if (type !== 'down') return;
+    setTimeout(() => {
+      const c = detectChord(Input.heldNotes());
+      if (!c || (c.type !== 'maj' && c.type !== 'min')) return;
+      const sg = CF_SEGS.find((x) => (c.type === 'maj' ? x.pc : x.mpc) === c.root);
+      if (!sg) return;
+      const k = (c.type === 'maj' ? 'out' : 'in') + sg.i;
+      S.det = k; paint();
+      const nm = cpSegName(sg.i, c.type === 'maj' ? 'out' : 'in');
+      line.innerHTML = isShown(k) ? 'You played <b>' + cpKeyName(nm) + '</b> ✓' : 'You played <b>' + cpKeyName(nm) + '</b>. That one isn’t on your circle yet, but nice!';
+      later(() => { if (S.det === k) { S.det = null; paint(); } }, 1600);
+    }, 40);
+  });
+  paint();
+  const el = h('div', { class: 'widget cs-widget' },
+    h('div', { class: 'cs-wrap' }, svg,
+      h('div', { class: 'cs-side' },
+        o.reveal ? revealBtn : null,
+        keyRow, progRow,
+        h('p', { class: 'cap', text: o.cap || 'Tap a chord on the circle to hear it. Play a chord on your keyboard and it lights up.' }),
+        h('div', { class: 'cs-legend' }, h('span', { class: 'lg-home' }, 'home'), h('span', { class: 'lg-fam' }, 'its family'), h('span', { class: 'lg-new' }, 'new'), h('span', { class: 'lg-hid' }, 'not yet')))),
+    line, frame);
+  return { el, destroy() { stopAll(); off(); kb.destroy(); } };
+};
+
+/* ----- widget: learn each chord, ticks when you play it ----- */
+W.chordcards = (o) => {
+  const cards = [], offs = [];
+  const grid = h('div', { class: 'cc-grid' }, o.chords.map((nm) => {
+    const c = cpParse(nm);
+    const root = 60 + c.pc - (c.pc >= 7 ? 12 : 0), tri = cpTriad(c, root);
+    const lo = 12 * Math.floor(tri[0] / 12), hi = lo + 23;
+    const { frame, k } = frameKeys(lo, hi, { labels: 'none' });
+    ['1', '3', '5'].forEach((fg, j) => k.mark(tri[j], j === 0 ? 'root' : 'u6', cpNote(tri[j], c.flat)));
+    const blacks = tri.filter((p) => isBlack(p)).length;
+    const card = h('div', { class: 'cc-card' },
+      h('div', { class: 'cc-head' }, h('b', { class: 'cc-name', text: nm }), h('span', { class: 'cc-ok', html: ICON.check, 'aria-hidden': 'true' })),
+      h('div', { class: 'cc-notes', text: cpKeyName(nm) + ' · ' + tri.map((p) => cpNote(p, c.flat)).join(' – ') }),
+      frame,
+      h('div', { class: 'cc-foot' }, h('span', { class: 'cap', text: 'Right hand 1 3 5' + (blacks ? ' · ' + blacks + ' black key' + (blacks > 1 ? 's' : '') : ' · all white keys') }),
+        h('button', { class: 'btn small', type: 'button', onclick: () => Piano.chord(tri, 1.5, 0.6) }, iconEl('play'), 'Hear')));
+    cards.push({ card, c, k });
+    return card;
+  }));
+  offs.push(Input.on((type) => {
+    if (type !== 'down') return;
+    setTimeout(() => {
+      const d = detectChord(Input.heldNotes()); if (!d) return;
+      const hit = cards.find((x) => x.c.pc === d.root && x.c.type === d.type);
+      if (hit && !hit.card.classList.contains('got')) { hit.card.classList.add('got'); const left = cards.filter((x) => !x.card.classList.contains('got')).length; msg.textContent = left ? '✓ ' + hit.c.name + '! ' + left + ' to go.' : '✓ All of them. Brilliant.'; msg.className = 'feedback good'; }
+    }, 40);
+  }));
+  const msg = h('p', { class: 'feedback', text: '' });
+  return { el: h('div', { class: 'widget' }, h('p', { class: 'cap', text: o.cap || 'Play each chord on your keyboard (or tap the keys). Each card ticks when you get it. Any octave works.' }), grid, msg), destroy() { offs.forEach((f) => f()); cards.forEach((x) => x.k.destroy()); } };
+};
+W.cpscale = (o) => W.scale({ tonic: o.tonic, fingers: CF_FINGERS[pcOf(midiOf(o.tonic))][0], hand: 'R' });
+
+/* ----- drills ----- */
+function cpChordDrill(title, sub, names) {
+  return {
+    title, sub, group: 'Circle', answer: 'chord', range: ['C3', 'C6'],
+    make(st) {
+      const nm = noRepeat(st, 'c', () => pick(names));
+      const c = cpParse(nm), tri = cpTriad(c, 60 + c.pc - (c.pc >= 7 ? 12 : 0));
+      return {
+        prompt: 'Play <b>' + cpKeyName(nm) + '</b> <span class="cap">(' + nm + ')</span>',
+        sub: st.i > 3 ? 'Any octave, any order.' : 'Notes: ' + tri.map((p) => cpNote(p, c.flat)).join(' – ') + '. Any octave.',
+        chord: { pcs: [...new Set(tri.map(pcOf))], bass: null }, reveal: tri,
+      };
+    },
+  };
+}
+const CP_DRILL_T = { 'cp-four': 'The four chords', 'cp-family': 'C major’s six chords', 'cp-g': 'G major’s chords', 'cp-f': 'F major’s chords', 'cp-minor': 'A minor’s chords', 'cp-d': 'D major’s chords', 'cp-a': 'A major’s chords', 'cp-e': 'E major’s chords', 'cp-bb': 'B♭ major’s chords', 'cp-eb': 'E♭ major’s chords', 'cp-db': 'Black-key chords', 'cp-close': 'D♭ major’s chords' };
+CP.forEach((L) => { if (L.set) DRILLS['cp-d-' + L.id.slice(3)] = cpChordDrill(CP_DRILL_T[L.id], L.set.join(' · '), L.set); });
+DRILLS['cp-d-all'] = cpChordDrill('All 24 chords', 'Every major and minor chord on the circle', ['C', 'G', 'D', 'A', 'E', 'B', 'G♭', 'D♭', 'A♭', 'E♭', 'B♭', 'F', 'Am', 'Em', 'Bm', 'F♯m', 'C♯m', 'G♯m', 'E♭m', 'B♭m', 'Fm', 'Cm', 'Gm', 'Dm']);
+DRILLS['cp-ear-four'] = {
+  title: 'Which order?', sub: 'Hear the four chords and pick the loop', group: 'Circle', answer: 'choice', ear: true,
+  make(st) {
+    const opts = [['I–V–vi–IV', ['C', 'G', 'Am', 'F']], ['I–vi–IV–V', ['C', 'Am', 'F', 'G']], ['vi–IV–I–V', ['Am', 'F', 'C', 'G']], ['I–IV–V–I', ['C', 'F', 'G', 'C']]];
+    const pool = st.i < 4 ? opts.slice(0, 2) : opts;
+    const [rn, pr] = noRepeat(st, 'p', () => pick(pool));
+    return {
+      prompt: 'Which chord loop is this?', sub: 'Listen for the second chord: G (bright, wants to go home), Am (sad) or F (lifting).',
+      audio: () => { const T = earT(), d = Math.max(0.9, T.d * 1.1); const c = Piano.ensure(), t0 = c.currentTime + 0.05; pr.forEach((nm, j) => cpPlay(nm, t0 + j * d, d * 0.97)); return { stop() { Piano.stopAll(); } }; },
+      choices: pool.map(([r, p]) => ({ label: p.join(' – ') + '  (' + r + ')', ok: r === rn })), explain: 'It was ' + pr.join(' – ') + ', ' + rn + '.',
+    };
+  },
+};
+DRILLS['cp-quiz'] = {
+  title: 'Chords in any key', sub: 'Find I, IV, V and vi on the circle', group: 'Circle', answer: 'choice',
+  make(st) {
+    const keys = ['C', 'G', 'D', 'A', 'E', 'F', 'B♭', 'E♭', 'A♭', 'D♭', 'B'];
+    const kind = noRepeat(st, 'k', () => pick(['IV', 'V', 'vi', 'ii', 'key', 'rel']));
+    const key = pick(keys), F = cfFamily(cpKeySel(key));
+    const nmOf = (rn) => { const x = F.find((y) => y[2] === rn); return cpSegName(x[0], x[1]); };
+    const others = (right, pool) => shuffle(pool.filter((x) => x !== right)).slice(0, 3);
+    if (kind === 'key') {
+      const pr = ['I', 'V', 'vi', 'IV'].map(nmOf);
+      return { prompt: '<b>' + pr.join(' – ') + '</b> is the four-chord loop in which key?', sub: 'Find the chord that sits in the middle of the wedge.', choices: choiceSet(key + ' major', others(key, keys).map((k) => k + ' major')), explain: 'Home is ' + key + ': it sits between ' + nmOf('IV') + ' and ' + nmOf('V') + ' on the circle.' };
+    }
+    if (kind === 'rel') {
+      const right = nmOf('vi');
+      return { prompt: 'What is the relative minor of <b>' + key + ' major</b>?', sub: 'It sits just inside it on the circle.', choices: choiceSet(right, others(right, CF_SEGS.map((x) => x.minor + 'm'))), explain: right + ' is just inside ' + key + '. They share a key signature.' };
+    }
+    const right = nmOf(kind);
+    const where = { IV: 'one step counter-clockwise', V: 'one step clockwise', vi: 'just inside the home chord', ii: 'inside, one step counter-clockwise' }[kind];
+    const pool = kind === 'vi' || kind === 'ii' ? CF_SEGS.map((x) => x.minor + 'm') : CF_SEGS.map((x) => x.main[0]);
+    return { prompt: 'In <b>' + key + ' major</b>, which chord is <b>' + kind + '</b>?', sub: kind + ' is ' + where + '.', choices: choiceSet(right, others(right, pool)), explain: kind + ' in ' + key + ' major is ' + right + ' (' + where + ').' };
+  },
+};
+
+/* ----- falling-blocks progressions, voiced so the right hand barely moves ----- */
+function cpVoiceLead(names) {
+  let prev = null;
+  return names.map((nm) => {
+    const c = cpParse(nm), iv = c.type === 'maj' ? [0, 4, 7] : [0, 3, 7];
+    const cands = [];
+    for (let low = 53; low <= 69; low++) for (let inv = 0; inv < 3; inv++) {
+      const rel = [iv[inv], iv[(inv + 1) % 3], iv[(inv + 2) % 3]];
+      if (pcOf(low) !== (c.pc + rel[0]) % 12) continue;
+      const ps = [low]; for (let j = 1; j < 3; j++) { let p = ps[j - 1] + 1; while (pcOf(p) !== (c.pc + rel[j]) % 12) p++; ps.push(p); }
+      if (ps[2] <= 77) cands.push({ ps, inv });
+    }
+    const score = (x) => (prev ? x.ps.reduce((a, p, j) => a + Math.abs(p - prev[j]), 0) : Math.abs(x.ps[0] - 60) + x.inv * 3) + Math.abs(x.ps[1] - 65) * 0.15;
+    const best = cands.sort((a, b) => score(a) - score(b))[0];
+    prev = best.ps;
+    return { c, tri: best.ps, fing: best.inv === 1 ? [1, 2, 5] : [1, 3, 5], bass: 40 + ((c.pc - 4 + 12) % 12) };
+  });
+}
+function cpExercise(id, title, names, opts = {}) {
+  const f = opts.f || 0, flat = f < 0;
+  const nm = (p) => { const n = cpSpell(p, flat); return n.letter + (n.acc > 0 ? '#' : n.acc < 0 ? 'b' : '') + n.oct; };
+  const V = cpVoiceLead(names);
+  const tri = (v) => '[' + v.tri.map((p, j) => nm(p) + '.' + v.fing[j]).join(' ') + ']';
+  const R = V.map((v, j) => (opts.pop && j < V.length - 1 ? tri(v) + '/h ' + tri(v) + '/q ' + tri(v) + '/q' : tri(v) + '/w')).join(' | ');
+  const L = V.map((v) => nm(v.bass) + '.5/w').join(' | ');
+  EXERCISES.push({ id, group: 'Progressions', title, bpm: opts.bpm || 66, key: f, keyName: opts.keyName, level: opts.level || 1, desc: opts.desc, R, L });
+}
+const CPX = [
+  ['cpx-four', 'The four chords: C G Am F', ['C', 'G', 'Am', 'F', 'C', 'G', 'Am', 'F', 'C'], { desc: 'Left hand plays each chord’s root down low. Your right hand barely moves: watch for the shared notes.', keyName: 'C major' }],
+  ['cpx-four-pop', 'Four chords, pop rhythm', ['C', 'G', 'Am', 'F', 'C', 'G', 'Am', 'F', 'C'], { pop: true, bpm: 80, desc: 'Right hand: long, short, short. Count 1 2 3 4: play on 1, 3 and 4.', keyName: 'C major' }],
+  ['cpx-family', 'The 1950s loop: C Am F G', ['C', 'Am', 'F', 'G', 'C', 'Am', 'F', 'G', 'C'], { keyName: 'C major', desc: 'I–vi–IV–V. The G at the end of each line pulls you back to C.' }],
+  ['cpx-g', 'G major: G D Em C', ['G', 'D', 'Em', 'C', 'G', 'D', 'Em', 'C', 'G'], { f: 1, keyName: 'G major', desc: 'The four chords in G. Watch for F♯ in the D chord.' }],
+  ['cpx-f', 'F major: F C Dm B♭', ['F', 'C', 'Dm', 'B♭', 'F', 'C', 'Dm', 'B♭', 'F'], { f: -1, keyName: 'F major', desc: 'The four chords in F. B♭ is your first black-key chord root.' }],
+  ['cpx-minor', 'A minor: Am Dm E Am, Am G F E', ['Am', 'Dm', 'E', 'Am', 'Am', 'G', 'F', 'E', 'Am'], { keyName: 'A minor', desc: 'Two classic minor progressions. E major’s G♯ pulls hard back to A.' }],
+  ['cpx-d', 'D major: D A Bm G', ['D', 'A', 'Bm', 'G', 'D', 'A', 'Bm', 'G', 'D'], { f: 2, keyName: 'D major', desc: 'Two sharps: F♯ and C♯.' }],
+  ['cpx-a', 'A major: A E F♯m D', ['A', 'E', 'F♯m', 'D', 'A', 'E', 'F♯m', 'D', 'A'], { f: 3, keyName: 'A major', level: 2, desc: 'Three sharps: F♯, C♯ and G♯.' }],
+  ['cpx-e', 'E major: E B C♯m A', ['E', 'B', 'C♯m', 'A', 'E', 'B', 'C♯m', 'A', 'E'], { f: 4, keyName: 'E major', level: 2, desc: 'Four sharps. B major has two black keys.' }],
+  ['cpx-bb', 'B♭ major: B♭ F Gm E♭', ['B♭', 'F', 'Gm', 'E♭', 'B♭', 'F', 'Gm', 'E♭', 'B♭'], { f: -2, keyName: 'B♭ major', level: 2, desc: 'Two flats: B♭ and E♭.' }],
+  ['cpx-eb', 'E♭ major: E♭ B♭ Cm A♭', ['E♭', 'B♭', 'Cm', 'A♭', 'E♭', 'B♭', 'Cm', 'A♭', 'E♭'], { f: -3, keyName: 'E♭ major', level: 2, desc: 'Three flats: B♭, E♭ and A♭.' }],
+  ['cpx-db', 'D♭ major: D♭ G♭ A♭ D♭', ['D♭', 'G♭', 'A♭', 'D♭', 'D♭', 'G♭', 'A♭', 'D♭'], { f: -5, keyName: 'D♭ major', level: 2, desc: 'Black-key country. G♭ major is all three black keys.' }],
+  ['cpx-close', 'D♭ major: D♭ A♭ B♭m G♭', ['D♭', 'A♭', 'B♭m', 'G♭', 'D♭', 'A♭', 'B♭m', 'G♭', 'D♭'], { f: -5, keyName: 'D♭ major', level: 2, desc: 'The four chords, now in five flats.' }],
+  ['cpx-any', 'One loop, three keys: C → G → D', ['C', 'G', 'Am', 'F', 'G', 'D', 'Em', 'C', 'D', 'A', 'Bm', 'G', 'D'], { keyName: 'C, G and D major', level: 2, desc: 'The same I–V–vi–IV loop, turning the circle one step clockwise each time.' }],
+];
+CPX.forEach(([id, t, ch, o]) => cpExercise(id, t, ch, o));
+EX_GROUPS.push('Progressions');
+
+/* ----- the lessons ----- */
+const cps = (upto, extra) => Object.assign({ type: 'circlestep', upto }, extra || {});
+lesson('cp-four', 'The four chords', 'C, G, Am and F: the chords behind thousands of songs.', ['Chords', 'Circle'], [
+  ['Four chords, thousands of songs', '<p>A huge number of pop, rock and folk songs loop the same four chords. In the key of C they are <b>C</b>, <b>G</b>, <b>Am</b> (A minor) and <b>F</b>. “Let It Be” and “No Woman, No Cry” use exactly these. “With or Without You” and “Don’t Stop Believin’” use the same four, just in other keys.</p><p>This unit builds the circle of fifths a chord or two at a time, starting here. Press <b>Reveal</b> to put your first four chords on the circle.</p>', cps('cp-four', { reveal: true, cap: 'Everything else is hidden for now. Tap a chord to hear it.' })],
+  ['Play them', '<p>Each chord is a <b>triad</b>: three notes, skipping every other white key. C is C, E and G. Use right-hand fingers <b>1 3 5</b> and drop them together from the wrist.</p><p>C, G and F are <b>major</b> chords: bright and settled. Am is <b>minor</b>: darker, a little sad.</p>', { type: 'chordcards', chords: ['C', 'G', 'Am', 'F'] }],
+  ['Why they belong together', '<p>On the circle, <b>G</b> is one step clockwise from C, <b>F</b> is one step the other way, and <b>Am</b> sits just inside C. Neighbours on the circle share notes, so they flow into each other smoothly.</p>' + tip('Roman numerals', 'Musicians number chords by their place in the key. In C major: C is I, F is IV, G is V and Am is vi (small letters for minor). Pop’s favourite order is I–V–vi–IV.'), cps('cp-four', { progs: [['I–V–vi–IV', ['C', 'G', 'Am', 'F']], ['vi–IV–I–V', ['Am', 'F', 'C', 'G']], ['I–IV–V–I', ['C', 'F', 'G', 'C']]] })],
+  ['Move smoothly', '<p>Jumping to each chord in root position makes your hand leap around. Instead, keep your right hand near middle C and use whichever version of each chord is closest. That’s called an <b>inversion</b>:</p><ul><li>C: C E G</li><li>G: B D G (move two fingers down a step)</li><li>Am: C E A (back up)</li><li>F: C F A</li></ul><p>Your left hand plays each chord’s name note down low. The falling-blocks exercises at the end use exactly this.</p>', { type: 'listen', keys: ['C3', 'C6'], buttons: [{ label: 'Hear the smooth version', bpm: 56, seq: [[['C3', 'C4', 'E4', 'G4'], 2, '<b>C</b> · C E G'], [['G2', 'B3', 'D4', 'G4'], 2, '<b>G</b> · B D G'], [['A2', 'C4', 'E4', 'A4'], 2, '<b>Am</b> · C E A'], [['F2', 'C4', 'F4', 'A4'], 2, '<b>F</b> · C F A'], [['C3', 'C4', 'E4', 'G4'], 3, '<b>C</b> · home']] }] }],
+], { drills: ['cp-d-four'], blocks: ['cpx-four', 'cpx-four-pop'] });
+
+lesson('cp-family', 'C major’s whole chord family', 'Add Dm and Em: the six chords that live in one key.', ['Chords', 'Circle'], [
+  ['Two more chords', '<p>Every major key has six everyday chords: three major and three minor. You already know four of C major’s. The last two are <b>Dm</b> and <b>Em</b>, sitting just inside F and G.</p>', cps('cp-family', { reveal: true })],
+  ['Play Dm and Em', '<p>Like Am, they’re minor chords on white keys only, with fingers 1 3 5.</p>', { type: 'chordcards', chords: ['Dm', 'Em'] }],
+  ['One slice of the circle', '<p>Look at the six lit chords: they make one wedge, three outside and three inside. That wedge <i>is</i> the key of C. In every key, the six chords make this same shape.</p><ul><li>Outside: <b>IV · I · V</b> (F C G), the major chords</li><li>Inside: <b>ii · vi · iii</b> (Dm Am Em), the minor chords</li></ul>' + tip('Where they come from', 'Build a triad on each note of the C major scale using white keys only: C, Dm, Em, F, G, Am. (The seventh, B diminished, is rarely used.) That’s the whole family.'), cps('cp-family', { progs: [['I–vi–IV–V (the 1950s)', ['C', 'Am', 'F', 'G']], ['ii–V–I (jazz)', ['Dm', 'G', 'C']], ['I–iii–IV–V', ['C', 'Em', 'F', 'G']], ['vi–ii–V–I', ['Am', 'Dm', 'G', 'C']]] })],
+  ['Every chord has a job', '<ul><li><b>I</b> is home. Songs start and end there.</li><li><b>V</b> is tension: it wants to go home to I.</li><li><b>IV</b> lifts away from home.</li><li>The minor chords, <b>vi</b>, <b>ii</b> and <b>iii</b>, add shadow and colour.</li></ul><p>Listen for those jobs in any song: the V chord just before the end almost always pulls you home.</p>'],
+], { drills: ['cp-d-family', 'cp-ear-four'], blocks: ['cpx-family'] });
+
+lesson('cp-g', 'One step clockwise: G major', 'Turn the circle: D and Bm join, and F becomes F♯.', ['Chords', 'Circle', 'Scales'], [
+  ['Turn the circle', '<p>Move one step clockwise and <b>G</b> becomes home. The wedge turns with it: G in the middle, C and D on either side, and Am, Em and Bm inside. Two of those are new: <b>D</b> and <b>Bm</b>.</p>', cps('cp-g', { reveal: true })],
+  ['Play D and Bm', '<p>D major is your first chord with a black key: D, F♯, A. Bm is B, D, F♯. Reach the middle finger forward onto the black key; keep the wrist level.</p>', { type: 'chordcards', chords: ['D', 'Bm'] }],
+  ['The G major scale', '<p>G major uses the same notes as C major except one: <b>F becomes F♯</b>. That’s why its key signature has one sharp. Every step clockwise adds one more sharp.</p>', { type: 'cpscale', tonic: 'G4' }],
+  ['Same loop, new home', '<p>The pop loop I–V–vi–IV in G is <b>G D Em C</b>. Same shape on the circle, turned one step.</p>', cps('cp-g', { progs: [['I–V–vi–IV', ['G', 'D', 'Em', 'C']], ['I–vi–IV–V', ['G', 'Em', 'C', 'D']], ['ii–V–I', ['Am', 'D', 'G']]] })],
+], { drills: ['cp-d-g'], blocks: ['cpx-g'] });
+
+lesson('cp-f', 'One step counter-clockwise: F major', 'Turn the other way: B♭ and Gm join, and B becomes B♭.', ['Chords', 'Circle', 'Scales'], [
+  ['Turn the other way', '<p>From C, one step <b>counter-clockwise</b> is F. Its family: F at home, B♭ and C on either side, and Gm, Dm and Am inside. New on your circle: <b>B♭</b> and <b>Gm</b>.</p>', cps('cp-f', { reveal: true })],
+  ['Play B♭ and Gm', '<p>B♭ major is B♭, D, F. Your thumb starts on a black key, so slide your hand a little further into the keys. Gm is G, B♭, D.</p>', { type: 'chordcards', chords: ['B♭', 'Gm'] }],
+  ['The F major scale', '<p>F major is C major with one change: <b>B becomes B♭</b>. One flat. Every step counter-clockwise adds one more flat.</p>' + tip('Fingering tip', 'In F major the right-hand thumb crosses under after B♭: 1 2 3 4, 1 2 3 4.'), { type: 'cpscale', tonic: 'F4' }],
+  ['Progressions in F', '<p>The four chords in F are <b>F C Dm B♭</b>. Hear how C, the V chord, pulls back to F.</p>', cps('cp-f', { progs: [['I–V–vi–IV', ['F', 'C', 'Dm', 'B♭']], ['I–IV–V–I', ['F', 'B♭', 'C', 'F']], ['ii–V–I', ['Gm', 'C', 'F']]] })],
+], { drills: ['cp-d-f'], blocks: ['cpx-f'] });
+
+lesson('cp-minor', 'The inside ring: minor keys', 'A minor, its sad family, and the E chord that pulls it home.', ['Chords', 'Circle'], [
+  ['Happy and sad twins', '<p>Every key on the outside has a minor twin just inside it. <b>A minor</b> uses exactly the same notes as C major, but its home is A, so the same chords sound sadder.</p><p>In A minor the chords are Am (i), Dm (iv) and Em (v) inside, and F (VI), C (III) and G (VII) outside. There’s one new chord: <b>E major</b>.</p>', cps('cp-minor', { reveal: true, key: 'Am' })],
+  ['Why E major?', '<p>Em works in A minor, but it’s a bit weak. Minor songs usually swap it for <b>E major</b>, which contains <b>G♯</b>. G♯ is a half step below A, so it pulls hard toward home.</p>', { type: 'chordcards', chords: ['E', 'Am'] }],
+  ['Minor progressions', '<p><b>Am F C G</b> is the four chords again, starting on the sad one. <b>Am Dm E Am</b> is the classic minor cadence. <b>Am G F E</b> steps down to the E chord and has been used for centuries, from flamenco to rock.</p>', cps('cp-minor', { key: 'Am', progs: [['i–VI–III–VII', ['Am', 'F', 'C', 'G']], ['i–iv–V–i', ['Am', 'Dm', 'E', 'Am']], ['i–VII–VI–V', ['Am', 'G', 'F', 'E']]] })],
+  ['Major or minor?', '<p>To tell whether a song is in a major or a minor key, listen for where it comes to rest. If it settles on an outside chord (like C), it’s major. If it settles on an inside chord (like Am), it’s minor.</p>' + tip('Try it', 'Sing a song you know in the Circle tab’s Sing mode. Happy songs usually land on the outside ring, sad ones on the inside.')],
+], { drills: ['cp-d-minor', 'ear-mm'], blocks: ['cpx-minor'] });
+
+lesson('cp-d', 'Two sharps: D major', 'A and F♯m join the circle.', ['Chords', 'Circle', 'Scales'], [
+  ['Another step clockwise', '<p>One more step clockwise from G is <b>D</b>. D major’s family: D, G and A outside; Em, Bm and F♯m inside. New: <b>A</b> and <b>F♯m</b>.</p>', cps('cp-d', { reveal: true })],
+  ['Play A and F♯m', '<p>A major is A, C♯, E. F♯m is F♯, A, C♯: your thumb starts on a black key.</p>', { type: 'chordcards', chords: ['A', 'F♯m'] }],
+  ['The D major scale', '<p>From G major to D major, <b>C becomes C♯</b>. Again, just one note changes. D major has two sharps: F♯ and C♯.</p>', { type: 'cpscale', tonic: 'D4' }],
+  ['Progressions in D', '<p>The four chords in D are <b>D A Bm G</b>, the loop of “With or Without You”.</p>', cps('cp-d', { progs: [['I–V–vi–IV', ['D', 'A', 'Bm', 'G']], ['I–IV–V–I', ['D', 'G', 'A', 'D']], ['ii–V–I', ['Em', 'A', 'D']]] })],
+], { drills: ['cp-d-d'], blocks: ['cpx-d'] });
+
+lesson('cp-a', 'Three sharps: A major', 'You already know five of its six chords. C♯m completes it.', ['Chords', 'Circle', 'Scales'], [
+  ['Almost all familiar', '<p>A major’s family is A, D and E outside, and Bm, F♯m and C♯m inside. You already know five of them. The only new one is <b>C♯m</b>.</p>', cps('cp-a', { reveal: true })],
+  ['Play C♯m', '<p>C♯m is C♯, E, G♯: two black keys and one white in the middle. Compare it with A and E, its neighbours in the key.</p>', { type: 'chordcards', chords: ['C♯m', 'A', 'E'] }],
+  ['The A major scale', '<p>From D to A, <b>G becomes G♯</b>. Three sharps: F♯, C♯ and G♯.</p>', { type: 'cpscale', tonic: 'A3' }],
+  ['Progressions in A', '', cps('cp-a', { progs: [['I–V–vi–IV', ['A', 'E', 'F♯m', 'D']], ['vi–IV–I–V', ['F♯m', 'D', 'A', 'E']], ['I–IV–V–I', ['A', 'D', 'E', 'A']]] })],
+], { drills: ['cp-d-a'], blocks: ['cpx-a'] });
+
+lesson('cp-e', 'Four sharps: E major', 'B and G♯m join the circle.', ['Chords', 'Circle', 'Scales'], [
+  ['Two new chords', '<p>E major’s family: E, A and B outside; F♯m, C♯m and G♯m inside. New: <b>B</b> and <b>G♯m</b>.</p>', cps('cp-e', { reveal: true })],
+  ['Play B and G♯m', '<p>B major is B, D♯, F♯: two black keys. G♯m is G♯, B, D♯.</p>', { type: 'chordcards', chords: ['B', 'G♯m'] }],
+  ['The E major scale', '<p>From A to E, <b>D becomes D♯</b>. Four sharps: F♯, C♯, G♯ and D♯. Guitarists love E and A, so you’ll meet these keys often.</p>', { type: 'cpscale', tonic: 'E4' }],
+  ['Progressions in E', '<p>“Don’t Stop Believin’” loops I–V–vi–IV in E: <b>E B C♯m A</b>.</p>', cps('cp-e', { progs: [['I–V–vi–IV', ['E', 'B', 'C♯m', 'A']], ['vi–IV–I–V', ['C♯m', 'A', 'E', 'B']], ['I–IV–V–I', ['E', 'A', 'B', 'E']]] })],
+], { drills: ['cp-d-e'], blocks: ['cpx-e'] });
+
+lesson('cp-bb', 'Two flats: B♭ major', 'Back to the flat side: E♭ and Cm.', ['Chords', 'Circle', 'Scales'], [
+  ['The flat side', '<p>Back past F, one more step counter-clockwise is <b>B♭</b>. Its family: B♭, E♭ and F outside; Cm, Gm and Dm inside. New: <b>E♭</b> and <b>Cm</b>.</p>', cps('cp-bb', { reveal: true })],
+  ['Play E♭ and Cm', '<p>E♭ major is E♭, G, B♭. Cm is C, E♭, G: the same as C major with the middle note lowered.</p>', { type: 'chordcards', chords: ['E♭', 'Cm'] }],
+  ['The B♭ major scale', '<p>From F to B♭, <b>E becomes E♭</b>. Two flats: B♭ and E♭. Bands and horn players love the flat keys.</p>', { type: 'cpscale', tonic: 'Bb3' }],
+  ['Progressions in B♭', '', cps('cp-bb', { progs: [['I–V–vi–IV', ['B♭', 'F', 'Gm', 'E♭']], ['ii–V–I', ['Cm', 'F', 'B♭']], ['I–IV–V–I', ['B♭', 'E♭', 'F', 'B♭']]] })],
+], { drills: ['cp-d-bb'], blocks: ['cpx-bb'] });
+
+lesson('cp-eb', 'Three flats: E♭ major', 'A♭ and Fm join the circle.', ['Chords', 'Circle', 'Scales'], [
+  ['Two new chords', '<p>E♭ major’s family: E♭, A♭ and B♭ outside; Fm, Cm and Gm inside. New: <b>A♭</b> and <b>Fm</b>.</p>', cps('cp-eb', { reveal: true })],
+  ['Play A♭ and Fm', '<p>A♭ major is A♭, C, E♭. Fm is F, A♭, C.</p>', { type: 'chordcards', chords: ['A♭', 'Fm'] }],
+  ['The E♭ major scale', '<p>From B♭ to E♭, <b>A becomes A♭</b>. Three flats: B♭, E♭ and A♭.</p>', { type: 'cpscale', tonic: 'Eb4' }],
+  ['Progressions in E♭', '', cps('cp-eb', { progs: [['I–V–vi–IV', ['E♭', 'B♭', 'Cm', 'A♭']], ['ii–V–I', ['Fm', 'B♭', 'E♭']], ['I–vi–IV–V', ['E♭', 'Cm', 'A♭', 'B♭']]] })],
+], { drills: ['cp-d-eb'], blocks: ['cpx-eb'] });
+
+lesson('cp-db', 'The black keys: D♭ and G♭', 'Two major chords built on black keys.', ['Chords', 'Circle', 'Scales'], [
+  ['Down to the bottom', '<p>Keep going counter-clockwise and you reach the black keys. New: <b>D♭</b> and <b>G♭</b>. D♭ major has five flats, and its scale uses all five black keys plus F and C.</p>', cps('cp-db', { reveal: true })],
+  ['Play D♭ and G♭', '<p>D♭ major is D♭, F, A♭. G♭ major is G♭, B♭, D♭: <b>three black keys</b>. Black-key chords feel lovely under the fingers once you get used to them.</p>', { type: 'chordcards', chords: ['D♭', 'G♭'] }],
+  ['The D♭ major scale', '<p>Five flats: B♭, E♭, A♭, D♭ and G♭. Its fingering puts your thumb on the two white keys, F and C.</p>', { type: 'cpscale', tonic: 'Db4' }],
+  ['Progressions', '<p>D♭ G♭ A♭ D♭ is I–IV–V–I in D♭. And now you can play the four chords in A♭ major too: A♭ E♭ Fm D♭.</p>', cps('cp-db', { progs: [['I–IV–V–I in D♭', ['D♭', 'G♭', 'A♭', 'D♭']], ['I–V–vi–IV in A♭', ['A♭', 'E♭', 'Fm', 'D♭']]] })],
+], { drills: ['cp-d-db'], blocks: ['cpx-db'] });
+
+lesson('cp-close', 'Closing the circle', 'The last two chords, and why F♯ and G♭ are the same key.', ['Chords', 'Circle'], [
+  ['The last two', '<p>Two chords left: <b>B♭m</b> and <b>E♭m</b>. Reveal them and your circle is complete: all 12 major and 12 minor chords.</p>', cps('cp-close', { reveal: true })],
+  ['Play B♭m and E♭m', '<p>B♭m is B♭, D♭, F. E♭m is E♭, G♭, B♭: all three on black keys.</p>', { type: 'chordcards', chords: ['B♭m', 'E♭m'] }],
+  ['One sound, two names', '<p>At the bottom, the circle closes. <b>G♭ major</b> (six flats) is exactly the same keys on the piano as <b>F♯ major</b> (six sharps). E♭m is the same as D♯m, and D♭ is the same as C♯. Musicians pick whichever name is easier to read.</p><p>Twelve steps of a fifth visit every key once and bring you back to C. That’s why it’s a circle.</p>', cps('cp-close', { progs: [['I–V–vi–IV in D♭', ['D♭', 'A♭', 'B♭m', 'G♭']], ['vi–IV–I–V in D♭', ['B♭m', 'G♭', 'D♭', 'A♭']]] })],
+  ['Your whole circle', '<p>You’ve met all 24 chords. In the <b>Circle</b> tab, switch on <b>My circle</b> to see everything you’ve learned, then explore any key in depth.</p>', { type: 'circlelink' }],
+], { drills: ['cp-d-close'], blocks: ['cpx-close'] });
+
+lesson('cp-anykey', 'Any song, any key', 'The wedge travels: transpose any progression around the circle.', ['Chords', 'Circle'], [
+  ['The shape travels', '<p>Pick a progression, then turn the circle. The wedge moves, the shape stays the same, and the song sounds the same, just higher or lower. Moving a song to a new key is called <b>transposing</b>.</p>', { type: 'circlestep', upto: 'cp-anykey', move: true, roman: true, progs: [['I–V–vi–IV', ['I', 'V', 'vi', 'IV']], ['I–vi–IV–V', ['I', 'vi', 'IV', 'V']], ['vi–IV–I–V', ['vi', 'IV', 'I', 'V']], ['ii–V–I', ['ii', 'V', 'I']], ['I–IV–V–I', ['I', 'IV', 'V', 'I']]], cap: 'Turn the circle, then play a progression. The roman numerals stay put; the chord names change.' }],
+  ['Transposing a song', '<p>To move a song into a key that suits your voice, move <b>every chord the same number of steps</b> around the circle. “C G Am F” moved two steps clockwise becomes “D A Bm G”.</p>' + tip('Find your key', 'Not sure which key suits your voice? Sing the song in the Circle tab’s Sing mode and Keystone will find the key you naturally sing it in.'), { type: 'singlink', sub: 'key', label: 'Sing and find my key' }],
+  ['Keep going', '<ul><li>Learn songs from lead sheets: chord names above a melody.</li><li>Try each progression with different left-hand patterns in the Circle tab’s <b>Build a progression</b>.</li><li>Play the four chords in every key. It’s one of the best workouts a pianist can do.</li></ul>'],
+], { drills: ['cp-quiz', 'cp-d-all'], blocks: ['cpx-any'] });
+const CP_LESSONS = [['cp-four', 'B'], ['cp-family', 'B'], ['cp-g', 'B'], ['cp-f', 'B'], ['cp-minor', 'B'], ['cp-d', 'B'], ['cp-a', 'I'], ['cp-e', 'I'], ['cp-bb', 'I'], ['cp-eb', 'I'], ['cp-db', 'I'], ['cp-close', 'I'], ['cp-anykey', 'I']];
+
 /* ===== 23-course-b.js ===== */
 /* ---------- the full course: new lessons (part 2: rhythm, ear, scales, chords, expression, practice) ---------- */
 /* ===== Unit 4 · Rhythm and counting: one lesson per note value ===== */
@@ -5396,6 +5865,8 @@ const COURSE = [
     lessons: [['scale', 'B'], ['build', 'B'], ['keysig', 'B'], ['minor', 'B'], ['circle', 'I'], ['sharpkeys', 'I'], ['flatkeys', 'I'], ['twooctaves', 'I'], ['minorkeys', 'I'], ['pentablues', 'I'], ['modes', 'I'], ['transpose', 'I']] },
   { id: 'chords', title: 'Chords and harmony', color: 'var(--u6)', desc: 'Triads, inversions, chord symbols, progressions, accompaniment patterns, arpeggios, sevenths, lead sheets, cadences, the blues and ii–V–I.',
     lessons: [['triads', 'B'], ['majorminor', 'B'], ['symbols', 'B'], ['progressions', 'B'], ['accomp', 'B'], ['arpeggios', 'I'], ['dimaug', 'I'], ['sevenths', 'I'], ['leadsheet', 'I'], ['cadences', 'I'], ['blues', 'I'], ['twofive', 'I']] },
+  { id: 'circlepath', title: 'Chords around the circle', color: 'var(--u10)', desc: 'Start with the four chords behind thousands of songs, then turn the circle of fifths one key at a time. Each lesson reveals one or two new chords until all 24 are lit.',
+    lessons: CP_LESSONS },
   { id: 'expression', title: 'Expression and style', color: 'var(--u8)', desc: 'Dynamics, articulation, tempo words, phrasing, voicing, repeats and road maps, and ornaments.',
     lessons: [['dynamics', 'B'], ['articulation', 'B'], ['tempo', 'B'], ['phrasing', 'I'], ['form', 'I'], ['ornaments', 'I']] },
   { id: 'practice', title: 'Practising and performing', color: 'var(--u9)', desc: 'How to practise, the metronome, a daily routine, memorising, playing for others and what to learn next.',
@@ -5698,7 +6169,7 @@ const CF_TIPS = [
   ['Happy and sad twins', 'Each major key on the outside has a minor twin on the inside with the same key signature. C major and A minor use exactly the same notes.'],
   ['Clockwise = brighter', 'Moving clockwise raises one note (the 4th) a half step. Moving counter-clockwise lowers one note (the 7th). That one-note change is the whole secret of the circle.'],
 ];
-const CF = { sel: { i: 0, minor: false, alt: false }, mode: 'explore', recent: [], detect: null, walk: null, build: null, quiz: null, keys: null, off: null, seq: null, timers: [], svg: null, segEls: [], tip: 0 };
+const CF = { mine: store.get('cfMine', false), sel: { i: 0, minor: false, alt: false }, mode: 'explore', recent: [], detect: null, walk: null, build: null, quiz: null, keys: null, off: null, seq: null, timers: [], svg: null, segEls: [], tip: 0 };
 const cfKey = (sel) => { const sg = CF_SEGS[sel.i], k = sel.alt && sg.alt ? sg.alt : sg.main; return { name: k[0], f: k[1], pc: sg.pc, seg: sg }; };
 const ascii = (nm) => nm.replace(SHARP, '#').replace(FLAT, 'b');
 function cfScale(sel) {
@@ -5794,6 +6265,7 @@ function cfPaint() {
   const quietSel = CF.mode === 'quiz' || CF.mode === 'walk' || singNoKey;
   const fam = quietSel ? [] : cfFamily(CF.sel);
   const wt = CF.mode === 'walk' && CF.walk ? cfWalkTarget() : null;
+  const mine = CF.mine ? cpKnown(null, true) : null;
   CF.segEls.forEach((el, i) => {
     for (const ring of ['out', 'in']) {
       const p = ring === 'out' ? el.outer : el.inner;
@@ -5806,6 +6278,11 @@ function cfPaint() {
       p.classList.toggle('done', !!(CF.walk && CF.walk.doneSegs.has(i + ring)));
       p.classList.toggle('play', !!(CF.build && CF.build.cur && CF.build.cur.i === i && CF.build.cur.ring === ring));
       r.textContent = f && CF.mode !== 'walk' ? f[2] : '';
+      const hid = !!mine && !mine.has(ring + i);
+      p.classList.toggle('mine-hid', hid);
+      (ring === 'out' ? el.tMain : el.tMin).classList.toggle('mine-hid', hid);
+      if (ring === 'out' && el.tAlt) el.tAlt.classList.toggle('mine-hid', hid);
+      r.classList.toggle('mine-hid', hid);
       (ring === 'out' ? el.tMain : el.tMin).classList.toggle('on', selected);
       if (ring === 'out' && el.tAlt) el.tAlt.classList.toggle('on', selected);
     }
@@ -6236,6 +6713,19 @@ function cfQuizAnswer(i, ring) {
 }
 
 /* ----- page ----- */
+/* "My circle": show only the chords learned in the Chords-around-the-circle unit */
+function cfNextPathLesson() { const L = CP.find((x) => !progress.lessons[x.id]); return L ? L.id : CP[0].id; }
+function cfMineRow() {
+  const n = cpKnown(null, true).size;
+  const seg = h('div', { class: 'seg' }, [[false, 'Whole circle'], [true, 'My circle · ' + n + '/24']].map(([v, l]) => h('button', { type: 'button', text: l, 'aria-pressed': String(CF.mine === v), onclick: () => {
+    CF.mine = v; store.set('cfMine', v);
+    $$('button', seg).forEach((b, j) => b.setAttribute('aria-pressed', String((j === 1) === v)));
+    cfPaint();
+    if (v && !n) toast('Your circle is empty so far. Start the “Chords around the circle” lessons and it fills in as you go.', 5200);
+  } })));
+  return h('div', { class: 'cf-mine' }, seg,
+    h('button', { class: 'btn small', type: 'button', onclick: () => openLesson(cfNextPathLesson()) }, n >= 24 ? 'Review the circle lessons' : n ? 'Next circle lesson' : 'Learn it a few chords at a time', iconEl('next')));
+}
 function cfSyncTabs() {
   $$('#cf-tabs button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === CF.mode)));
   const d = $('#cf-detect'); if (d) d.hidden = CF.mode === 'sing';
@@ -6260,12 +6750,12 @@ function renderCircle() {
   if (CF.off) CF.off();
   v.textContent = '';
   const tabs = h('div', { class: 'seg', id: 'cf-tabs' }, [['explore', 'Explore'], ['sing', 'Sing: find your key'], ['walk', 'Walk the circle'], ['build', 'Build a progression'], ['quiz', 'Quiz']].map(([m, l]) => h('button', { type: 'button', 'data-v': m, onclick: () => cfSetMode(m) }, m === 'sing' ? iconEl('mic') : null, l)));
-  const circleHost = h('div', { class: 'cf-circle' });
+  const circleHost = h('div');
   const kd = h('div');
   v.append(
     h('div', { class: 'sec-head' }, h('h2', { text: 'Circle of fifths' }), h('p', { text: 'All 24 keys on one wheel. Tap any key to explore it, play a scale or sing a song and watch the circle find its key, walk around the circle one sharp or flat at a time, build chord progressions, or quiz yourself.' })),
     h('div', { class: 'cf-detect', id: 'cf-detect', html: 'Play a few notes or a whole scale on your keyboard, and I’ll find its key on the circle.' }),
-    h('div', { class: 'cf-grid' }, circleHost, h('div', { class: 'cf-side' }, tabs, h('div', { id: 'cf-panel', class: 'cf-panel' }))),
+    h('div', { class: 'cf-grid' }, h('div', { class: 'cf-circle' }, circleHost, cfMineRow()), h('div', { class: 'cf-side' }, tabs, h('div', { id: 'cf-panel', class: 'cf-panel' }))),
     h('div', { class: 'big-keys' }, h('div', { class: 'keys-frame' }, kd)));
   cfDrawCircle(circleHost);
   const wide = window.innerWidth > 760;
